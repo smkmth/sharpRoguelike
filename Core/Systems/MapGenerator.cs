@@ -190,13 +190,16 @@ namespace sharpRoguelike.Core
                 if (IsPotentialDoor(cell))
                 {
                     map.SetCellProperties(cell.X, cell.Y, false, true);
-                    map.Doors.Add(new Door
+                    Door door = new Door
                     {
                         x = cell.X,
                         y = cell.Y,
                         isOpen = false
 
-                    });
+                    };
+                    map.Doors.Add(door);
+                    map.Entities.Add(door);
+
                 }
             }
         }
@@ -240,7 +243,7 @@ namespace sharpRoguelike.Core
 
         private void CreateStairs()
         {
-            map.StairsUp = new Stairs
+            Stairs upstairs = new Stairs
             {
                 x = map.Rooms.First().Center.X + 1,
                 y = map.Rooms.First().Center.Y,
@@ -248,12 +251,18 @@ namespace sharpRoguelike.Core
                 
             };
 
-            map.StairsDown = new Stairs
+            Stairs downstairs = new Stairs
             {
                 x = map.Rooms.First().Center.X,
                 y = map.Rooms.First().Center.Y -1,
                 IsUp = false
             };
+
+            map.Entities.Add(downstairs);
+            map.Entities.Add(upstairs);
+            map.StairsDown = downstairs;
+            map.StairsUp = upstairs;
+
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RLNET;
 using RogueSharp.Random;
 using sharpRoguelike.Core;
+using sharpRoguelike.Core.Menus;
 using sharpRoguelike.Core.Systems;
 
 namespace sharpRoguelike
@@ -20,20 +21,24 @@ namespace sharpRoguelike
         private static readonly int statHeight = screenHeight;
         private static RLConsole statConsole;
 
-        private static readonly int inventoryWidth = screenWidth - 20;
-        private static readonly int inventoryHeight = 11;
-        private static RLConsole inventoryConsole;
+        private static readonly int lookWidth = screenWidth - 20;
+        private static readonly int lookHeight = 11;
+        private static RLConsole lookConsole;
 
         private static readonly int messageWidth = screenWidth - statWidth;
         private static readonly int messageHeight = 11;
         private static RLConsole messageConsole;
 
         private static readonly int mapWidth = screenWidth - statWidth;
-        private static readonly int mapHeight = screenHeight - (messageHeight + inventoryHeight);
+        private static readonly int mapHeight = screenHeight - (messageHeight + lookHeight);
         private static RLConsole mapConsole;
 
 
+        private static RLConsole inventoryConsole;
+
+
         public static Player Player { get;  set; }
+        public static InventoryMenu playerInventory;
         public static CommandSystem CommandSystem { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
@@ -47,6 +52,7 @@ namespace sharpRoguelike
         public static int steps;
 
         public static int mapLevel =1;
+        public static GameMode CurrentGameMode;
 
         static void Main(string[] args)
         {
@@ -55,11 +61,14 @@ namespace sharpRoguelike
 
             string fontFileName = "terminal8x8.png";
             string consoleTitle = "alchymia - " + seed ;
-            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1f, consoleTitle);
+            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1.5f, consoleTitle);
+            rootConsole.SetWindowState(RLWindowState.Maximized);
+          
             mapConsole = new RLConsole(mapWidth, mapHeight);
             statConsole = new RLConsole(statWidth, statHeight);
-            inventoryConsole = new RLConsole(inventoryWidth, inventoryHeight);
+            lookConsole = new RLConsole(lookWidth, lookHeight);
             messageConsole = new RLConsole(messageWidth, messageHeight);
+            inventoryConsole = new RLConsole(screenWidth, screenHeight);
             
             CommandSystem = new CommandSystem();
             SchedulingSytem = new SchedulingSystem();
@@ -81,28 +90,26 @@ namespace sharpRoguelike
 
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-       //     mapConsole.SetBackColor(0, 0, mapWidth, mapHeight, Colors.FloorBackground);
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
             int mx = rootConsole.Mouse.X ;
-            int my = rootConsole.Mouse.Y - inventoryHeight;
+            int my = rootConsole.Mouse.Y - lookHeight;
+            
+
             if (mx > 0 && my > 0)
             {
                 List<string> names = DungeonMap.InterigateEntityAtLocation(mx  , my);
                 if (names.Count > 0)
                 {
-                    inventoryConsole.Clear();
-
+                    lookConsole.Clear();
                     for (int i =0; i< names.Count; i++)
                     {
-                        inventoryConsole.Print(2, i, names[i], RLColor.White);
-
+                        lookConsole.Print(2, i, names[i], RLColor.White);
                     }
-
                 }
                 else
                 {
-                    inventoryConsole.Clear();
+                    lookConsole.Clear();
                 }
             }
 
@@ -111,45 +118,72 @@ namespace sharpRoguelike
 
                 if (keyPress != null)
                 {
-                    if (keyPress.Key == RLKey.Up)
+                    if (CurrentGameMode == GameMode.PLAYING)
                     {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
-                    }
-                    else if (keyPress.Key == RLKey.Down)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
-                    }
-                    else if (keyPress.Key == RLKey.Left)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
-                    }
-                    else if (keyPress.Key == RLKey.Right)
-                    {
-                        didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
-                    }
-                    else if (keyPress.Key == RLKey.Escape)
-                    {
-                        rootConsole.Close();
-                    }
-                    else if (keyPress.Key == RLKey.G)
-                    {
-                        Item pickup = DungeonMap.GetItemAt(Player.x, Player.y);
-                        DungeonMap.RemoveItem(pickup);
-                    }
-                    else if (keyPress.Key == RLKey.Period)
-                    {
-                        if (DungeonMap.CanMoveDownToNextLevel())
+
+                        if (keyPress.Key == RLKey.Up)
                         {
-                            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
-                            DungeonMap = mapGenerator.CreateMap();
-                            MessageLog = new MessageLog();
-                            CommandSystem = new CommandSystem();
-                            rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";
-                            didPlayerAct = true;
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                        }
+                        else if (keyPress.Key == RLKey.Down)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                        }
+                        else if (keyPress.Key == RLKey.Left)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                        }
+                        else if (keyPress.Key == RLKey.Right)
+                        {
+                            didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                        }
+                        else if (keyPress.Key == RLKey.Escape)
+                        {
+                            rootConsole.Close();
+                        }
+                        else if (keyPress.Key == RLKey.G)
+                        {
+                            Item pickup = DungeonMap.GetItemAt(Player.x, Player.y);
+                            if (Player.inventory.AddItem(pickup))
+                            {
+                                DungeonMap.RemoveItem(pickup);
+                            }
+                        }
+                        else if (keyPress.Key == RLKey.Period)
+                        {
+                            if (DungeonMap.CanMoveDownToNextLevel())
+                            {
+                                MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
+                                DungeonMap = mapGenerator.CreateMap();
+                                MessageLog = new MessageLog();
+                                CommandSystem = new CommandSystem();
+                                rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";
+                                didPlayerAct = true;
+
+                            }
+                        }
+
+                        if (keyPress.Key == RLKey.I)
+                        {
+                            
+                            CurrentGameMode = GameMode.INVENTORY;
+                            playerInventory.OnFirstEnter(inventoryConsole);
+                        }
+                    }
+                    else if (CurrentGameMode == GameMode.INVENTORY)
+                    {
+                        if (keyPress.Key == RLKey.Escape)
+                        {
+                            CurrentGameMode = GameMode.PLAYING;
+                        }
+                        else
+                        {
+                            playerInventory.HandleInput(keyPress, inventoryConsole);
 
                         }
                     }
-                    else if (keyPress.Alt && keyPress.Key == RLKey.Enter)
+
+                    if (keyPress.Alt && keyPress.Key == RLKey.Enter)
                     {
                         if (!fullScreen)
                         {
@@ -164,9 +198,8 @@ namespace sharpRoguelike
                         }
                     
                     }
-
-
-
+                    
+                  
                     keyPress = null;
 
                 }
@@ -187,27 +220,45 @@ namespace sharpRoguelike
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
-          
+
+            if (CurrentGameMode == GameMode.INVENTORY)
+            {
+                mapConsole.Clear();
+                statConsole.Clear();
+                messageConsole.Clear();
+                rootConsole.Clear();
+
+
+
+                RLConsole.Blit(inventoryConsole, 0, 0, screenWidth, screenHeight,
+                     rootConsole, 0, 0);
+
+                rootConsole.Draw();
+                playerInventory.Draw(inventoryConsole);
+
+                return;
+            
+            }
      
             // Blit the sub consoles to the root console in the correct locations
             RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight,
-                rootConsole, 0, inventoryHeight);
+                rootConsole, 0, lookHeight);
             RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight,
                 rootConsole, mapWidth, 0);
             RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight,
                 rootConsole, 0, screenHeight - messageHeight);
-            RLConsole.Blit(inventoryConsole, 0, 0, inventoryWidth, inventoryHeight,
+            RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight,
                 rootConsole, 0, 0);
             
 
             if (shouldUpdateDraw)
             {
+                rootConsole.Draw();
 
                 mapConsole.Clear();
                 statConsole.Clear();
                 messageConsole.Clear();
 
-                rootConsole.Draw();
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);

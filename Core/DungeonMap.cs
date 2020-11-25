@@ -57,6 +57,16 @@ namespace sharpRoguelike.Core
 
                 SetConsoleSymbolForCell(mapConsole, cell);
             }
+            StairsUp.Draw(mapConsole, this);
+            StairsDown.Draw(mapConsole, this);
+            foreach(Item item in Items)
+            {
+                item.Draw(mapConsole, this);
+            }
+            foreach(Door door in Doors)
+            {
+                door.Draw(mapConsole, this);
+            }
             int i = 0;
             foreach(Monster monster in Monsters)
             {
@@ -67,16 +77,6 @@ namespace sharpRoguelike.Core
                     i++;
                 }
             }
-            foreach(Item item in Items)
-            {
-                item.Draw(mapConsole, this);
-            }
-            foreach(Door door in Doors)
-            {
-                door.Draw(mapConsole, this);
-            }
-            StairsUp.Draw(mapConsole, this);
-            StairsDown.Draw(mapConsole, this);
         }
 
         public void SetConsoleSymbolForCell(RLConsole con, Cell cell)
@@ -235,7 +235,7 @@ namespace sharpRoguelike.Core
             }
             return false;
         }
-
+        
         public Door GetDoor(int x, int y)
         {
             return Doors.SingleOrDefault(d => d.x == x && d.y == y);
@@ -266,7 +266,10 @@ namespace sharpRoguelike.Core
             List<string> names = new List<string>();
             foreach(Entity entity in results)
             {
-                names.Add(entity.name);
+                if (IsInFov(entity.x, entity.y))
+                {
+                    names.Add(entity.name);
+                }
             }
             return names;
 

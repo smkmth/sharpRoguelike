@@ -1,4 +1,5 @@
 ﻿using RLNET;
+using sharpRoguelike.Core.Items;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,7 +23,11 @@ namespace sharpRoguelike.Core
             
             color = Colors.Player;
             symbol = '@';
-
+            inventory = new Inventory();
+            inventory.AddItem(HealthPotion.Create());
+            inventory.AddItem(HealthPotion.Create());
+            inventory.AddItem(HealthPotion.Create());
+            Game.playerInventory = new Menus.InventoryMenu(inventory);
         }
 
         public void DrawStats(RLConsole statConsole)

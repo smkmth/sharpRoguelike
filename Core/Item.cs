@@ -9,6 +9,10 @@ namespace sharpRoguelike.Core
 {
     //a description of a item in the world
     public class Item : Entity
-    { 
+    {
+        public virtual bool Use()
+        {
+            return false;
+        }
     }
 }

@@ -7,23 +7,19 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
-    public class Stairs : IDrawable 
+    public class Stairs : Entity 
     { 
-
-        public RLColor color { get; set; }
-        public char symbol { get; set ; }
-        public int x { get; set ; }
-        public int y { get; set; }        
+ 
         public bool IsUp { get; set; }
 
-        public void Draw(RLConsole console, IMap map)
+        public override void Draw(RLConsole console, IMap map)
         {
             if (!map.GetCell(x, y).IsExplored) 
             {
                 return;
             }
-
             symbol = IsUp ? '<' : '>';
+            name = IsUp ? "Stairs leading up" : "Stairs leading down";
 
             if (map.IsInFov(x, y))
             {

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
-    public class Door : IDrawable
+    public class Door :  Entity
     {
         public Door()
         {
@@ -17,13 +17,9 @@ namespace sharpRoguelike.Core
         }
 
         public bool isOpen { get; set; }
-        public RLColor color { get; set; }
         public RLColor BackgroundColor { get; set; }
-        public char symbol { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
 
-        public void Draw(RLConsole console, IMap map)
+        public override void Draw(RLConsole console, IMap map)
         {
             if (!map.GetCell(x, y).IsExplored)
             {
@@ -31,6 +27,7 @@ namespace sharpRoguelike.Core
             }
 
             symbol = isOpen ? '-' : '+';
+            name = isOpen ? "A open door" : "A closed door";
 
             if (map.IsInFov(x, y))
             {

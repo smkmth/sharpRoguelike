@@ -16,7 +16,9 @@ namespace sharpRoguelike.Core
         public int y { get; set; }
         public string name { get; set; }
 
-        public void Draw(RLConsole con, IMap map)
+        public Inventory inventory = null;    
+
+        public virtual void Draw(RLConsole con, IMap map)
         {
             ICell cell = map.GetCell(x, y);
 
