@@ -224,8 +224,10 @@ namespace sharpRoguelike.Core.Systems
             else 
             {
                 Game.DungeonMap.RemoveMonster((Monster)defender);
-
-                Game.MessageLog.Add($"  {defender.name} died !");
+                defender.corpse.x = defender.x;
+                defender.corpse.y = defender.y;
+                Game.DungeonMap.AddItem(defender.corpse);
+                Game.MessageLog.Add($" {defender.name} died !");
             }
         }
 

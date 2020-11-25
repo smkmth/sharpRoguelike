@@ -55,17 +55,29 @@ namespace sharpRoguelike.Core.Menus
 
             if (currentInventoryState == InventoryState.SELECTED_ITEM)
             {
-                string itemname = $"Selected: {currentlySelectedItem.name}";
-                con.Print(con.Width - itemname.Length, 2, itemname, RLColor.White);
+                int index = 2;
 
-                string useItem = $" (a) use item ";
-                con.Print(con.Width - useItem.Length, 4, useItem, RLColor.White);
+                string itemname = $"Selected: {currentlySelectedItem.name}";
+                con.Print(con.Width - itemname.Length, index, itemname, RLColor.White);
+                index+=2;
+
+                if(currentlySelectedItem.effect != null)
+                {
+                    string useItem = $" (a) use item ";
+                    con.Print(con.Width - useItem.Length, index, useItem, RLColor.White);
+                    index += 2;
+
+                }
 
                 string dropItem = $" (d) drop item ";
-                con.Print(con.Width - dropItem.Length, 6, dropItem, RLColor.White);
+                con.Print(con.Width - dropItem.Length, index, dropItem, RLColor.White);
+                index += 2;
+
 
                 string goBack = "(backspace) go back to inventory selection ";
-                con.Print(con.Width - goBack.Length, 8, goBack, RLColor.White);
+                con.Print(con.Width - goBack.Length, index, goBack, RLColor.White);
+                index += 2;
+
             }
         }
 
@@ -96,38 +108,40 @@ namespace sharpRoguelike.Core.Menus
                     con.Clear();
                     currentInventoryState = InventoryState.INVENTORY;
                     currentlySelectedItem = null;
+                    return;
                 }
-
 
                 //interprit selection as selection
                 char useSelection = keypress.Key.ToString().ToCharArray()[0];
-
                 if(useSelection == 'D')
                 {
                     inv.DropItem(currentlySelectedItem);
                     currentlySelectedItem = null;
                     currentInventoryState = InventoryState.INVENTORY;
-
                     return;
                 }
                 else
                 {   
-                    if (currentlySelectedItem.effect.Use(useSelection, inv.owner, inv.owner ))
+                    if (currentlySelectedItem.effect != null)
                     {
-                        inv.ConsumeItem(currentlySelectedItem);
-                        currentlySelectedItem = null;
-                        currentInventoryState = InventoryState.INVENTORY;
+
+                        if (currentlySelectedItem.effect.Use(useSelection, inv.owner, inv.owner ))
+                        {
+                            inv.ConsumeItem(currentlySelectedItem);
+                            currentlySelectedItem = null;
+                            currentInventoryState = InventoryState.INVENTORY;
+                        }
                     }
                     return;
                 }
                     
                 
-                }
-
             }
-
 
         }
 
+
     }
+
 }
+

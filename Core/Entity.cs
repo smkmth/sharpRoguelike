@@ -19,6 +19,7 @@ namespace sharpRoguelike.Core
         public Attacker attacker = null;
         public Actor actor = null;
         public Useable effect = null;
+        public Entity corpse = null;
 
         public virtual void Draw(RLConsole con, IMap map)
         {
