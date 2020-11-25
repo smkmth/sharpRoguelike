@@ -3,8 +3,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Users\Lab42_AMD_1\source\repos\sharpRoguelike\Backup2\</UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>C:\Users\danda\source\repos\sharpRoguelike\sharpRoguelike\Backup\</UpgradeBackupLocation>
+    <OldToolsVersion>Current</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="RLNET" Version="1.0.6" />

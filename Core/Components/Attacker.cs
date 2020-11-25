@@ -1,32 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RLNET;
-using RogueSharp;
-using sharpRoguelike.Core.Interfaces;
-namespace sharpRoguelike.Core
+
+namespace sharpRoguelike.Core.Components
 {
-    public class Actor : Entity, IActor, IScheduleable
+    public class Attacker
     {
 
-        public int Time
+        public Attacker(Entity _owner)
         {
-            get
-            {
-                return Speed;
-            }
+            owner = _owner;
         }
 
-        // IActor
+        public Entity owner;
         private int _attack;
         private int _attackChance;
-        private int _awareness;
         private int _defense;
         private int _defenseChance;
-        private int _gold;
-        private int _health;
         private int _maxHealth;
-        private int _speed;
+        private int _health;
 
         public int Attack
         {
@@ -52,17 +44,6 @@ namespace sharpRoguelike.Core
             }
         }
 
-        public int Awareness
-        {
-            get
-            {
-                return _awareness;
-            }
-            set
-            {
-                _awareness = value;
-            }
-        }
 
         public int Defense
         {
@@ -88,17 +69,6 @@ namespace sharpRoguelike.Core
             }
         }
 
-        public int Gold
-        {
-            get
-            {
-                return _gold;
-            }
-            set
-            {
-                _gold = value;
-            }
-        }
 
         public int Health
         {
@@ -124,28 +94,7 @@ namespace sharpRoguelike.Core
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
-
-        public int Speed
-        {
-            get
-            {
-                return _speed;
-            }
-            set
-            {
-                _speed = value;
-            }
-        }
     }
+
+
 }

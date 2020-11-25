@@ -12,7 +12,7 @@ namespace sharpRoguelike.Core
         public List<Rectangle> Rooms;
         public List<Monster> Monsters;
         public List<Door> Doors;
-        public List<Item> Items;
+        public List<Entity> Items;
         public Stairs StairsUp;
         public Stairs StairsDown;
         public List<Entity> Entities;
@@ -23,7 +23,7 @@ namespace sharpRoguelike.Core
             Rooms = new List<Rectangle>();
             Monsters = new List<Monster>();
             Doors = new List<Door>();
-            Items = new List<Item>();
+            Items = new List<Entity>();
             Entities = new List<Entity>();
         }
 
@@ -59,7 +59,7 @@ namespace sharpRoguelike.Core
             }
             StairsUp.Draw(mapConsole, this);
             StairsDown.Draw(mapConsole, this);
-            foreach(Item item in Items)
+            foreach(Entity item in Items)
             {
                 item.Draw(mapConsole, this);
             }
@@ -114,7 +114,7 @@ namespace sharpRoguelike.Core
         public void UpdatePlayerFOV()
         {
             Player player = Game.Player;
-            ComputeFov(player.x, player.y, player.Awareness, true);
+            ComputeFov(player.x, player.y, player.actor.Awareness, true);
             foreach(Cell cell in GetAllCells())
             {
                 if (IsInFov(cell.X, cell.Y))
@@ -126,7 +126,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public bool SetActorPosition(Actor actor, int x, int y)
+        public bool SetActorPosition(Entity actor, int x, int y)
         {
             if (GetCell(x, y).IsWalkable)
             {
@@ -158,7 +158,7 @@ namespace sharpRoguelike.Core
             Game.Player = player;
             SetIsWalkable(player.x, player.y, false);
             UpdatePlayerFOV();
-            Game.SchedulingSytem.Add(player);
+            Game.SchedulingSytem.Add(player.actor);
             Entities.Add(player);
         }
 
@@ -166,7 +166,7 @@ namespace sharpRoguelike.Core
         {
             Monsters.Add(monster);
             SetIsWalkable(monster.x, monster.y, false);
-            Game.SchedulingSytem.Add(monster);
+            Game.SchedulingSytem.Add(monster.actor);
             Entities.Add(monster);
 
         }
@@ -175,27 +175,28 @@ namespace sharpRoguelike.Core
         {
             Monsters.Remove(monster);
             SetIsWalkable(monster.x, monster.y, true);
-            Game.SchedulingSytem.Remove(monster);
+            Game.SchedulingSytem.Remove(monster.actor);
 
         }
+        
 
         public Monster GetMonsterAt(int x, int y)
         {
             return Monsters.FirstOrDefault(m => m.x == x && m.y == y);
         }
 
-        public Item GetItemAt(int x, int y)
+        public Entity GetItemAt(int x, int y)
         {
             return Items.FirstOrDefault(i => i.x == x && i.y == y);
 
         }
 
-        public void RemoveItem(Item item)
+        public void RemoveItem(Entity item)
         {
             Items.Remove(item);
         }
 
-        public void AddItem(Item item)
+        public void AddItem(Entity item)
         {
             Items.Add(item);
             Entities.Add(item);
@@ -241,7 +242,7 @@ namespace sharpRoguelike.Core
             return Doors.SingleOrDefault(d => d.x == x && d.y == y);
         }
 
-        private void OpenDoor(Actor actor, int x, int y)
+        private void OpenDoor(Entity actor, int x, int y)
         {
             Door door = GetDoor(x, y);
             if (door != null)
@@ -249,7 +250,7 @@ namespace sharpRoguelike.Core
                 door.isOpen = true;
                 var cell = GetCell(x, y);
                 SetCellProperties(x, y, true, cell.IsWalkable, cell.IsExplored);
-                Game.MessageLog.Add($"{actor.Name} opened a door");
+                Game.MessageLog.Add($"{actor.name} opened a door");
             }
         }
         
@@ -257,6 +258,18 @@ namespace sharpRoguelike.Core
         {
             Player player = Game.Player;
             return StairsDown.x == player.x && StairsDown.y == player.y;
+
+        }
+
+        public List<Entity> GetAllEntitiesAt(int x, int y)
+        {
+            var results = Entities.Where(i => i.x == x && i.y == y);
+            List<Entity> entitiesHere = new List<Entity>();           
+            foreach(Entity entity in results)
+            {
+                entitiesHere.Add(entity);
+            }
+            return entitiesHere;
 
         }
 

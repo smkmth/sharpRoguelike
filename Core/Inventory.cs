@@ -7,15 +7,15 @@ namespace sharpRoguelike.Core
     public class Inventory
     {
         public Entity owner;
-        public List<Item> storedItems;
+        public List<Entity> storedItems;
         public int maxCapacity = 26;
         public Inventory(Entity _owner)
         {
             owner = _owner;
-            storedItems = new List<Item>(maxCapacity);
+            storedItems = new List<Entity>(maxCapacity);
         }
 
-        public bool AddItem(Item item)
+        public bool AddItem(Entity item)
         {
             if (storedItems.Count + 1 >= maxCapacity)
             {
@@ -30,7 +30,7 @@ namespace sharpRoguelike.Core
             }
         }
 
-        public void DropItem(Item item)
+        public void DropItem(Entity item)
         {
             item.x = owner.x;
             item.y = owner.y;
@@ -41,7 +41,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void ConsumeItem(Item item)
+        public void ConsumeItem(Entity item)
         {
             storedItems.Remove(item);
 

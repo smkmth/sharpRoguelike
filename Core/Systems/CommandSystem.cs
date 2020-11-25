@@ -20,19 +20,19 @@ namespace sharpRoguelike.Core.Systems
         public void ActivateMonsters()
         {
             IScheduleable scheduleable = Game.SchedulingSytem.Get();
-            if (scheduleable is Player)
+            if (scheduleable.owner is Player)
             {
                 IsPlayerTurn = true;
-                Game.SchedulingSytem.Add(Game.Player);
+                Game.SchedulingSytem.Add(Game.Player.actor);
 
             }
             else
             {
-                Monster monster = scheduleable as Monster;
+                Monster monster = scheduleable.owner as Monster;
                 if (monster != null)
                 {
                     monster.PerformAction(this);
-                    Game.SchedulingSytem.Add(monster);
+                    Game.SchedulingSytem.Add(monster.actor);
                 }
                 ActivateMonsters();
 
@@ -93,20 +93,29 @@ namespace sharpRoguelike.Core.Systems
             }
             else
             {
-                Monster monster = Game.DungeonMap.GetMonsterAt(x, y);
-                if (monster != null)
+                List<Entity> targets = Game.DungeonMap.GetAllEntitiesAt(x, y);
+                foreach(Entity target in targets)
                 {
-                    Attack(Game.Player, monster);
+                    if (target.attacker != null)
+                    {
+                        Attack(Game.Player, target);
+
+                    }
+                }
+                if (targets.Count > 0)
+                {
+                    return false;
+                }
+                else
+                {
                     return true;
                 }
-
-                return false;
             }
 
 
         }
 
-        public void Attack(Actor attacker, Actor defender)
+        public void Attack(Entity attacker, Entity defender)
         {
             StringBuilder attackMessage = new StringBuilder();
             StringBuilder defenseMessage = new StringBuilder();
@@ -127,14 +136,14 @@ namespace sharpRoguelike.Core.Systems
         }
 
         // The attacker rolls based on his stats to see if he gets any hits
-        private static int ResolveAttack(Actor attacker, Actor defender, StringBuilder attackMessage)
+        private static int ResolveAttack(Entity attacker, Entity defender, StringBuilder attackMessage)
         {
             int hits = 0;
 
-            attackMessage.AppendFormat("{0} attacks {1} and rolls: ", attacker.Name, defender.Name);
+            attackMessage.AppendFormat("{0} attacks {1} and rolls: ", attacker.name, defender.name);
 
             // Roll a number of 100-sided dice equal to the Attack value of the attacking actor
-            DiceExpression attackDice = new DiceExpression().Dice(attacker.Attack, 100);
+            DiceExpression attackDice = new DiceExpression().Dice(attacker.attacker.Attack, 100);
             DiceResult attackResult = attackDice.Roll();
 
             // Look at the face value of each single die that was rolled
@@ -142,7 +151,7 @@ namespace sharpRoguelike.Core.Systems
             {
                 attackMessage.Append(termResult.Value + ", ");
                 // Compare the value to 100 minus the attack chance and add a hit if it's greater
-                if (termResult.Value >= 100 - attacker.AttackChance)
+                if (termResult.Value >= 100 - attacker.attacker.AttackChance)
                 {
                     hits++;
                 }
@@ -152,17 +161,17 @@ namespace sharpRoguelike.Core.Systems
         }
 
         // The defender rolls based on his stats to see if he blocks any of the hits from the attacker
-        private static int ResolveDefense(Actor defender, int hits, StringBuilder attackMessage, StringBuilder defenseMessage)
+        private static int ResolveDefense(Entity defender, int hits, StringBuilder attackMessage, StringBuilder defenseMessage)
         {
             int blocks = 0;
 
             if (hits > 0)
             {
                 attackMessage.AppendFormat("scoring {0} hits.", hits);
-                defenseMessage.AppendFormat("  {0} defends and rolls: ", defender.Name);
+                defenseMessage.AppendFormat("  {0} defends and rolls: ", defender.name);
 
                 // Roll a number of 100-sided dice equal to the Defense value of the defendering actor
-                DiceExpression defenseDice = new DiceExpression().Dice(defender.Defense, 100);
+                DiceExpression defenseDice = new DiceExpression().Dice(defender.attacker.Defense, 100);
                 DiceResult defenseRoll = defenseDice.Roll();
 
                 // Look at the face value of each single die that was rolled
@@ -170,7 +179,7 @@ namespace sharpRoguelike.Core.Systems
                 {
                     defenseMessage.Append(termResult.Value + ", ");
                     // Compare the value to 100 minus the defense chance and add a block if it's greater
-                    if (termResult.Value >= 100 - defender.DefenseChance)
+                    if (termResult.Value >= 100 - defender.attacker.DefenseChance)
                     {
                         blocks++;
                     }
@@ -186,37 +195,37 @@ namespace sharpRoguelike.Core.Systems
         }
 
         // Apply any damage that wasn't blocked to the defender
-        private static void ResolveDamage(Actor defender, int damage)
+        private static void ResolveDamage(Entity defender, int damage)
         {
             if (damage > 0)
             {
-                defender.Health = defender.Health - damage;
+                defender.attacker.Health = defender.attacker.Health - damage;
 
-                Game.MessageLog.Add($"  {defender.Name} was hit for {damage} damage");
+                Game.MessageLog.Add($"  {defender.name} was hit for {damage} damage");
 
-                if (defender.Health <= 0)
+                if (defender.attacker.Health <= 0)
                 {
                     ResolveDeath(defender);
                 }
             }
             else
             {
-                Game.MessageLog.Add($"  {defender.Name} blocked all damage");
+                Game.MessageLog.Add($"  {defender.name} blocked all damage");
             }
         }
 
         // Remove the defender from the map and add some messages upon death.
-        private static void ResolveDeath(Actor defender)
+        private static void ResolveDeath(Entity defender)
         {
             if (defender is Player)
             {
-                Game.MessageLog.Add($"  {defender.Name} was killed, GAME OVER MAN!");
+                Game.MessageLog.Add($"  {defender.name} was killed, GAME OVER MAN!");
             }
-            else if (defender is Monster)
+            else 
             {
                 Game.DungeonMap.RemoveMonster((Monster)defender);
 
-                Game.MessageLog.Add($"  {defender.Name} died and dropped {defender.Gold} gold");
+                Game.MessageLog.Add($"  {defender.name} died !");
             }
         }
 

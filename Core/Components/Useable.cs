@@ -8,11 +8,12 @@ using System.Text;
 namespace sharpRoguelike.Core
 {
     //a description of a item in the world
-    public class Item : Entity
+    public class Useable
     {
-        public virtual bool Use(char useageChar, Actor user)
+        public Entity owner;
+        public virtual bool Use(char useageChar, Entity user, Entity target = null)
         {
-            Game.MessageLog.Add($"Tried to use {name}");
+            Game.MessageLog.Add($"Tried to use {owner.name}");
             return false;
         }
     }

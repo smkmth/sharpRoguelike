@@ -1,10 +1,11 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace sharpRoguelike.Core.Items
 {
-    public class HealthPotion : Item
+    public class HealthPotion : Entity
     {
         public static HealthPotion Create()
         {
@@ -12,39 +13,12 @@ namespace sharpRoguelike.Core.Items
             {
                 symbol = '!',
                 color = Colors.HealthPotion,
-                name = "Health Potion"
+                name = "Health Potion",
+                effect = new HealEffect()
             };
 
         }
 
-        public override bool Use(char usageChar, Actor user)
-        {
-            switch (usageChar)
-            {
-                case 'A':
-                    if (user.Health == user.MaxHealth)
-                    {
-                        Game.MessageLog.Add("Tried to drink health potion, but was already at max health");
-                        return false;
-                    }
-                    else
-                    {
-                        user.Health += 20;
-                        if (user.Health > user.MaxHealth)
-                        {
-                            user.Health = user.MaxHealth;
-                        }
-                        Game.MessageLog.Add($"{user.name} gulped down the health potion - and their wounds began to mend.");
-                        return true;
-
-                    }
-                    break;
-
-            }
-
-            return false;
-
-
-        }
+   
     }
 }

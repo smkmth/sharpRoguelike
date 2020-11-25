@@ -1,9 +1,8 @@
 ﻿using RLNET;
 using RogueSharp;
+using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace sharpRoguelike.Core
 {
@@ -16,7 +15,10 @@ namespace sharpRoguelike.Core
         public int y { get; set; }
         public string name { get; set; }
 
-        public Inventory inventory = null;    
+        public Inventory inventory = null;
+        public Attacker attacker = null;
+        public Actor actor = null;
+        public Useable effect = null;
 
         public virtual void Draw(RLConsole con, IMap map)
         {
@@ -38,5 +40,7 @@ namespace sharpRoguelike.Core
             }
         }
 
+
+        public virtual void DrawStats(RLConsole statConsole, int pos) {}
     }
 }

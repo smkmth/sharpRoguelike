@@ -15,7 +15,7 @@ namespace sharpRoguelike
         public static readonly int screenWidth = 150;
         public static readonly int screenHeight = 80;
         private static RLRootConsole rootConsole;
-
+        
 
         private static readonly int statWidth = 20;
         private static readonly int statHeight = screenHeight;
@@ -61,7 +61,7 @@ namespace sharpRoguelike
 
             string fontFileName = "terminal8x8.png";
             string consoleTitle = "alchymia - " + seed ;
-            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1.5f, consoleTitle);
+            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1f, consoleTitle);
             rootConsole.SetWindowState(RLWindowState.Maximized);
           
             mapConsole = new RLConsole(mapWidth, mapHeight);
@@ -143,7 +143,7 @@ namespace sharpRoguelike
                         }
                         else if (keyPress.Key == RLKey.G)
                         {
-                            Item pickup = DungeonMap.GetItemAt(Player.x, Player.y);
+                            Entity pickup = DungeonMap.GetItemAt(Player.x, Player.y);
                             if (Player.inventory.AddItem(pickup))
                             {
                                 DungeonMap.RemoveItem(pickup);
@@ -254,7 +254,7 @@ namespace sharpRoguelike
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);
-                Player.DrawStats(statConsole);
+                Player.DrawStats(statConsole,0);
             }
 
            

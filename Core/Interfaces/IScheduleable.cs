@@ -4,8 +4,10 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Interfaces
 {
-   public  interface IScheduleable
+   public interface IScheduleable
     {
         int Time { get; }
+
+        Entity owner { get; }
     }
 }

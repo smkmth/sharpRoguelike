@@ -18,7 +18,7 @@ namespace sharpRoguelike.Core.Menus
         Inventory inv;
         int offset = 5;
 
-        Item currentlySelectedItem;
+        Entity currentlySelectedItem;
 
         public InventoryMenu(Inventory _inv)
         {
@@ -102,27 +102,25 @@ namespace sharpRoguelike.Core.Menus
                 //interprit selection as selection
                 char useSelection = keypress.Key.ToString().ToCharArray()[0];
 
-                switch (useSelection)
+                if(useSelection == 'D')
                 {
-                   
-                    case ('D'):
-                    {
-                            inv.DropItem(currentlySelectedItem);
-                            currentlySelectedItem = null;
-                            currentInventoryState = InventoryState.INVENTORY;
+                    inv.DropItem(currentlySelectedItem);
+                    currentlySelectedItem = null;
+                    currentInventoryState = InventoryState.INVENTORY;
 
-                            return;
-                    }
-                    default:
+                    return;
+                }
+                else
+                {   
+                    if (currentlySelectedItem.effect.Use(useSelection, inv.owner, inv.owner ))
                     {
-                            if (currentlySelectedItem.Use(useSelection, (Actor)inv.owner))
-                            {
-                                inv.ConsumeItem(currentlySelectedItem);
-                                currentlySelectedItem = null;
-                                currentInventoryState = InventoryState.INVENTORY;
-                            }
-                        return;
+                        inv.ConsumeItem(currentlySelectedItem);
+                        currentlySelectedItem = null;
+                        currentInventoryState = InventoryState.INVENTORY;
                     }
+                    return;
+                }
+                    
                 
                 }
 
