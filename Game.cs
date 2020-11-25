@@ -34,9 +34,14 @@ namespace sharpRoguelike
         public static CommandSystem CommandSystem { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
+        public static MessageLog MessageLog { get; set; }
+        public static SchedulingSystem SchedulingSytem { get; private set; }
+
         public static IRandom Random { get; private set; }
 
-
+        public static bool didPlayerAct;
+        public static bool shouldUpdateDraw =true;
+        public static int steps;
 
         static void Main(string[] args)
         {
@@ -51,8 +56,12 @@ namespace sharpRoguelike
             statConsole = new RLConsole(statWidth, statHeight);
             inventoryConsole = new RLConsole(inventoryWidth, inventoryHeight);
             messageConsole = new RLConsole(messageWidth, messageHeight);
-
+            
             CommandSystem = new CommandSystem();
+            SchedulingSytem = new SchedulingSystem();
+            MessageLog = new MessageLog();
+            MessageLog.Add("The rogue arrives on level 1");
+            MessageLog.Add($" level created with seed : ' {seed}'");
 
             MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight,20,7,14);
             DungeonMap = mapGenerator.CreateMap();
@@ -62,6 +71,8 @@ namespace sharpRoguelike
             rootConsole.Render += OnRootConsoleRender;
             rootConsole.Update += OnRootConsoleUpdate;
             rootConsole.Run();
+
+            shouldUpdateDraw = true;
         }
 
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
@@ -69,11 +80,7 @@ namespace sharpRoguelike
             mapConsole.SetBackColor(0, 0, mapWidth, mapHeight, Colors.FloorBackground);
             mapConsole.Print(1, 1, "Map", RLColor.White);
 
-            messageConsole.SetBackColor(0, 0, messageWidth, messageHeight, Swatch.DbDeepWater);
-            messageConsole.Print(1, 1, "Messages", RLColor.White);
 
-            statConsole.SetBackColor(0, 0, statWidth, statHeight, Swatch.DbOldStone);
-            statConsole.Print(1, 1, "Stats", RLColor.White);
 
             inventoryConsole.SetBackColor(0, 0, inventoryWidth, inventoryHeight, Swatch.DbWood);
             inventoryConsole.Print(1, 1, "Inventory", RLColor.White);
@@ -81,34 +88,48 @@ namespace sharpRoguelike
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
 
-
-            if (keyPress != null)
+            if (CommandSystem.IsPlayerTurn)
             {
-                if (keyPress.Key == RLKey.Up)
-                {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
-                }
-                else if (keyPress.Key == RLKey.Down)
-                {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
-                }
-                else if (keyPress.Key == RLKey.Left)
-                {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
-                }
-                else if (keyPress.Key == RLKey.Right)
-                {
-                    didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
-                }
-                else if (keyPress.Key == RLKey.Escape)
-                {
-                    rootConsole.Close();
-                }
 
-                keyPress = null;
+                if (keyPress != null)
+                {
+                    if (keyPress.Key == RLKey.Up)
+                    {
+                        didPlayerAct = CommandSystem.MovePlayer(Direction.Up);
+                    }
+                    else if (keyPress.Key == RLKey.Down)
+                    {
+                        didPlayerAct = CommandSystem.MovePlayer(Direction.Down);
+                    }
+                    else if (keyPress.Key == RLKey.Left)
+                    {
+                        didPlayerAct = CommandSystem.MovePlayer(Direction.Left);
+                    }
+                    else if (keyPress.Key == RLKey.Right)
+                    {
+                        didPlayerAct = CommandSystem.MovePlayer(Direction.Right);
+                    }
+                    else if (keyPress.Key == RLKey.Escape)
+                    {
+                        rootConsole.Close();
+                    }
 
+                    keyPress = null;
+
+                }
+                if (didPlayerAct)
+                {
+                    shouldUpdateDraw = true;
+                    CommandSystem.EndPlayerTurn();
+                }
             }
-
+            else
+            {
+                CommandSystem.ActivateMonsters();
+                shouldUpdateDraw = true;
+            }
+            // In OnRootConsoleUpdate() replace the if ( didPlayerAct ) block
+      
         }
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
@@ -125,12 +146,23 @@ namespace sharpRoguelike
             RLConsole.Blit(inventoryConsole, 0, 0, inventoryWidth, inventoryHeight,
                 rootConsole, 0, 0);
 
+            if (shouldUpdateDraw)
+            {
+                mapConsole.Clear();
+                statConsole.Clear();
+                messageConsole.Clear();
 
-            rootConsole.Draw();
-            DungeonMap.Draw(mapConsole);
-      
-            
-            Player.Draw(mapConsole, DungeonMap);
+                rootConsole.Draw();
+                DungeonMap.Draw(mapConsole, statConsole);
+                MessageLog.Draw(messageConsole);
+                Player.Draw(mapConsole, DungeonMap);
+
+                Player.DrawStats(statConsole);
+            }
+
+           
+
+     
         }
 
    

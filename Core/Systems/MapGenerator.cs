@@ -1,4 +1,6 @@
 ﻿using RogueSharp;
+using RogueSharp.DiceNotation;
+using sharpRoguelike.Core.Monsters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +79,7 @@ namespace sharpRoguelike.Core
             }
 
             PlacePlayer();
+            PlaceMonsters();
             return map;
         }
 
@@ -86,7 +89,7 @@ namespace sharpRoguelike.Core
             {
                 for (int y = room.Top + 1; y < room.Bottom; y++)
                 {
-                    map.SetCellProperties(x, y, true, true, true);
+                    map.SetCellProperties(x, y, true, true, false);
                 }
             }
         }
@@ -120,5 +123,26 @@ namespace sharpRoguelike.Core
             map.AddPlayer(player);
         }
 
+        private void PlaceMonsters()
+        {
+            foreach(var room in map.Rooms)
+            {
+                if (Dice.Roll("1D10") < 7)
+                {
+                    var numberOfMonsters = Dice.Roll("1D4");
+                    for(int i = 0; i < numberOfMonsters; i++)
+                    {
+                        Point randomRoomLocation = new Point(0, 0);
+                        if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
+                        {
+                            var monster = Kobold.Create(1);
+                            monster.x = randomRoomLocation.X;
+                            monster.y = randomRoomLocation.Y;
+                            map.AddMonster(monster);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

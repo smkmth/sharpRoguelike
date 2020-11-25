@@ -1,0 +1,69 @@
+﻿using RogueSharp;
+using sharpRoguelike.Core.Interfaces;
+using sharpRoguelike.Core.Systems;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace sharpRoguelike.Core.Behaviors
+{
+    class StandardMoveAndAttack : IBehavior
+    {
+        public bool Act(Monster monster, CommandSystem commandSystem)
+        {
+            DungeonMap dungeonMap = Game.DungeonMap;
+            Player player = Game.Player;
+            FieldOfView monsterFov = new FieldOfView(dungeonMap);
+
+            if (!monster.TurnsAlerted.HasValue)
+            {
+                monsterFov.ComputeFov(monster.x, monster.y, monster.Awareness, true);
+                if (monsterFov.IsInFov(player.x, player.y))
+                {
+                    Game.MessageLog.Add($" The {monster.Name} sees {player.Name}");
+                    monster.TurnsAlerted = 1;
+                }
+
+            }
+            else
+            {
+                dungeonMap.SetIsWalkable(monster.x, monster.y, true);
+                dungeonMap.SetIsWalkable(player.x, player.y, true);
+                PathFinder pf = new PathFinder(dungeonMap);
+                Path path = null;
+                try
+                {
+                    path = pf.ShortestPath(
+                        dungeonMap.GetCell(monster.x, monster.y),
+                        dungeonMap.GetCell(player.x, player.y));
+
+                }
+                catch (PathNotFoundException)
+                {
+                    Game.MessageLog.Add($"{monster.Name} waits for a turn");
+                }
+                dungeonMap.SetIsWalkable(monster.x, monster.y, false);
+                dungeonMap.SetIsWalkable(player.x, player.y, false);
+                if (path != null)
+                {
+                    try
+                    {
+                        commandSystem.MoveMonster(monster, path.StepForward());
+                    }
+                    catch(NoMoreStepsException)
+                    {
+                        Game.MessageLog.Add($"{monster.Name} growls in frustration");
+
+                    }
+                }
+                monster.TurnsAlerted++;
+                if(monster.TurnsAlerted > 15)
+                {
+                    monster.TurnsAlerted = null;
+                }
+            }
+            return true;
+        }
+    }
+}

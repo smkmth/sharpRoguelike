@@ -21,6 +21,15 @@ namespace sharpRoguelike.Core
         public static RLColor TextHeading = Swatch.DbLight;
 
 
-        public static RLColor PlayerColor = Swatch.Primary;
+        public static RLColor Player = Swatch.Primary;
+
+
+        public static RLColor Text = Swatch.DbLight;
+        public static RLColor Gold = Swatch.DbSun;
+
+        public static RLColor KoboldColor = Swatch.DbBrightWood;
+
+
+
     }
 }
