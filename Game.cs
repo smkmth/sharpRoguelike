@@ -25,7 +25,7 @@ namespace sharpRoguelike
         private static readonly int messageHeight = 11;
         private static RLConsole messageConsole;
 
-        private static readonly int mapWidth = screenWidth - statWidth;
+        private static readonly int mapWidth = screenWidth;
         private static readonly int mapHeight = screenHeight - (messageHeight + inventoryHeight);
         private static RLConsole mapConsole;
 
@@ -42,6 +42,8 @@ namespace sharpRoguelike
         public static bool didPlayerAct;
         public static bool shouldUpdateDraw =true;
         public static int steps;
+
+        public static int mapLevel =1;
 
         static void Main(string[] args)
         {
@@ -61,9 +63,9 @@ namespace sharpRoguelike
             SchedulingSytem = new SchedulingSystem();
             MessageLog = new MessageLog();
             MessageLog.Add("The rogue arrives on level 1");
-            MessageLog.Add($" level created with seed : ' {seed}'");
+            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'");
 
-            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight,20,7,14);
+            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight,20,7,14, mapLevel);
             DungeonMap = mapGenerator.CreateMap();
 
             DungeonMap.UpdatePlayerFOV();
@@ -113,7 +115,19 @@ namespace sharpRoguelike
                     {
                         rootConsole.Close();
                     }
+                    else if (keyPress.Key == RLKey.Period)
+                    {
+                        if (DungeonMap.CanMoveDownToNextLevel())
+                        {
+                            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
+                            DungeonMap = mapGenerator.CreateMap();
+                            MessageLog = new MessageLog();
+                            CommandSystem = new CommandSystem();
+                            rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";
+                            didPlayerAct = true;
 
+                        }
+                    }
                     keyPress = null;
 
                 }

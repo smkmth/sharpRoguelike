@@ -16,6 +16,7 @@ namespace sharpRoguelike.Core.Systems
         public MessageLog()
         {
             lines = new Queue<string>();
+            update = true;
         }
 
         public void Add(string message)

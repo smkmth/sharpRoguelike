@@ -19,7 +19,7 @@ namespace sharpRoguelike.Core
 
         private readonly DungeonMap map;
 
-        public MapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize)
+        public MapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize, int mapLevel)
         {
             width = _width;
             height = _height;
@@ -53,12 +53,9 @@ namespace sharpRoguelike.Core
                 }
             }
 
-            foreach(Rectangle room in map.Rooms)
-            {
-                CreateRoom(room);
-            }
+        
 
-            for(int r=1; r < map.Rooms.Count; r++)
+            for (int r=1; r < map.Rooms.Count; r++)
             {
                 int previousRoomCenterX = map.Rooms[r - 1].Center.X;
                 int previousRoomCenterY = map.Rooms[r - 1].Center.Y;
@@ -78,6 +75,13 @@ namespace sharpRoguelike.Core
 
             }
 
+            foreach (Rectangle room in map.Rooms)
+            {
+                CreateRoom(room);
+                CreateDoors(room);
+
+            }
+            CreateStairs();
             PlacePlayer();
             PlaceMonsters();
             return map;
@@ -144,5 +148,90 @@ namespace sharpRoguelike.Core
                 }
             }
         }
+
+        private void CreateDoors(Rectangle room)
+        {
+            int xMin = room.Left;
+            int xMax = room.Right;
+            int yMin = room.Top;
+            int yMax = room.Bottom;
+            List<ICell> borderCells = map.GetCellsAlongLine(xMin, yMin, xMax, yMin).ToList();
+            borderCells.AddRange(map.GetCellsAlongLine(xMin, yMin, xMin, yMax));
+            borderCells.AddRange(map.GetCellsAlongLine(xMin, yMax, xMax, yMax));
+            borderCells.AddRange(map.GetCellsAlongLine(xMax, yMin, xMax, yMax));
+
+            foreach(Cell cell in borderCells)
+            {
+                if (IsPotentialDoor(cell))
+                {
+                    map.SetCellProperties(cell.X, cell.Y, false, true);
+                    map.Doors.Add(new Door
+                    {
+                        x = cell.X,
+                        y = cell.Y,
+                        isOpen = false
+
+                    });
+                }
+            }
+        }
+
+        private bool IsPotentialDoor(ICell cell)
+        {
+            if (!cell.IsWalkable)
+            {
+                return false;
+            }
+            // Store references to all of the neighboring cells 
+            ICell right = map.GetCell(cell.X + 1, cell.Y);          
+            ICell left = map.GetCell(cell.X - 1, cell.Y);
+            ICell top = map.GetCell(cell.X, cell.Y - 1);
+            ICell bottom = map.GetCell(cell.X, cell.Y + 1);
+
+
+
+            if (map.GetDoor(cell.X, cell.Y) != null ||
+                    map.GetDoor(right.X, right.Y) != null ||
+                    map.GetDoor(left.X, left.Y) != null ||
+                    map.GetDoor(top.X, top.Y) != null ||
+                    map.GetDoor(bottom.X, bottom.Y) != null)
+            {
+                return false;
+            }
+
+            if (right.IsWalkable && left.IsWalkable && !top.IsWalkable && !bottom.IsWalkable)
+            {
+               
+                return true;
+            }
+
+            if (!right.IsWalkable && !left.IsWalkable && top.IsWalkable && bottom.IsWalkable)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void CreateStairs()
+        {
+            map.StairsUp = new Stairs
+            {
+                x = map.Rooms.First().Center.X + 1,
+                y = map.Rooms.First().Center.Y,
+                IsUp = true
+                
+            };
+
+            map.StairsDown = new Stairs
+            {
+                x = map.Rooms.First().Center.X,
+                y = map.Rooms.First().Center.Y -1,
+                IsUp = false
+            };
+        }
+
     }
+
+
 }

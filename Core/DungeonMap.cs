@@ -11,11 +11,39 @@ namespace sharpRoguelike.Core
     {
         public List<Rectangle> Rooms;
         public List<Monster> Monsters;
+        public List<Door> Doors;
+        public Stairs StairsUp;
+        public Stairs StairsDown;
 
         public DungeonMap()
         {
+            Game.SchedulingSytem.Clear();
+
             Rooms = new List<Rectangle>();
             Monsters = new List<Monster>();
+            Doors = new List<Door>();
+        }
+
+        new public ICell GetCell(int x, int y)
+        {
+            if (x > Width || y > Height)
+            {
+                return null;
+
+            }
+            else if (x < 0 || y < 0  )
+            {
+
+                return null;
+
+            }
+            else
+            {
+                
+                return base.GetCell(x, y);
+            }
+        
+           
         }
 
         public void Draw(RLConsole mapConsole, RLConsole statConsole )
@@ -36,6 +64,13 @@ namespace sharpRoguelike.Core
                     i++;
                 }
             }
+
+            foreach(Door door in Doors)
+            {
+                door.Draw(mapConsole, this);
+            }
+            StairsUp.Draw(mapConsole, this);
+            StairsDown.Draw(mapConsole, this);
         }
 
         public void SetConsoleSymbolForCell(RLConsole con, Cell cell)
@@ -98,6 +133,7 @@ namespace sharpRoguelike.Core
                 {
                     UpdatePlayerFOV();
                 }
+                OpenDoor(actor, x, y);
                 return true;
 
             }
@@ -173,6 +209,30 @@ namespace sharpRoguelike.Core
                 }
             }
             return false;
+        }
+
+        public Door GetDoor(int x, int y)
+        {
+            return Doors.SingleOrDefault(d => d.x == x && d.y == y);
+        }
+
+        private void OpenDoor(Actor actor, int x, int y)
+        {
+            Door door = GetDoor(x, y);
+            if (door != null)
+            {
+                door.isOpen = true;
+                var cell = GetCell(x, y);
+                SetCellProperties(x, y, true, cell.IsWalkable, cell.IsExplored);
+                Game.MessageLog.Add($"{actor.Name} opened a door");
+            }
+        }
+        
+        public bool CanMoveDownToNextLevel()
+        {
+            Player player = Game.Player;
+            return StairsDown.x == player.x && StairsDown.y == player.y;
+
         }
     }
 }
