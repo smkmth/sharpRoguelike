@@ -65,6 +65,31 @@ namespace sharpRoguelike.Core
 
         }
 
+        public bool SetActorPosition(Actor actor, int x, int y)
+        {
+            if (GetCell(x, y).IsWalkable)
+            {
+                SetIsWalkable(actor.x, actor.y, true);
+                actor.x = x;
+                actor.y = y;
+
+                SetIsWalkable(actor.x, actor.y, false);
+                if (actor is Player)
+                {
+                    UpdatePlayerFOV();
+                }
+                return true;
+
+            }
+                return false;
+
+        }
+
+        public void SetIsWalkable(int x, int y, bool walkable)
+        {
+            SetCellProperties(x, y, GetCell(x,y).IsTransparent, walkable, GetCell(x,y).IsExplored);
+
+        }
 
     }
 }
