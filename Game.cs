@@ -1,5 +1,6 @@
 ﻿using System;
 using RLNET;
+using RogueSharp.Random;
 using sharpRoguelike.Core;
 using sharpRoguelike.Core.Systems;
 
@@ -7,10 +8,6 @@ namespace sharpRoguelike
 {
     public static class Game
     {
-
-        private static bool renderRequired = true;
-
-
         public static readonly int screenWidth = 150;
         public static readonly int screenHeight = 80;
         private static RLRootConsole rootConsole;
@@ -37,11 +34,17 @@ namespace sharpRoguelike
         public static CommandSystem CommandSystem { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
+        public static IRandom Random { get; private set; }
+
+
+
         static void Main(string[] args)
         {
+            int seed = (int)DateTime.UtcNow.Ticks;
+            Random = new DotNetRandom(seed);
 
             string fontFileName = "terminal8x8.png";
-            string consoleTitle = "alchymia";
+            string consoleTitle = "alchymia - " + seed ;
             rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1f, consoleTitle);
             
             mapConsole = new RLConsole(mapWidth, mapHeight);
@@ -49,17 +52,15 @@ namespace sharpRoguelike
             inventoryConsole = new RLConsole(inventoryWidth, inventoryHeight);
             messageConsole = new RLConsole(messageWidth, messageHeight);
 
-            Player = new Player();
-
             CommandSystem = new CommandSystem();
 
-            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight);
+            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight,20,7,14);
             DungeonMap = mapGenerator.CreateMap();
 
             DungeonMap.UpdatePlayerFOV();
 
-            rootConsole.Update += OnRootConsoleUpdate;
             rootConsole.Render += OnRootConsoleRender;
+            rootConsole.Update += OnRootConsoleUpdate;
             rootConsole.Run();
         }
 
@@ -79,6 +80,7 @@ namespace sharpRoguelike
 
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
+
 
             if (keyPress != null)
             {
@@ -102,34 +104,33 @@ namespace sharpRoguelike
                 {
                     rootConsole.Close();
                 }
-            }
 
-            if (didPlayerAct)
-            {
-                renderRequired = true;
+                keyPress = null;
+
             }
 
         }
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
-            if (renderRequired)
-            {
-                
-                // Blit the sub consoles to the root console in the correct locations
-                RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight,
-                  rootConsole, 0, inventoryHeight);
-                RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight,
-                  rootConsole, mapWidth, 0);
-                RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight,
-                  rootConsole, 0, screenHeight - messageHeight);
-                RLConsole.Blit(inventoryConsole, 0, 0, inventoryWidth, inventoryHeight,
-                  rootConsole, 0, 0);
-                rootConsole.Draw();
-                DungeonMap.Draw(mapConsole);
-                Player.Draw(mapConsole, DungeonMap);
-                renderRequired = false;
-            }
+          
+     
+            // Blit the sub consoles to the root console in the correct locations
+            RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight,
+                rootConsole, 0, inventoryHeight);
+            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight,
+                rootConsole, mapWidth, 0);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight,
+                rootConsole, 0, screenHeight - messageHeight);
+            RLConsole.Blit(inventoryConsole, 0, 0, inventoryWidth, inventoryHeight,
+                rootConsole, 0, 0);
+
+
+            rootConsole.Draw();
+            DungeonMap.Draw(mapConsole);
+      
+            
+            Player.Draw(mapConsole, DungeonMap);
         }
 
    

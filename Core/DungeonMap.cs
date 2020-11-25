@@ -8,6 +8,14 @@ namespace sharpRoguelike.Core
 {
     public class DungeonMap : Map 
     {
+        public List<Rectangle> Rooms;
+
+        public DungeonMap()
+        {
+            Rooms = new List<Rectangle>();
+
+        }
+
         public void Draw(RLConsole mapConsole )
         {
             mapConsole.Clear();
@@ -81,7 +89,7 @@ namespace sharpRoguelike.Core
                 return true;
 
             }
-                return false;
+            return false;
 
         }
 
@@ -89,6 +97,13 @@ namespace sharpRoguelike.Core
         {
             SetCellProperties(x, y, GetCell(x,y).IsTransparent, walkable, GetCell(x,y).IsExplored);
 
+        }
+
+        public void AddPlayer(Player player)
+        {
+            Game.Player = player;
+            SetIsWalkable(player.x, player.y, false);
+            UpdatePlayerFOV();
         }
 
     }

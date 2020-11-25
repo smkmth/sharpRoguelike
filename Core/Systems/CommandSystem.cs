@@ -11,7 +11,7 @@ namespace sharpRoguelike.Core.Systems
             int x = Game.Player.x;
             int y = Game.Player.y;
 
-            switch( direction)
+            switch ( direction)
             {
                 case Direction.Up:
                     {
@@ -26,11 +26,13 @@ namespace sharpRoguelike.Core.Systems
                 case Direction.Left:
                     {
                         x = Game.Player.x - 1;
+
                         break;
                     }
                 case Direction.Right:
                     {
                         x = Game.Player.x + 1;
+
                         break;
                     }
                 default:
@@ -41,6 +43,7 @@ namespace sharpRoguelike.Core.Systems
 
             if (Game.DungeonMap.SetActorPosition(Game.Player, x, y))
             {
+
                 return true;
             }
             else
