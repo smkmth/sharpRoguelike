@@ -6,7 +6,7 @@ using RogueSharp;
 using sharpRoguelike.Core.Interfaces;
 namespace sharpRoguelike.Core
 {
-    public class Actor : IActor, IDrawable, IScheduleable
+    public class Actor : Entity, IActor, IScheduleable
     {
 
         public int Time
@@ -14,31 +14,6 @@ namespace sharpRoguelike.Core
             get
             {
                 return Speed;
-            }
-        }
-
-        public RLColor color { get; set; }
-        public char symbol { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-
-        public void Draw(RLConsole con, IMap map)
-        {
-            ICell cell = map.GetCell(x, y);
-
-            if (!cell.IsExplored)
-            {
-                return;
-            }
-
-            if (map.IsInFov(x, y))
-            {
-                con.Set(x, y, color, Colors.FloorBackgroundFov, symbol);
-
-            }
-            else
-            {
-                con.Set(x, y, Colors.Floor, Colors.FloorBackground, ' ');
             }
         }
 
@@ -51,7 +26,6 @@ namespace sharpRoguelike.Core
         private int _gold;
         private int _health;
         private int _maxHealth;
-        private string _name;
         private int _speed;
 
         public int Attack
@@ -154,11 +128,11 @@ namespace sharpRoguelike.Core
         {
             get
             {
-                return _name;
+                return name;
             }
             set
             {
-                _name = value;
+                name = value;
             }
         }
 

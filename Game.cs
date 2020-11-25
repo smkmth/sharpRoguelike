@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RLNET;
 using RogueSharp.Random;
 using sharpRoguelike.Core;
@@ -8,6 +9,8 @@ namespace sharpRoguelike
 {
     public static class Game
     {
+
+        public static bool fullScreen = false;
         public static readonly int screenWidth = 150;
         public static readonly int screenHeight = 80;
         private static RLRootConsole rootConsole;
@@ -17,7 +20,7 @@ namespace sharpRoguelike
         private static readonly int statHeight = screenHeight;
         private static RLConsole statConsole;
 
-        private static readonly int inventoryWidth = screenWidth - statWidth;
+        private static readonly int inventoryWidth = screenWidth - 20;
         private static readonly int inventoryHeight = 11;
         private static RLConsole inventoryConsole;
 
@@ -25,7 +28,7 @@ namespace sharpRoguelike
         private static readonly int messageHeight = 11;
         private static RLConsole messageConsole;
 
-        private static readonly int mapWidth = screenWidth;
+        private static readonly int mapWidth = screenWidth - statWidth;
         private static readonly int mapHeight = screenHeight - (messageHeight + inventoryHeight);
         private static RLConsole mapConsole;
 
@@ -53,7 +56,6 @@ namespace sharpRoguelike
             string fontFileName = "terminal8x8.png";
             string consoleTitle = "alchymia - " + seed ;
             rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1f, consoleTitle);
-            
             mapConsole = new RLConsole(mapWidth, mapHeight);
             statConsole = new RLConsole(statWidth, statHeight);
             inventoryConsole = new RLConsole(inventoryWidth, inventoryHeight);
@@ -79,16 +81,30 @@ namespace sharpRoguelike
 
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            mapConsole.SetBackColor(0, 0, mapWidth, mapHeight, Colors.FloorBackground);
-            mapConsole.Print(1, 1, "Map", RLColor.White);
-
-
-
-            inventoryConsole.SetBackColor(0, 0, inventoryWidth, inventoryHeight, Swatch.DbWood);
-            inventoryConsole.Print(1, 1, "Inventory", RLColor.White);
-
+       //     mapConsole.SetBackColor(0, 0, mapWidth, mapHeight, Colors.FloorBackground);
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
+            int mx = rootConsole.Mouse.X ;
+            int my = rootConsole.Mouse.Y - inventoryHeight;
+            if (mx > 0 && my > 0)
+            {
+                List<string> names = DungeonMap.InterigateEntityAtLocation(mx  , my);
+                if (names.Count > 0)
+                {
+                    inventoryConsole.Clear();
+
+                    for (int i =0; i< names.Count; i++)
+                    {
+                        inventoryConsole.Print(2, i, names[i], RLColor.White);
+
+                    }
+
+                }
+                else
+                {
+                    inventoryConsole.Clear();
+                }
+            }
 
             if (CommandSystem.IsPlayerTurn)
             {
@@ -115,6 +131,11 @@ namespace sharpRoguelike
                     {
                         rootConsole.Close();
                     }
+                    else if (keyPress.Key == RLKey.G)
+                    {
+                        Item pickup = DungeonMap.GetItemAt(Player.x, Player.y);
+                        DungeonMap.RemoveItem(pickup);
+                    }
                     else if (keyPress.Key == RLKey.Period)
                     {
                         if (DungeonMap.CanMoveDownToNextLevel())
@@ -128,6 +149,24 @@ namespace sharpRoguelike
 
                         }
                     }
+                    else if (keyPress.Alt && keyPress.Key == RLKey.Enter)
+                    {
+                        if (!fullScreen)
+                        {
+                            fullScreen = true;
+                            rootConsole.SetWindowState(RLWindowState.Fullscreen);
+                        }
+                        else
+                        {
+                            fullScreen = true;
+                            rootConsole.SetWindowState(RLWindowState.Normal);
+
+                        }
+                    
+                    }
+
+
+
                     keyPress = null;
 
                 }
@@ -159,9 +198,11 @@ namespace sharpRoguelike
                 rootConsole, 0, screenHeight - messageHeight);
             RLConsole.Blit(inventoryConsole, 0, 0, inventoryWidth, inventoryHeight,
                 rootConsole, 0, 0);
+            
 
             if (shouldUpdateDraw)
             {
+
                 mapConsole.Clear();
                 statConsole.Clear();
                 messageConsole.Clear();
@@ -170,7 +211,7 @@ namespace sharpRoguelike
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);
-
+                
                 Player.DrawStats(statConsole);
             }
 

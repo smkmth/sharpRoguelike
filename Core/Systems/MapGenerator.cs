@@ -1,5 +1,6 @@
 ﻿using RogueSharp;
 using RogueSharp.DiceNotation;
+using sharpRoguelike.Core.Items;
 using sharpRoguelike.Core.Monsters;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,7 @@ namespace sharpRoguelike.Core
             CreateStairs();
             PlacePlayer();
             PlaceMonsters();
+            PlaceItems();
             return map;
         }
 
@@ -146,6 +148,29 @@ namespace sharpRoguelike.Core
                         }
                     }
                 }
+            }
+        }
+
+        private void PlaceItems()
+        {
+            foreach(var room in map.Rooms)
+            {
+                if (Dice.Roll("1D10") < 7)
+                {
+                    var items = Dice.Roll("1D4");
+                    for (int i = 0; i < items; i++)
+                    {
+                        Point randomRoomLocation = new Point(0, 0);
+                        if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
+                        {
+                            var potion = HealthPotion.Create();
+                            potion.x = randomRoomLocation.X;
+                            potion.y = randomRoomLocation.Y;
+                            map.AddItem(potion);
+                        }
+                    }
+                }
+
             }
         }
 

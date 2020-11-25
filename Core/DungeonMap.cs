@@ -12,16 +12,19 @@ namespace sharpRoguelike.Core
         public List<Rectangle> Rooms;
         public List<Monster> Monsters;
         public List<Door> Doors;
+        public List<Item> Items;
         public Stairs StairsUp;
         public Stairs StairsDown;
+        public List<Entity> Entities;
 
         public DungeonMap()
         {
             Game.SchedulingSytem.Clear();
-
             Rooms = new List<Rectangle>();
             Monsters = new List<Monster>();
             Doors = new List<Door>();
+            Items = new List<Item>();
+            Entities = new List<Entity>();
         }
 
         new public ICell GetCell(int x, int y)
@@ -64,7 +67,10 @@ namespace sharpRoguelike.Core
                     i++;
                 }
             }
-
+            foreach(Item item in Items)
+            {
+                item.Draw(mapConsole, this);
+            }
             foreach(Door door in Doors)
             {
                 door.Draw(mapConsole, this);
@@ -153,6 +159,7 @@ namespace sharpRoguelike.Core
             SetIsWalkable(player.x, player.y, false);
             UpdatePlayerFOV();
             Game.SchedulingSytem.Add(player);
+            Entities.Add(player);
         }
 
         public void AddMonster(Monster monster)
@@ -160,6 +167,7 @@ namespace sharpRoguelike.Core
             Monsters.Add(monster);
             SetIsWalkable(monster.x, monster.y, false);
             Game.SchedulingSytem.Add(monster);
+            Entities.Add(monster);
 
         }
 
@@ -174,6 +182,23 @@ namespace sharpRoguelike.Core
         public Monster GetMonsterAt(int x, int y)
         {
             return Monsters.FirstOrDefault(m => m.x == x && m.y == y);
+        }
+
+        public Item GetItemAt(int x, int y)
+        {
+            return Items.FirstOrDefault(i => i.x == x && i.y == y);
+
+        }
+
+        public void RemoveItem(Item item)
+        {
+            Items.Remove(item);
+        }
+
+        public void AddItem(Item item)
+        {
+            Items.Add(item);
+            Entities.Add(item);
         }
 
         public bool GetRandomWalkableLocationInRoom(Rectangle room, out Point point)
@@ -232,6 +257,18 @@ namespace sharpRoguelike.Core
         {
             Player player = Game.Player;
             return StairsDown.x == player.x && StairsDown.y == player.y;
+
+        }
+
+        public List<string> InterigateEntityAtLocation(int x, int y) 
+        {
+            var results =  Entities.Where(i => i.x == x && i.y == y );
+            List<string> names = new List<string>();
+            foreach(Entity entity in results)
+            {
+                names.Add(entity.name);
+            }
+            return names;
 
         }
     }

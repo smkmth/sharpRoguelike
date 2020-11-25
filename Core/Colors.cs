@@ -26,12 +26,17 @@ namespace sharpRoguelike.Core
 
         public static RLColor Text = Swatch.DbLight;
         public static RLColor Gold = Swatch.DbSun;
-
-        public static RLColor KoboldColor = Swatch.DbBrightWood;
+        
+        //items
+        public static RLColor HealthPotion = Swatch.DbBlood;
         public static RLColor DoorBackground = Swatch.ComplimentDarkest;
         public static RLColor Door = Swatch.ComplimentLighter;
         public static RLColor DoorBackgroundFov = Swatch.ComplimentDarker;
         public static RLColor DoorFov = Swatch.ComplimentLightest;
+
+        //monsters
+        public static RLColor KoboldColor = Swatch.DbBrightWood;
+        
 
 
 
