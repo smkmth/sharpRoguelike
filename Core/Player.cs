@@ -23,7 +23,7 @@ namespace sharpRoguelike.Core
             
             color = Colors.Player;
             symbol = '@';
-            inventory = new Inventory();
+            inventory = new Inventory(this);
             inventory.AddItem(HealthPotion.Create());
             inventory.AddItem(HealthPotion.Create());
             inventory.AddItem(HealthPotion.Create());

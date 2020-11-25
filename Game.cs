@@ -225,30 +225,22 @@ namespace sharpRoguelike
             {
                 mapConsole.Clear();
                 statConsole.Clear();
-                messageConsole.Clear();
-                rootConsole.Clear();
 
-
-
-                RLConsole.Blit(inventoryConsole, 0, 0, screenWidth, screenHeight,
-                     rootConsole, 0, 0);
+                RLConsole.Blit(inventoryConsole, 0, 0, screenWidth, screenHeight - messageHeight, rootConsole, 0, 0);
+                RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
 
                 rootConsole.Draw();
                 playerInventory.Draw(inventoryConsole);
-
+                MessageLog.Draw(messageConsole);
                 return;
             
             }
      
             // Blit the sub consoles to the root console in the correct locations
-            RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight,
-                rootConsole, 0, lookHeight);
-            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight,
-                rootConsole, mapWidth, 0);
-            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight,
-                rootConsole, 0, screenHeight - messageHeight);
-            RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight,
-                rootConsole, 0, 0);
+            RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight, rootConsole, 0, lookHeight);
+            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, mapWidth, 0);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
+            RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight, rootConsole, 0, 0);
             
 
             if (shouldUpdateDraw)
@@ -262,7 +254,6 @@ namespace sharpRoguelike
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);
-                
                 Player.DrawStats(statConsole);
             }
 

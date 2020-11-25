@@ -6,10 +6,12 @@ namespace sharpRoguelike.Core
 {
     public class Inventory
     {
+        public Entity owner;
         public List<Item> storedItems;
         public int maxCapacity = 26;
-        public Inventory()
+        public Inventory(Entity _owner)
         {
+            owner = _owner;
             storedItems = new List<Item>(maxCapacity);
         }
 
@@ -28,7 +30,22 @@ namespace sharpRoguelike.Core
             }
         }
 
+        public void DropItem(Item item)
+        {
+            item.x = owner.x;
+            item.y = owner.y;
+            Game.DungeonMap.AddItem(item);
+            storedItems.Remove(item);
+            Game.MessageLog.Add($"Dropped {item.name}.");
 
-     
+
+        }
+
+        public void ConsumeItem(Item item)
+        {
+            storedItems.Remove(item);
+
+        }
+
     }
 }
