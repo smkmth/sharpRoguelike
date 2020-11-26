@@ -21,7 +21,7 @@ namespace sharpRoguelike.Core
             attacker.Attack = 2;
             attacker.AttackChance = 50;
             attacker.Defense = 2;
-            attacker.DefenseChance = 40;
+            attacker.DefenseChance = 20;
             attacker.Health = 100;
             attacker.MaxHealth = 100;
 

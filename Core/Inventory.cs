@@ -21,7 +21,7 @@ namespace sharpRoguelike.Core
             {
                 if (!silent)
                 {
-                    Game.MessageLog.Add($"Cant pick up {item.name}, inventory is full");
+                    Game.MessageLog.Add($"Cant pick up {item.name}, inventory is full", Colors.ErrorMessage);
                 }
                 return false;
             }
@@ -29,7 +29,7 @@ namespace sharpRoguelike.Core
             {
                 if (!silent)
                 {
-                    Game.MessageLog.Add($"Picked up {item.name}.");
+                    Game.MessageLog.Add($"Picked up {item.name}.", Colors.NormalMessage);
                 }
                 storedItems.Add(item);
                 return true;
@@ -42,7 +42,7 @@ namespace sharpRoguelike.Core
             item.y = owner.y;
             Game.DungeonMap.AddItem(item);
             storedItems.Remove(item);
-            Game.MessageLog.Add($"Dropped {item.name}.");
+            Game.MessageLog.Add($"Dropped {item.name}.", Colors.NormalMessage);
         }
 
         public void ConsumeItem(Entity item)

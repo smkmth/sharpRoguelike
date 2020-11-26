@@ -73,8 +73,8 @@ namespace sharpRoguelike
             CommandSystem = new CommandSystem();
             SchedulingSytem = new SchedulingSystem();
             MessageLog = new MessageLog();
-            MessageLog.Add("The rogue arrives on level 1");
-            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'");
+            MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
+            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
 
             MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight,20,7,14, mapLevel);
             DungeonMap = mapGenerator.CreateMap();

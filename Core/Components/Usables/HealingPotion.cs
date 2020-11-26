@@ -29,7 +29,7 @@ namespace sharpRoguelike.Core.Components
 
                     if (target.attacker.Health == target.attacker.MaxHealth)
                     {
-                        Game.MessageLog.Add("Tried to drink health potion, but was already at max health");
+                        Game.MessageLog.Add("Tried to drink health potion, but was already at max health", Colors.HelpMessage);
                         return false;
                     }
                     else
@@ -39,7 +39,7 @@ namespace sharpRoguelike.Core.Components
                         {
                             target.attacker.Health = target.attacker.MaxHealth;
                         }
-                        Game.MessageLog.Add($"{target.name} gulped down the health potion - and their wounds began to mend.");
+                        Game.MessageLog.Add($"{target.name} gulped down the health potion - and their wounds began to mend.", Colors.HealMessage);
                         return true;
 
                     }
@@ -51,7 +51,7 @@ namespace sharpRoguelike.Core.Components
             } 
             else if (usageChar == 'B')
             {
-                Game.MessageLog.Add("You take aim with the potion bottle. Left Click to throw, Right Click to cancel.");
+                Game.MessageLog.Add("You take aim with the potion bottle. Left Click to throw, Right Click to cancel.", Colors.HelpMessage);
 
                 Game.CurrentGameMode = GameMode.TARGETING;
                 Game.targetCallback = ResolveThrow;
@@ -64,7 +64,7 @@ namespace sharpRoguelike.Core.Components
 
         public void ResolveThrow(int x, int y)
         {
-            Game.MessageLog.Add("The potion bottle smashes on the ground - spilling healing liquid everywhere!");
+            Game.MessageLog.Add("The potion bottle smashes on the ground - spilling healing liquid everywhere!", Colors.NormalMessage);
 
             Entity liquid = new Entity();
             liquid.name= "Healing Liquid";
@@ -77,7 +77,7 @@ namespace sharpRoguelike.Core.Components
 
         public void CancelThrow(bool canceled)
         {
-            Game.MessageLog.Add("Cancelled throw!");
+            Game.MessageLog.Add("Cancelled throw!",Colors.HelpMessage);
 
             Game.Player.inventory.AddItem(owner,true);
         }

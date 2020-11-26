@@ -22,7 +22,7 @@ namespace sharpRoguelike.Core
 
         public virtual bool Use(char UseLike, Entity user, Entity target = null)
         {
-            Game.MessageLog.Add($"Tried to use {owner.name}");
+            Game.MessageLog.Add($"Tried to use {owner.name}", Colors.HelpMessage);
             return false;
 
         }

@@ -13,7 +13,7 @@ namespace sharpRoguelike.Core.Components.Surfaces
             {
                 if (entity.attacker.Health != entity.attacker.MaxHealth)
                 {
-                    Game.MessageLog.Add($"{entity.name} walked across the healing liquid and felt a bit better");
+                    Game.MessageLog.Add($"{entity.name} walked across the healing liquid and felt a bit better", Colors.HealMessage);
                     entity.attacker.Health += 5;
                     if (entity.attacker.Health > entity.attacker.MaxHealth)
                     {

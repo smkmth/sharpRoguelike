@@ -5,23 +5,36 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Systems
 {
+    public class Message
+    {
+        public string message;
+        public RLColor color;
+
+        public Message(string _message, RLColor _color)
+        {
+            message = _message;
+            color = _color;
+        }
+
+    }
+
     public class MessageLog
     {
         private static readonly int maxLines = 9;
 
-        private readonly Queue<string> lines;
-        string[] arlines;
+        private readonly Queue<Message> lines;
+        Message[] arlines;
         bool update;
 
         public MessageLog()
         {
-            lines = new Queue<string>();
+            lines = new Queue<Message>();
             update = true;
         }
 
-        public void Add(string message)
+        public void Add(string message ,RLColor color )
         {
-            lines.Enqueue(message);
+            lines.Enqueue(new Message(message,color));
             if (lines.Count > maxLines)
             {
                 lines.Dequeue();
@@ -41,7 +54,7 @@ namespace sharpRoguelike.Core.Systems
 
             for(int i =0; i < arlines.Length; i++)
             {
-                con.Print(1, i + 1, arlines[i], RLColor.White); 
+                con.Print(1, i + 1, arlines[i].message, arlines[i].color); 
             }
         }
 

@@ -21,7 +21,7 @@ namespace sharpRoguelike.Core.Behaviors
                 monsterFov.ComputeFov(monster.x, monster.y, monster.actor.Awareness, true);
                 if (monsterFov.IsInFov(player.x, player.y))
                 {
-                    Game.MessageLog.Add($" The {monster.name} sees {player.name}");
+                    Game.MessageLog.Add($" The {monster.name} sees {player.name}", Colors.NormalMessage);
                     monster.TurnsAlerted = 1;
                 }
 
@@ -41,7 +41,7 @@ namespace sharpRoguelike.Core.Behaviors
                 }
                 catch (PathNotFoundException)
                 {
-                    Game.MessageLog.Add($"{monster.name} waits for a turn");
+                    Game.MessageLog.Add($"{monster.name} waits for a turn", Colors.NormalMessage);
                 }
                 dungeonMap.SetIsWalkable(monster.x, monster.y, false);
                 dungeonMap.SetIsWalkable(player.x, player.y, false);
@@ -53,7 +53,7 @@ namespace sharpRoguelike.Core.Behaviors
                     }
                     catch(NoMoreStepsException)
                     {
-                        Game.MessageLog.Add($"{monster.name} growls in frustration");
+                        Game.MessageLog.Add($"{monster.name} growls in frustration", Colors.NormalMessage);
 
                     }
                 }

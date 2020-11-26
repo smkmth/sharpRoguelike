@@ -268,7 +268,7 @@ namespace sharpRoguelike.Core
                 door.isOpen = true;
                 var cell = GetCell(x, y);
                 SetCellProperties(x, y, true, cell.IsWalkable, cell.IsExplored);
-                Game.MessageLog.Add($"{actor.name} opened a door");
+                Game.MessageLog.Add($"{actor.name} opened a door", Colors.NormalMessage);
             }
         }
         

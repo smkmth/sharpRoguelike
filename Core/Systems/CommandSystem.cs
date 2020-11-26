@@ -123,10 +123,10 @@ namespace sharpRoguelike.Core.Systems
 
             int blocks = ResolveDefense(defender, hits, attackMessage, defenseMessage);
 
-            Game.MessageLog.Add(attackMessage.ToString());
+            Game.MessageLog.Add(attackMessage.ToString(), Colors.CombatMessage);
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
             {
-                Game.MessageLog.Add(defenseMessage.ToString());
+                Game.MessageLog.Add(defenseMessage.ToString(), Colors.CombatMessage);
             }
 
             int damage = hits - blocks;
@@ -200,7 +200,7 @@ namespace sharpRoguelike.Core.Systems
             {
                 defender.attacker.Health = defender.attacker.Health - damage;
 
-                Game.MessageLog.Add($"  {defender.name} was hit for {damage} damage");
+                Game.MessageLog.Add($"  {defender.name} was hit for {damage} damage", Colors.CombatMessage);
 
                 if (defender.attacker.Health <= 0)
                 {
@@ -209,7 +209,7 @@ namespace sharpRoguelike.Core.Systems
             }
             else
             {
-                Game.MessageLog.Add($"  {defender.name} blocked all damage");
+                Game.MessageLog.Add($"  {defender.name} blocked all damage",Colors.CombatMessage);
             }
         }
 
@@ -218,7 +218,7 @@ namespace sharpRoguelike.Core.Systems
         {
             if (defender is Player)
             {
-                Game.MessageLog.Add($"  {defender.name} was killed, GAME OVER MAN!");
+                Game.MessageLog.Add($"  {defender.name} was killed, GAME OVER MAN!",Colors.CombatMessage);
             }
             else 
             {
@@ -226,7 +226,7 @@ namespace sharpRoguelike.Core.Systems
                 defender.corpse.x = defender.x;
                 defender.corpse.y = defender.y;
                 Game.DungeonMap.AddItem(defender.corpse);
-                Game.MessageLog.Add($" {defender.name} died !");
+                Game.MessageLog.Add($" {defender.name} died !", Swatch.DbBlood);
             }
         }
 
