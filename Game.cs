@@ -91,7 +91,9 @@ namespace sharpRoguelike
 
         public static void ResetGame()
         {
+            
             CurrentGameMode = GameMode.MAINMENU;
+            mainMenu.OnFirstEnter();
             messageConsole.Clear();
             MessageLog.Clear();
         }
@@ -208,10 +210,15 @@ namespace sharpRoguelike
                         else if (keyPress.Key == RLKey.G)
                         {
                             Entity pickup = DungeonMap.GetItemAt(Player.x, Player.y);
-                            if (Player.inventory.AddItem(pickup))
+                            if (pickup != null)
                             {
-                                DungeonMap.RemoveItem(pickup);
+                                if (Player.inventory.AddItem(pickup))
+                                {
+                                    DungeonMap.RemoveItem(pickup);
+                                    didPlayerAct = true;
+                                }
                             }
+                           
                         }
                         else if (keyPress.Key == RLKey.Period)
                         {

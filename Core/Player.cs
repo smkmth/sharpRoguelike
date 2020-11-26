@@ -36,7 +36,6 @@ namespace sharpRoguelike.Core
 
             inventory = new Inventory(this);
             inventory.AddItem(HealthPotion.Create());
-            //TODO wierd - move this 
 
 
         }

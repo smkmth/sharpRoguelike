@@ -33,7 +33,7 @@ namespace sharpRoguelike.Core.Monsters
 
             Actor actor = new Actor(kobold);
             actor.Awareness = 10;
-            actor.Speed = 5;
+            actor.Speed = 9;
 
             kobold.actor = actor;
 
