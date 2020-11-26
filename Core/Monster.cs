@@ -33,9 +33,6 @@ namespace sharpRoguelike.Core
 
             statConsole.Print(2, yPosition, $": {name}", Swatch.DbLight);
 
-
-
-
         }
     }
 }

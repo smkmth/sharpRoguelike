@@ -362,8 +362,20 @@ namespace sharpRoguelike.Core
             Entities.AddRange(Doors);
             Entities.AddRange(Items);
             Entities.AddRange(Surfaces);
-            
+            foreach (Entity entity in Entities)
+            {
+                entity.LoadEntityColor();
+            }
+            Game.Player.LoadEntityColor();
 
+        }
+
+        public void SaveEntityColors()
+        {
+            foreach(Entity entity in Entities)
+            {
+                entity.SaveEntityColor();
+            }
         }
     }
 }

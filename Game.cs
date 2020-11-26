@@ -77,7 +77,6 @@ namespace sharpRoguelike
             CommandSystem = new CommandSystem();
             SchedulingSytem = new SchedulingSystem();
             MessageLog = new MessageLog();
-
             mainMenu = new MainMenu();
 
             shouldUpdateDraw = false;
@@ -114,13 +113,14 @@ namespace sharpRoguelike
             MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
             DungeonMap = mapGenerator.CreateMap(true);
             Player.ResetPlayer();
-            DungeonMap.UpdatePlayerFOV();
 
             //start messages
             MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
             MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
-            shouldUpdateDraw = true;
-            CurrentGameMode = GameMode.PLAYING;
+
+            StartGeneric();
+
+
         }
 
         public static void LoadGame()
@@ -135,11 +135,14 @@ namespace sharpRoguelike
 
             DungeonMap.LoadEntities();
 
+            StartGeneric();
+        }
+
+        public static void StartGeneric()
+        {
             DungeonMap.UpdatePlayerFOV();
 
-            //start messages
-            MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
-            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
+            playerInventory = new InventoryMenu(Player.inventory);
             shouldUpdateDraw = true;
             CurrentGameMode = GameMode.PLAYING;
         }

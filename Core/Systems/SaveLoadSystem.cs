@@ -13,6 +13,9 @@ namespace sharpRoguelike.Core.Systems
         public string seedName = "GameSeed.sav";
         public void SaveGame()
         {
+            Game.Player.SaveEntityColor();
+            Game.DungeonMap.SaveEntityColors();
+
             FileStream stream =  File.Create(saveName);
             var formatter = new BinaryFormatter();
             formatter.Serialize(stream, Game.seed);
