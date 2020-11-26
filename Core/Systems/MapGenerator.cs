@@ -1,5 +1,4 @@
 ﻿using RogueSharp;
-using RogueSharp.DiceNotation;
 using sharpRoguelike.Core.Items;
 using sharpRoguelike.Core.Monsters;
 using System;
@@ -141,9 +140,9 @@ namespace sharpRoguelike.Core
         {
             foreach(var room in map.Rooms)
             {
-                if (Dice.Roll("1D10") < 7)
+                if (Game.Random.Next(0,10) < 7)
                 {
-                    var numberOfMonsters = Dice.Roll("1D4");
+                    var numberOfMonsters = Game.Random.Next(1,4);
                     for(int i = 0; i < numberOfMonsters; i++)
                     {
                         Point randomRoomLocation = new Point(0, 0);
@@ -163,9 +162,9 @@ namespace sharpRoguelike.Core
         {
             foreach(var room in map.Rooms)
             {
-                if (Dice.Roll("1D10") < 4)
+                if (Game.Random.Next(0,10) < 4)
                 {
-                    var items = Dice.Roll("1D2");
+                    var items = Game.Random.Next(1,2);
                     for (int i = 0; i < items; i++)
                     {
                         Point randomRoomLocation = new Point(0, 0);
