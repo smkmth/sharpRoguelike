@@ -5,6 +5,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components
 {
+    [Serializable]
     class HealingPotion : Useable
     {
         public HealingPotion()

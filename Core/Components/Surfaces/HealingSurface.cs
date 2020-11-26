@@ -4,6 +4,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components.Surfaces
 {
+    [Serializable]
     public class HealingSurface : Surface
     {
 

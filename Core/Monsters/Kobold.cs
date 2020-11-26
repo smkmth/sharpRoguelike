@@ -6,6 +6,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Monsters
 {
+    [Serializable]
     public class Kobold : Monster
     {
         public static Kobold Create(int level)

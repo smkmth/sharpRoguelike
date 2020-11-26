@@ -7,6 +7,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    [Serializable]
     public class Monster : Entity
     {
         public int? TurnsAlerted { get; set; }

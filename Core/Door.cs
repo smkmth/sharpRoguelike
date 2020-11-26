@@ -7,6 +7,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    [Serializable]
     public class Door :  Entity
     {
         public Door()
@@ -17,7 +18,8 @@ namespace sharpRoguelike.Core
         }
 
         public bool isOpen { get; set; }
-        public RLColor BackgroundColor { get; set; }
+        [NonSerialized()] private RLColor bgcolor;
+        public RLColor BackgroundColor { get { return bgcolor; } set { bgcolor = value; } }
 
         public override void Draw(RLConsole console, IMap map)
         {

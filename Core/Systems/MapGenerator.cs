@@ -80,7 +80,10 @@ namespace sharpRoguelike.Core
             foreach (Rectangle room in map.Rooms)
             {
                 CreateRoom(room);
-                CreateDoors(room);
+                if (addEntities)
+                {
+                    CreateDoors(room);
+                }
 
             }
             if (addEntities)

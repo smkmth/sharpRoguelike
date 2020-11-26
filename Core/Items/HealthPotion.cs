@@ -5,6 +5,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Items
 {
+    [Serializable]
     public class HealthPotion : Entity
     {
         public static HealthPotion Create()

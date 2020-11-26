@@ -4,6 +4,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    [Serializable]
     public class Inventory
     {
         public Entity owner;

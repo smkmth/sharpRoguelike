@@ -4,6 +4,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components
 {
+    [Serializable]
     public class Surface
     {
         public Entity owner;

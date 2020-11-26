@@ -2,14 +2,20 @@
 using RogueSharp;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace sharpRoguelike.Core
 {
+    [Serializable]
     public class Entity : IDrawable
     {
-
-        public RLColor color { get; set; }
+        [NonSerialized()] private RLColor _color;
+        public RLColor color
+        {
+            get { return _color; }
+            set { _color = value; }
+        }
         public char symbol { get; set; }
         public int x { get; set; }
         public int y { get; set; }

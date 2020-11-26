@@ -8,6 +8,7 @@ using System.Text;
 namespace sharpRoguelike.Core
 {
     //a description of a item in the world
+    [Serializable]
     public class Useable
     {
         public Entity owner;

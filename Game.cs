@@ -32,7 +32,7 @@ namespace sharpRoguelike
         private static readonly int mapWidth = screenWidth - statWidth;
         private static readonly int mapHeight = screenHeight - (messageHeight + lookHeight);
         private static RLConsole mapConsole;
-
+        public static SaveLoadSystem saveLoad;
 
         private static RLConsole menuConsole;
         private static RLConsole mainMenuConsole;
@@ -55,11 +55,12 @@ namespace sharpRoguelike
 
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
-        private static int seed;
+
+        public static int seed;
 
         static void Main(string[] args)
         {
-
+            saveLoad = new SaveLoadSystem();
             CurrentGameMode = GameMode.MAINMENU;
 
             string fontFileName = "terminal8x8.png";
@@ -122,7 +123,26 @@ namespace sharpRoguelike
             CurrentGameMode = GameMode.PLAYING;
         }
 
+        public static void LoadGame()
+        {
+            saveLoad.LoadSeed();
 
+            Random = new DotNetRandom(seed);
+            //gen map
+            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
+            DungeonMap = mapGenerator.CreateMap(false);
+            saveLoad.LoadGame();
+
+            DungeonMap.LoadEntities();
+
+            DungeonMap.UpdatePlayerFOV();
+
+            //start messages
+            MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
+            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
+            shouldUpdateDraw = true;
+            CurrentGameMode = GameMode.PLAYING;
+        }
 
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
@@ -207,6 +227,15 @@ namespace sharpRoguelike
 
                             CurrentGameMode = GameMode.INVENTORY;
                             playerInventory.OnFirstEnter(menuConsole);
+                        }
+                        else if (keyPress.Key == RLKey.S)
+                        {
+                            saveLoad.SaveGame();
+                            saveLoad.SaveSeed();
+                        }
+                        else if( keyPress.Key == RLKey.L)
+                        {
+                            saveLoad.LoadGame();
                         }
                     }
                     else if (CurrentGameMode == GameMode.INVENTORY)

@@ -353,6 +353,16 @@ namespace sharpRoguelike.Core
 
         public void LoadEntities()
         {
+            Entities.AddRange(Monsters);
+            foreach(Monster monster in Monsters)
+            {
+                Game.SchedulingSytem.Add(monster.actor);
+            }
+            Game.SchedulingSytem.Add(Game.Player.actor);
+            Entities.AddRange(Doors);
+            Entities.AddRange(Items);
+            Entities.AddRange(Surfaces);
+            
 
         }
     }

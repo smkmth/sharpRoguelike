@@ -6,6 +6,7 @@ using RogueSharp;
 using sharpRoguelike.Core.Interfaces;
 namespace sharpRoguelike.Core
 {
+    [Serializable]
     public class Actor :  IScheduleable
     {
         public Actor(Entity _owner)
