@@ -101,14 +101,11 @@ namespace sharpRoguelike.Core.Systems
 
                     }
                 }
-                if (targets.Count > 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+               
+                //always counts as a move = even walking into a wall
+                return true;
+             
+             
             }
 
 
