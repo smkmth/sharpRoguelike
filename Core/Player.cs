@@ -31,8 +31,6 @@ namespace sharpRoguelike.Core
             
             inventory = new Inventory(this);
             inventory.AddItem(HealthPotion.Create());
-            inventory.AddItem(HealthPotion.Create());
-            inventory.AddItem(HealthPotion.Create());
             //TODO wierd - move this 
             Game.playerInventory = new Menus.InventoryMenu(inventory);
         }

@@ -10,6 +10,8 @@ namespace sharpRoguelike.Core.Behaviors
 {
     class StandardMoveAndAttack : IBehavior
     {
+        int longPathWait = 0;
+
         public bool Act(Monster monster, CommandSystem commandSystem)
         {
             DungeonMap dungeonMap = Game.DungeonMap;
@@ -47,8 +49,21 @@ namespace sharpRoguelike.Core.Behaviors
                 dungeonMap.SetIsWalkable(player.x, player.y, false);
                 if (path != null)
                 {
+                    if (path.Length > 40)
+                    {
+                        //this monster is going for a - fucking - walk lol 
+                        //wait for a few turns 
+                        longPathWait++;
+                        if (longPathWait < 0)
+                        {
+                            Game.MessageLog.Add($"{monster.name} waits at the back.", Colors.NormalMessage);
+                            return true;
+                        }
+
+                    }
                     try
                     {
+                        Console.WriteLine(monster.name + path.Length);
                         commandSystem.MoveMonster(monster, path.StepForward());
                     }
                     catch(NoMoreStepsException)

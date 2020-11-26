@@ -59,7 +59,7 @@ namespace sharpRoguelike.Core
 
                 SetConsoleSymbolForCell(mapConsole, cell);
             }
-            StairsUp.Draw(mapConsole, this);
+            StairsUp?.Draw(mapConsole, this);
             StairsDown.Draw(mapConsole, this);
             foreach(Entity surface in Surfaces)
             {
@@ -156,6 +156,8 @@ namespace sharpRoguelike.Core
                 }
 
                 OpenDoor(actor, x, y);
+                UpdatePlayerFOV();
+
                 return true;
 
             }

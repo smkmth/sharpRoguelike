@@ -16,17 +16,18 @@ namespace sharpRoguelike.Core
         private readonly int maxRooms;
         private readonly int roomsMinSize;
         private readonly int roomsMaxSize;
-
+        private readonly int mapLevel;
 
         private readonly DungeonMap map;
 
-        public MapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize, int mapLevel)
+        public MapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize, int _mapLevel)
         {
             width = _width;
             height = _height;
             maxRooms = _maxRooms;
             roomsMinSize = _roomsMinSize;
             roomsMaxSize = _roomsMaxSize;
+            mapLevel = _mapLevel;
             map = new DungeonMap();
 
         }
@@ -155,9 +156,9 @@ namespace sharpRoguelike.Core
         {
             foreach(var room in map.Rooms)
             {
-                if (Dice.Roll("1D10") < 7)
+                if (Dice.Roll("1D10") < 4)
                 {
-                    var items = Dice.Roll("1D4");
+                    var items = Dice.Roll("1D2");
                     for (int i = 0; i < items; i++)
                     {
                         Point randomRoomLocation = new Point(0, 0);
@@ -243,25 +244,29 @@ namespace sharpRoguelike.Core
 
         private void CreateStairs()
         {
-            Stairs upstairs = new Stairs
+            if (mapLevel > 1)
             {
-                x = map.Rooms.First().Center.X + 1,
-                y = map.Rooms.First().Center.Y,
-                IsUp = true
-                
-            };
 
+                Stairs upstairs = new Stairs
+                {
+                    x = map.Rooms.First().Center.X + 1,
+                    y = map.Rooms.First().Center.Y,
+                    IsUp = true
+                
+                };
+                map.Entities.Add(upstairs);
+                map.StairsUp = upstairs;
+
+            }
             Stairs downstairs = new Stairs
             {
-                x = map.Rooms.First().Center.X,
-                y = map.Rooms.First().Center.Y -1,
+                x = map.Rooms.Last().Center.X,
+                y = map.Rooms.Last().Center.Y -1,
                 IsUp = false
             };
 
             map.Entities.Add(downstairs);
-            map.Entities.Add(upstairs);
             map.StairsDown = downstairs;
-            map.StairsUp = upstairs;
 
         }
 
