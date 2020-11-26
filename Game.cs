@@ -61,7 +61,7 @@ namespace sharpRoguelike
 
             string fontFileName = "terminal8x8.png";
             string consoleTitle = "alchymia - " + seed ;
-            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1f, consoleTitle);
+            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1.4f, consoleTitle);
             rootConsole.SetWindowState(RLWindowState.Maximized);
           
             mapConsole = new RLConsole(mapWidth, mapHeight);
@@ -87,31 +87,11 @@ namespace sharpRoguelike
 
             shouldUpdateDraw = true;
         }
-
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
-            int mx = rootConsole.Mouse.X ;
-            int my = rootConsole.Mouse.Y - lookHeight;
-            
-
-            if (mx > 0 && my > 0)
-            {
-                List<string> names = DungeonMap.InterigateEntityAtLocation(mx  , my);
-                if (names.Count > 0)
-                {
-                    lookConsole.Clear();
-                    for (int i =0; i< names.Count; i++)
-                    {
-                        lookConsole.Print(2, i, names[i], RLColor.White);
-                    }
-                }
-                else
-                {
-                    lookConsole.Clear();
-                }
-            }
+            HandleMouse();
 
             if (CommandSystem.IsPlayerTurn)
             {
@@ -162,10 +142,9 @@ namespace sharpRoguelike
 
                             }
                         }
-
-                        if (keyPress.Key == RLKey.I)
+                        else if (keyPress.Key == RLKey.I)
                         {
-                            
+
                             CurrentGameMode = GameMode.INVENTORY;
                             playerInventory.OnFirstEnter(inventoryConsole);
                         }
@@ -196,10 +175,10 @@ namespace sharpRoguelike
                             rootConsole.SetWindowState(RLWindowState.Normal);
 
                         }
-                    
+
                     }
-                    
-                  
+
+
                     keyPress = null;
 
                 }
@@ -215,7 +194,55 @@ namespace sharpRoguelike
                 shouldUpdateDraw = true;
             }
             // In OnRootConsoleUpdate() replace the if ( didPlayerAct ) block
-      
+
+        }
+
+        public static Action<int, int> targetCallback;
+        public static Action<bool> targetCancelCallback;
+        private static void HandleMouse()
+        {
+            int mx = rootConsole.Mouse.X;
+            int my = rootConsole.Mouse.Y - lookHeight;
+
+            if (rootConsole.Mouse.GetLeftClick())
+            {
+                if (CurrentGameMode == GameMode.TARGETING)
+                {
+                    if (DungeonMap.IsInFov(mx, my))
+                    {
+                        targetCallback.Invoke(mx, my);
+                        CurrentGameMode = GameMode.PLAYING;
+                        targetCallback = null;
+                        targetCancelCallback = null;
+                    }
+                }
+            }
+            if (rootConsole.Mouse.GetRightClick())
+            {
+                if (CurrentGameMode == GameMode.TARGETING)
+                {
+                    targetCancelCallback.Invoke(true);
+                    CurrentGameMode = GameMode.PLAYING;
+                    targetCallback = null;
+                    targetCancelCallback = null;
+                }
+            }
+            if (mx > 0 && my > 0)
+            {
+                List<string> names = DungeonMap.InterigateEntityAtLocation(mx, my);
+                if (names.Count > 0)
+                {
+                    lookConsole.Clear();
+                    for (int i = 0; i < names.Count; i++)
+                    {
+                        lookConsole.Print(2, i, names[i], RLColor.White);
+                    }
+                }
+                else
+                {
+                    lookConsole.Clear();
+                }
+            }
         }
 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
@@ -235,13 +262,27 @@ namespace sharpRoguelike
                 return;
             
             }
-     
+
+            if (CurrentGameMode == GameMode.TARGETING)
+            {
+                DrawMainGame();
+                return;
+
+            }
+
+            DrawMainGame();
+
+        }
+
+
+        private static void DrawMainGame()
+        {
             // Blit the sub consoles to the root console in the correct locations
             RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight, rootConsole, 0, lookHeight);
             RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, mapWidth, 0);
             RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
             RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight, rootConsole, 0, 0);
-            
+
 
             if (shouldUpdateDraw)
             {
@@ -254,12 +295,8 @@ namespace sharpRoguelike
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);
-                Player.DrawStats(statConsole,0);
+                Player.DrawStats(statConsole, 0);
             }
-
-           
-
-     
         }
 
    

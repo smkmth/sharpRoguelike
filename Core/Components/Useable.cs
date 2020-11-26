@@ -11,13 +11,21 @@ namespace sharpRoguelike.Core
     public class Useable
     {
         public Entity owner;
-        public char usageChar;
-        public char displayChar;      //to avoid uppercase lower case confusion
-        public string usageName;
-        public virtual bool Use(Entity user, Entity target = null)
+        public List<char> usageChars;
+        public List<char> displayChars;
+        public List<string> usageNames;
+
+        public bool throwable;      //you can throw this object
+        public bool targetable;     //can the effect be targeted
+        public bool consume;        //does the effect consume the item
+
+
+        public virtual bool Use(char UseLike, Entity user, Entity target = null)
         {
             Game.MessageLog.Add($"Tried to use {owner.name}");
             return false;
+
         }
+
     }
 }

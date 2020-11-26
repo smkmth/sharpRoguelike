@@ -15,16 +15,22 @@ namespace sharpRoguelike.Core
             storedItems = new List<Entity>(maxCapacity);
         }
 
-        public bool AddItem(Entity item)
+        public bool AddItem(Entity item, bool silent = false)
         {
             if (storedItems.Count + 1 >= maxCapacity)
             {
-                Game.MessageLog.Add($"Cant pick up {item.name}, inventory is full");
+                if (!silent)
+                {
+                    Game.MessageLog.Add($"Cant pick up {item.name}, inventory is full");
+                }
                 return false;
             }
             else
             {
-                Game.MessageLog.Add($"Picked up {item.name}.");
+                if (!silent)
+                {
+                    Game.MessageLog.Add($"Picked up {item.name}.");
+                }
                 storedItems.Add(item);
                 return true;
             }
@@ -37,8 +43,6 @@ namespace sharpRoguelike.Core
             Game.DungeonMap.AddItem(item);
             storedItems.Remove(item);
             Game.MessageLog.Add($"Dropped {item.name}.");
-
-
         }
 
         public void ConsumeItem(Entity item)

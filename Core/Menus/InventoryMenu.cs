@@ -63,11 +63,11 @@ namespace sharpRoguelike.Core.Menus
                 con.Print(con.Width - itemname.Length, index, itemname, RLColor.White);
                 index+=2;
 
-                if (currentlySelectedItem.effects != null)
+                if (currentlySelectedItem.effect != null)
                 {
-                    for (int i = 0; i< currentlySelectedItem.effects.Count; i++ )
+                    for (int i = 0; i< currentlySelectedItem.effect.usageChars.Count; i++ )
                     {
-                        string useItem = $" ({currentlySelectedItem.effects[i].displayChar}) {currentlySelectedItem.effects[i].usageName } ";
+                        string useItem = $" ({currentlySelectedItem.effect.displayChars[i]}) {currentlySelectedItem.effect.usageNames[i] } ";
                         con.Print(con.Width - useItem.Length, index, useItem, RLColor.White);
                         index += 2;
                     }
@@ -130,24 +130,17 @@ namespace sharpRoguelike.Core.Menus
                 }
                 else
                 {   
-                    if (currentlySelectedItem.effects != null && currentlySelectedItem.effects.Count != 0)
+                    if (currentlySelectedItem.effect != null && currentlySelectedItem.effect.usageChars.Count != 0)
                     {
-                        foreach(Useable effect in currentlySelectedItem.effects)
+                           
+                        if (currentlySelectedItem.effect.Use( useSelection ,inv.owner, inv.owner))
                         {
-
-                            if (effect.usageChar == useSelection)
-                            {
-                            
-                                if (effect.Use( inv.owner, inv.owner))
-                                {
-                                    inv.ConsumeItem(currentlySelectedItem);
-                                    currentlySelectedItem = null;
-                                    currentInventoryState = InventoryState.INVENTORY;
-
-                                }
-                        
-                            }
+                            inv.ConsumeItem(currentlySelectedItem);
+                            currentlySelectedItem = null;
+                            currentInventoryState = InventoryState.INVENTORY;
                         }
+           
+                        
                     }
                     return;
                 }

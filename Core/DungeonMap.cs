@@ -13,6 +13,7 @@ namespace sharpRoguelike.Core
         public List<Monster> Monsters;
         public List<Door> Doors;
         public List<Entity> Items;
+        public List<Entity> Surfaces;
         public Stairs StairsUp;
         public Stairs StairsDown;
         public List<Entity> Entities;
@@ -24,6 +25,7 @@ namespace sharpRoguelike.Core
             Monsters = new List<Monster>();
             Doors = new List<Door>();
             Items = new List<Entity>();
+            Surfaces = new List<Entity>();
             Entities = new List<Entity>();
         }
 
@@ -59,6 +61,10 @@ namespace sharpRoguelike.Core
             }
             StairsUp.Draw(mapConsole, this);
             StairsDown.Draw(mapConsole, this);
+            foreach(Entity surface in Surfaces)
+            {
+                surface.Draw(mapConsole, this);
+            }
             foreach(Entity item in Items)
             {
                 item.Draw(mapConsole, this);
@@ -286,6 +292,44 @@ namespace sharpRoguelike.Core
             }
             return names;
 
+        }
+
+        public void CreateSurface(int x, int y, int range , string liquidName, RLColor color)
+        {
+            for (int dx = x; dx < x+ range; dx++)
+            {
+                for (int dy =y; dy < y + range; dy++)
+                {
+                    if (IsWalkable(dx, dy))
+                    {
+                        Entity oldSurf = GetSurfaceAt(dx, dy);
+                        
+                        if (oldSurf != null)
+                        {
+                            RemoveSurface(oldSurf);
+                        }
+                        Entity liquid = new Entity();
+                        liquid.name = liquidName;
+                        liquid.color = color;
+                        liquid.symbol = '~';
+                        liquid.x = dx;
+                        liquid.y = dy;
+                        Surfaces.Add(liquid);
+                        Entities.Add(liquid);
+                    }
+
+                }
+            }
+        }
+
+        public Entity GetSurfaceAt(int x, int y)
+        {
+            return Surfaces.FirstOrDefault(i => i.x == x && i.y == y);
+
+        }
+        public void RemoveSurface(Entity surface)
+        {
+            Surfaces.Remove(surface);
         }
     }
 }

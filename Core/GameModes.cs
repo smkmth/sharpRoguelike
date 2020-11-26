@@ -7,6 +7,7 @@ namespace sharpRoguelike.Core
     public enum GameMode
     {
         PLAYING,
-        INVENTORY
+        INVENTORY,
+        TARGETING
     }
 }
