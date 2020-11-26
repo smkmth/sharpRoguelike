@@ -88,7 +88,6 @@ namespace sharpRoguelike.Core.Systems
 
             if (Game.DungeonMap.SetActorPosition(Game.Player, x, y))
             {
-
                 return true;
             }
             else

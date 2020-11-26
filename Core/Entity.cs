@@ -15,11 +15,12 @@ namespace sharpRoguelike.Core
         public int y { get; set; }
         public string name { get; set; }
 
-        public Inventory inventory = null;
-        public Attacker attacker = null;
-        public Actor actor = null;
-        public Useable effect = null;
-        public Entity corpse = null;
+        public Inventory inventory = null; //does this entity have an inventory
+        public Attacker attacker = null;    //does this entity attack
+        public Actor actor = null;          //does this entity move
+        public Useable effect = null;       //does this enity have an effect when used
+        public Entity corpse = null;        //does this entity have a corpse
+        public Surface surface = null;      //does this entity have an effect when walked on
 
         public virtual void Draw(RLConsole con, IMap map)
         {
@@ -41,6 +42,10 @@ namespace sharpRoguelike.Core
             }
         }
 
+        public virtual void Create()
+        {
+
+        }
 
         public virtual void DrawStats(RLConsole statConsole, int pos) {}
     }

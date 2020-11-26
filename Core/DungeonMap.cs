@@ -145,6 +145,16 @@ namespace sharpRoguelike.Core
                 {
                     UpdatePlayerFOV();
                 }
+
+                Entity surface = GetSurfaceAt(x, y);
+                if (surface != null && surface.surface != null)
+                {
+                    if (surface.surface.WalkOverSurface(actor))
+                    {
+                        RemoveSurface(surface);
+                    }
+                }
+
                 OpenDoor(actor, x, y);
                 return true;
 
@@ -180,6 +190,7 @@ namespace sharpRoguelike.Core
         public void RemoveMonster(Monster monster)
         {
             Monsters.Remove(monster);
+            Entities.Remove(monster);
             SetIsWalkable(monster.x, monster.y, true);
             Game.SchedulingSytem.Remove(monster.actor);
 
@@ -199,6 +210,7 @@ namespace sharpRoguelike.Core
 
         public void RemoveItem(Entity item)
         {
+            Entities.Remove(item);
             Items.Remove(item);
         }
 
@@ -294,7 +306,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void CreateSurface(int x, int y, int range , string liquidName, RLColor color)
+        public void CreateSurface(int x, int y, int range , Entity liquid)
         {
             for (int dx = x; dx < x+ range; dx++)
             {
@@ -308,14 +320,16 @@ namespace sharpRoguelike.Core
                         {
                             RemoveSurface(oldSurf);
                         }
-                        Entity liquid = new Entity();
-                        liquid.name = liquidName;
-                        liquid.color = color;
-                        liquid.symbol = '~';
-                        liquid.x = dx;
-                        liquid.y = dy;
-                        Surfaces.Add(liquid);
-                        Entities.Add(liquid);
+
+                        Entity liquidinst = new Entity();
+                        liquidinst.name = liquid.name;
+                        liquidinst.color = liquid.color;
+                        liquidinst.symbol = liquid.symbol;
+                        liquidinst.surface = liquid.surface;
+                        liquidinst.x = dx;
+                        liquidinst.y = dy;
+                        Surfaces.Add(liquidinst);
+                        Entities.Add(liquidinst);
                     }
 
                 }
@@ -330,6 +344,7 @@ namespace sharpRoguelike.Core
         public void RemoveSurface(Entity surface)
         {
             Surfaces.Remove(surface);
+            Entities.Remove(surface);
         }
     }
 }

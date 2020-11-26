@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Components.Surfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -64,7 +65,14 @@ namespace sharpRoguelike.Core.Components
         public void ResolveThrow(int x, int y)
         {
             Game.MessageLog.Add("The potion bottle smashes on the ground - spilling healing liquid everywhere!");
-            Game.DungeonMap.CreateSurface(x, y, 3, "Healing Liquid", RLNET.RLColor.Red);
+
+            Entity liquid = new Entity();
+            liquid.name= "Healing Liquid";
+            liquid.color= RLNET.RLColor.Red;
+            liquid.symbol= '~';
+            liquid.surface = new HealingSurface();
+
+            Game.DungeonMap.CreateSurface(x, y, 3, liquid);
         }
 
         public void CancelThrow(bool canceled)
