@@ -1,6 +1,7 @@
 ﻿using RLNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -14,11 +15,15 @@ namespace sharpRoguelike.Core.Menus
     public class MainMenu
     {
         MainMenuState currentMenuState;
-        
+        bool loadpossible = false;
         public void OnFirstEnter()
         {
             currentMenuState = MainMenuState.MAIN_MENU;
             enteredSeed = "";
+            if (File.Exists(Path.Combine(Game.saveLoad.savePathName, Game.saveLoad.saveName)))
+            {
+                loadpossible = true;
+            }
         }
 
         public void Draw(RLConsole con)
@@ -30,7 +35,10 @@ namespace sharpRoguelike.Core.Menus
                     con.Print((con.Width / 2), (con.Height / 2) - 10, "ALCHYMIA", RLColor.White);
                     con.Print((con.Width / 2), (con.Height / 2) - 5, "Press Enter to start game", RLColor.White);
                     con.Print((con.Width / 2), (con.Height / 2) - 2, "Press S to enter a seed", RLColor.White);
-                    con.Print((con.Width / 2), (con.Height / 2) - 2, "Press L to load a game", RLColor.White);
+                    if (loadpossible)
+                    {
+                        con.Print((con.Width / 2), (con.Height / 2) - 2, "Press L to load a game", RLColor.White);
+                    }
                     break;
 
                 case MainMenuState.ENTER_SEED:
@@ -65,7 +73,10 @@ namespace sharpRoguelike.Core.Menus
                     }
                     if (itemSelection == 'L')
                     {
-                        Game.LoadGame();
+                        if (loadpossible)
+                        {
+                            Game.LoadGame();
+                        }
                     }
                     break;
                 case MainMenuState.ENTER_SEED:

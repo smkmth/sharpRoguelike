@@ -11,7 +11,6 @@ namespace sharpRoguelike
     public static class Game
     {
 
-        public static bool fullScreen = false;
         public static readonly int screenWidth = 150;
         public static readonly int screenHeight = 80;
         private static RLRootConsole rootConsole;
@@ -32,37 +31,38 @@ namespace sharpRoguelike
         private static readonly int mapWidth = screenWidth - statWidth;
         private static readonly int mapHeight = screenHeight - (messageHeight + lookHeight);
         private static RLConsole mapConsole;
-        public static SaveLoadSystem saveLoad;
 
         private static RLConsole menuConsole;
-        private static RLConsole mainMenuConsole;
-
-
+        
+        public static bool fullScreen = false;
         public static Player Player { get;  set; }
-        public static InventoryMenu playerInventory;
-        public static MainMenu mainMenu;
+        
+        public static SaveLoadSystem saveLoad { get; private set; }
+
+        public static InventoryMenu playerInventory { get; private set; }
+
+        public static MainMenu mainMenu { get; private set; }
         public static CommandSystem CommandSystem { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
-
         public static MessageLog MessageLog { get; set; }
         public static SchedulingSystem SchedulingSytem { get; private set; }
-
         public static IRandom Random { get; private set; }
+
+
 
         public static bool didPlayerAct;
         public static bool shouldUpdateDraw =true;
         public static int steps;
-
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
-
         public static int seed;
+
+
 
         static void Main(string[] args)
         {
             saveLoad = new SaveLoadSystem();
             CurrentGameMode = GameMode.MAINMENU;
-
             string fontFileName = "terminal8x8.png";
             string consoleTitle = "alchymia";
             rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1.4f, consoleTitle);
@@ -80,6 +80,7 @@ namespace sharpRoguelike
             mainMenu = new MainMenu();
 
             shouldUpdateDraw = false;
+            mainMenu.OnFirstEnter();
 
             rootConsole.Render += OnRootConsoleRender;
             rootConsole.Update += OnRootConsoleUpdate;
@@ -166,7 +167,7 @@ namespace sharpRoguelike
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
             if (keyPress != null)
             {
-                mainMenu.HandleInput(keyPress, mainMenuConsole);
+                mainMenu.HandleInput(keyPress, menuConsole);
             }
         }
 

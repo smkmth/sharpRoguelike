@@ -63,7 +63,6 @@ namespace sharpRoguelike.Core.Behaviors
                     }
                     try
                     {
-                        Console.WriteLine(monster.name + path.Length);
                         commandSystem.MoveMonster(monster, path.StepForward());
                     }
                     catch(NoMoreStepsException)

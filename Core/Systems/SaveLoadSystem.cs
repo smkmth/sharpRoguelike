@@ -9,8 +9,17 @@ namespace sharpRoguelike.Core.Systems
 {
     public class SaveLoadSystem
     {
-        public string saveName = "Game.sav";
-        public string seedName = "GameSeed.sav";
+        public string savePathName = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDoc‌​uments), "ALCHYMIA");
+
+        public SaveLoadSystem()
+        {
+            System.IO.Directory.CreateDirectory(savePathName);
+            saveName = System.IO.Path.Combine(savePathName, "Game.sav");
+            seedName = System.IO.Path.Combine(savePathName,  "GameSeed.sav");
+        }
+
+        public string saveName;
+        public string seedName ;
         public void SaveGame()
         {
             Game.Player.SaveEntityColor();
