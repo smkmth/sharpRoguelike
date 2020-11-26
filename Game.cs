@@ -34,11 +34,13 @@ namespace sharpRoguelike
         private static RLConsole mapConsole;
 
 
-        private static RLConsole inventoryConsole;
+        private static RLConsole menuConsole;
+        private static RLConsole mainMenuConsole;
 
 
         public static Player Player { get;  set; }
         public static InventoryMenu playerInventory;
+        public static MainMenu mainMenu;
         public static CommandSystem CommandSystem { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
 
@@ -53,14 +55,15 @@ namespace sharpRoguelike
 
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
+        private static int seed;
 
         static void Main(string[] args)
         {
-            int seed = (int)DateTime.UtcNow.Ticks;
-            Random = new DotNetRandom(seed);
+
+            CurrentGameMode = GameMode.MAINMENU;
 
             string fontFileName = "terminal8x8.png";
-            string consoleTitle = "alchymia - " + seed ;
+            string consoleTitle = "alchymia";
             rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1.4f, consoleTitle);
             rootConsole.SetWindowState(RLWindowState.Maximized);
           
@@ -68,26 +71,73 @@ namespace sharpRoguelike
             statConsole = new RLConsole(statWidth, statHeight);
             lookConsole = new RLConsole(lookWidth, lookHeight);
             messageConsole = new RLConsole(messageWidth, messageHeight);
-            inventoryConsole = new RLConsole(screenWidth, screenHeight);
+            menuConsole = new RLConsole(screenWidth, screenHeight);
             
             CommandSystem = new CommandSystem();
             SchedulingSytem = new SchedulingSystem();
             MessageLog = new MessageLog();
-            MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
-            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
 
-            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight,20,7,14, mapLevel);
-            DungeonMap = mapGenerator.CreateMap();
+            mainMenu = new MainMenu();
 
-            DungeonMap.UpdatePlayerFOV();
+            shouldUpdateDraw = false;
 
             rootConsole.Render += OnRootConsoleRender;
             rootConsole.Update += OnRootConsoleUpdate;
             rootConsole.Run();
 
-            shouldUpdateDraw = true;
+
         }
+
+
+        public static void StartGame(int? enter_seed=null)
+        {
+            //get seed
+            if (enter_seed != null)
+            {
+                seed = (int)enter_seed;
+            }
+            else
+            {
+                seed = (int)DateTime.UtcNow.Ticks;
+            }
+
+            Random = new DotNetRandom(seed);
+            //gen map
+            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
+            DungeonMap = mapGenerator.CreateMap();
+            DungeonMap.UpdatePlayerFOV();
+
+            //start messages
+            MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
+            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
+            shouldUpdateDraw = true;
+            CurrentGameMode = GameMode.PLAYING;
+        }
+
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
+        {
+            if (CurrentGameMode == GameMode.MAINMENU)
+            {
+                HandleMainMenu();
+            }
+            else
+            { 
+                HandleGame();
+            }
+       
+            // In OnRootConsoleUpdate() replace the if ( didPlayerAct ) block
+
+        }
+        public static void HandleMainMenu()
+        {
+            RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
+            if (keyPress != null)
+            {
+                mainMenu.HandleInput(keyPress, mainMenuConsole);
+            }
+        }
+
+        public static void HandleGame()
         {
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
@@ -146,7 +196,7 @@ namespace sharpRoguelike
                         {
 
                             CurrentGameMode = GameMode.INVENTORY;
-                            playerInventory.OnFirstEnter(inventoryConsole);
+                            playerInventory.OnFirstEnter(menuConsole);
                         }
                     }
                     else if (CurrentGameMode == GameMode.INVENTORY)
@@ -157,7 +207,7 @@ namespace sharpRoguelike
                         }
                         else
                         {
-                            playerInventory.HandleInput(keyPress, inventoryConsole);
+                            playerInventory.HandleInput(keyPress, menuConsole);
 
                         }
                     }
@@ -193,8 +243,6 @@ namespace sharpRoguelike
                 CommandSystem.ActivateMonsters();
                 shouldUpdateDraw = true;
             }
-            // In OnRootConsoleUpdate() replace the if ( didPlayerAct ) block
-
         }
 
         public static Action<int, int> targetCallback;
@@ -248,19 +296,19 @@ namespace sharpRoguelike
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
 
+            if (CurrentGameMode == GameMode.MAINMENU)
+            {
+                DrawMainMenu();
+                return;
+
+            }
+
             if (CurrentGameMode == GameMode.INVENTORY)
             {
-                mapConsole.Clear();
-                statConsole.Clear();
 
-                RLConsole.Blit(inventoryConsole, 0, 0, screenWidth, screenHeight - messageHeight, rootConsole, 0, 0);
-                RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
-
-                rootConsole.Draw();
-                playerInventory.Draw(inventoryConsole);
-                MessageLog.Draw(messageConsole);
+                DrawInventory();
                 return;
-            
+
             }
 
             if (CurrentGameMode == GameMode.TARGETING)
@@ -274,6 +322,30 @@ namespace sharpRoguelike
 
         }
 
+        private static void DrawMainMenu()
+        {
+        
+            RLConsole.Blit(menuConsole, 0, 0, screenWidth, screenHeight - messageHeight, rootConsole, 0, 0);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
+
+            rootConsole.Draw();
+            mainMenu.Draw(menuConsole);
+
+        }
+
+        private static void DrawInventory()
+        {
+            mapConsole.Clear();
+            statConsole.Clear();
+
+            RLConsole.Blit(menuConsole, 0, 0, screenWidth, screenHeight - messageHeight, rootConsole, 0, 0);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
+
+            rootConsole.Draw();
+            playerInventory.Draw(menuConsole);
+            MessageLog.Draw(messageConsole);
+
+        }
 
         private static void DrawMainGame()
         {
