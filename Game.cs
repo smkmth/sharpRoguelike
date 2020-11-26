@@ -233,6 +233,7 @@ namespace sharpRoguelike
                         }
                         else if (keyPress.Key == RLKey.S)
                         {
+                            MessageLog.Add("Game Saved!", Colors.HelpMessage);
                             saveLoad.SaveGame();
                             saveLoad.SaveSeed();
                         }

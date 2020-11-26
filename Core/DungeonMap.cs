@@ -17,7 +17,7 @@ namespace sharpRoguelike.Core
         public Stairs StairsUp;
         public Stairs StairsDown;
         public List<Entity> Entities;
-
+        public List<SerialiseableCells> s_cells;
         public DungeonMap()
         {
             Game.SchedulingSytem.Clear();
@@ -27,6 +27,7 @@ namespace sharpRoguelike.Core
             Items = new List<Entity>();
             Surfaces = new List<Entity>();
             Entities = new List<Entity>();
+            s_cells = new List<SerialiseableCells>();
         }
 
 
@@ -353,6 +354,13 @@ namespace sharpRoguelike.Core
 
         public void LoadEntities()
         {
+
+            foreach (SerialiseableCells cell in s_cells)
+            {
+                ICell icell = GetCell(cell.x, cell.y);
+                SetCellProperties(cell.x, cell.y, icell.IsTransparent, icell.IsWalkable, cell.explored);
+            }
+
             Entities.AddRange(Monsters);
             foreach(Monster monster in Monsters)
             {
@@ -365,17 +373,48 @@ namespace sharpRoguelike.Core
             foreach (Entity entity in Entities)
             {
                 entity.LoadEntityColor();
+                if (entity.corpse != null)
+                {
+                    entity.corpse.LoadEntityColor();
+
+                }
             }
             Game.Player.LoadEntityColor();
 
+       
         }
 
+        
         public void SaveEntityColors()
         {
             foreach(Entity entity in Entities)
             {
                 entity.SaveEntityColor();
+                if (entity.corpse != null)
+                {
+                    entity.corpse.SaveEntityColor();
+
+                }
             }
+
+            foreach(ICell cell in GetAllCells())
+            {
+                s_cells.Add(new SerialiseableCells(cell.X, cell.Y, cell.IsExplored));
+            }
+        }
+    }
+    [Serializable]
+    public struct SerialiseableCells
+    {
+        public int x;
+        public int y;
+        public bool explored;
+
+        public SerialiseableCells(int x, int y, bool explored)
+        {
+            this.x = x;
+            this.y = y;
+            this.explored = explored;
         }
     }
 }

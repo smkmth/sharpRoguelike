@@ -20,6 +20,7 @@ namespace sharpRoguelike.Core.Systems
             var formatter = new BinaryFormatter();
             formatter.Serialize(stream, Game.seed);
             formatter.Serialize(stream, Game.Player);
+            formatter.Serialize(stream, Game.DungeonMap.s_cells);
             formatter.Serialize(stream, Game.DungeonMap.Doors);
             formatter.Serialize(stream, Game.DungeonMap.Monsters);
             formatter.Serialize(stream, Game.DungeonMap.Items);
@@ -49,6 +50,7 @@ namespace sharpRoguelike.Core.Systems
             FileStream stream = File.OpenRead(saveName);
             Game.seed = (int)formatter.Deserialize(stream);
             Game.Player = (Player)formatter.Deserialize(stream);
+            Game.DungeonMap.s_cells = (List<SerialiseableCells>)formatter.Deserialize(stream);
             Game.DungeonMap.Doors = (List<Door>)formatter.Deserialize(stream);
             Game.DungeonMap.Monsters = (List<Monster>)formatter.Deserialize(stream);
             Game.DungeonMap.Items = (List<Entity>)formatter.Deserialize(stream);
