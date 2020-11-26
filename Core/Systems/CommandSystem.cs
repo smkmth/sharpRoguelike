@@ -113,6 +113,10 @@ namespace sharpRoguelike.Core.Systems
 
         public void Attack(Entity attacker, Entity defender)
         {
+            if (attacker.attacker == null || defender.attacker == null)
+            {
+                return;
+            }
             StringBuilder attackMessage = new StringBuilder();
             StringBuilder defenseMessage = new StringBuilder();
 
@@ -134,6 +138,10 @@ namespace sharpRoguelike.Core.Systems
         // The attacker rolls based on his stats to see if he gets any hits
         private static int ResolveAttack(Entity attacker, Entity defender, StringBuilder attackMessage)
         {
+            if (attacker.attacker == null)
+            {
+                return 0;
+            }
             int hits = 0;
 
             attackMessage.AppendFormat("{0} attacks {1} and rolls: ", attacker.name, defender.name);
@@ -159,6 +167,10 @@ namespace sharpRoguelike.Core.Systems
         // The defender rolls based on his stats to see if he blocks any of the hits from the attacker
         private static int ResolveDefense(Entity defender, int hits, StringBuilder attackMessage, StringBuilder defenseMessage)
         {
+            if (defender.attacker == null )
+            {
+                return 0;
+            }
             int blocks = 0;
 
             if (hits > 0)
@@ -216,15 +228,18 @@ namespace sharpRoguelike.Core.Systems
             if (defender is Player)
             {
                 Game.MessageLog.Add($"  {defender.name} was killed, GAME OVER MAN!",Colors.CombatMessage);
+                Game.ResetGame();
             }
             else 
             {
                 Game.DungeonMap.RemoveMonster((Monster)defender);
                 defender.corpse.x = defender.x;
                 defender.corpse.y = defender.y;
+                
                 Game.DungeonMap.AddItem(defender.corpse);
                 Game.MessageLog.Add($" {defender.name} died !", Swatch.DbBlood);
             }
+            defender.attacker = null;
         }
 
 

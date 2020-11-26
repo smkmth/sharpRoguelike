@@ -58,6 +58,13 @@ namespace sharpRoguelike.Core.Systems
             }
         }
 
+        public void Clear()
+        {
+            lines.Clear();
+            arlines = lines.ToArray();
 
+            
+
+        }
     }
 }

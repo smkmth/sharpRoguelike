@@ -29,6 +29,8 @@ namespace sharpRoguelike.Core
             Entities = new List<Entity>();
         }
 
+
+
         new public ICell GetCell(int x, int y)
         {
             if (x > Width || y > Height)
@@ -347,6 +349,11 @@ namespace sharpRoguelike.Core
         {
             Surfaces.Remove(surface);
             Entities.Remove(surface);
+        }
+
+        public void LoadEntities()
+        {
+
         }
     }
 }

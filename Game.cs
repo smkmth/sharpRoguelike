@@ -88,6 +88,13 @@ namespace sharpRoguelike
 
         }
 
+        public static void ResetGame()
+        {
+            CurrentGameMode = GameMode.MAINMENU;
+            messageConsole.Clear();
+            MessageLog.Clear();
+        }
+
 
         public static void StartGame(int? enter_seed=null)
         {
@@ -104,7 +111,8 @@ namespace sharpRoguelike
             Random = new DotNetRandom(seed);
             //gen map
             MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
-            DungeonMap = mapGenerator.CreateMap();
+            DungeonMap = mapGenerator.CreateMap(true);
+            Player.ResetPlayer();
             DungeonMap.UpdatePlayerFOV();
 
             //start messages
@@ -113,6 +121,8 @@ namespace sharpRoguelike
             shouldUpdateDraw = true;
             CurrentGameMode = GameMode.PLAYING;
         }
+
+
 
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
@@ -184,7 +194,7 @@ namespace sharpRoguelike
                             if (DungeonMap.CanMoveDownToNextLevel())
                             {
                                 MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
-                                DungeonMap = mapGenerator.CreateMap();
+                                DungeonMap = mapGenerator.CreateMap(true);
                                 MessageLog = new MessageLog();
                                 CommandSystem = new CommandSystem();
                                 rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";

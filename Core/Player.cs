@@ -11,7 +11,11 @@ namespace sharpRoguelike.Core
     {
         public Player()
         {
+            ResetPlayer();
+        }
 
+        public void ResetPlayer()
+        {
             color = Colors.Player;
             symbol = '@';
             name = "Rogue";
@@ -28,11 +32,12 @@ namespace sharpRoguelike.Core
             actor = new Actor(this);
             actor.Awareness = 15;
             actor.Speed = 10;
-            
+
             inventory = new Inventory(this);
             inventory.AddItem(HealthPotion.Create());
             //TODO wierd - move this 
             Game.playerInventory = new Menus.InventoryMenu(inventory);
+
         }
 
         public override void DrawStats(RLConsole statConsole, int pos)

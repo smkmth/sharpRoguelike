@@ -32,7 +32,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public DungeonMap CreateMap()
+        public DungeonMap CreateMap(bool addEntities)
         {
             map.Initialize(width, height);
            
@@ -83,10 +83,14 @@ namespace sharpRoguelike.Core
                 CreateDoors(room);
 
             }
-            CreateStairs();
-            PlacePlayer();
-            PlaceMonsters();
-            PlaceItems();
+            if (addEntities)
+            {
+
+                CreateStairs();
+                PlacePlayer();
+                PlaceMonsters();
+                PlaceItems();
+            }
             return map;
         }
 
