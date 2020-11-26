@@ -2,7 +2,7 @@
 using RogueSharp;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Interfaces;
-
+using System.Collections.Generic;
 
 namespace sharpRoguelike.Core
 {
@@ -18,7 +18,7 @@ namespace sharpRoguelike.Core
         public Inventory inventory = null;
         public Attacker attacker = null;
         public Actor actor = null;
-        public Useable effect = null;
+        public List<Useable> effects = null;
         public Entity corpse = null;
 
         public virtual void Draw(RLConsole con, IMap map)

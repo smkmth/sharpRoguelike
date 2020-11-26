@@ -55,18 +55,22 @@ namespace sharpRoguelike.Core.Menus
 
             if (currentInventoryState == InventoryState.SELECTED_ITEM)
             {
+
+
                 int index = 2;
 
                 string itemname = $"Selected: {currentlySelectedItem.name}";
                 con.Print(con.Width - itemname.Length, index, itemname, RLColor.White);
                 index+=2;
 
-                if(currentlySelectedItem.effect != null)
+                if (currentlySelectedItem.effects != null)
                 {
-                    string useItem = $" (a) use item ";
-                    con.Print(con.Width - useItem.Length, index, useItem, RLColor.White);
-                    index += 2;
-
+                    for (int i = 0; i< currentlySelectedItem.effects.Count; i++ )
+                    {
+                        string useItem = $" ({currentlySelectedItem.effects[i].displayChar}) {currentlySelectedItem.effects[i].usageName } ";
+                        con.Print(con.Width - useItem.Length, index, useItem, RLColor.White);
+                        index += 2;
+                    }
                 }
 
                 string dropItem = $" (d) drop item ";
@@ -110,6 +114,10 @@ namespace sharpRoguelike.Core.Menus
                     currentlySelectedItem = null;
                     return;
                 }
+                if (keypress.Key == RLKey.Down || keypress.Key == RLKey.Up || keypress.Key == RLKey.Left || keypress.Key == RLKey.Right)
+                {
+                    return;
+                }
 
                 //interprit selection as selection
                 char useSelection = keypress.Key.ToString().ToCharArray()[0];
@@ -122,14 +130,23 @@ namespace sharpRoguelike.Core.Menus
                 }
                 else
                 {   
-                    if (currentlySelectedItem.effect != null)
+                    if (currentlySelectedItem.effects != null && currentlySelectedItem.effects.Count != 0)
                     {
-
-                        if (currentlySelectedItem.effect.Use(useSelection, inv.owner, inv.owner ))
+                        foreach(Useable effect in currentlySelectedItem.effects)
                         {
-                            inv.ConsumeItem(currentlySelectedItem);
-                            currentlySelectedItem = null;
-                            currentInventoryState = InventoryState.INVENTORY;
+
+                            if (effect.usageChar == useSelection)
+                            {
+                            
+                                if (effect.Use( inv.owner, inv.owner))
+                                {
+                                    inv.ConsumeItem(currentlySelectedItem);
+                                    currentlySelectedItem = null;
+                                    currentInventoryState = InventoryState.INVENTORY;
+
+                                }
+                        
+                            }
                         }
                     }
                     return;

@@ -9,16 +9,18 @@ namespace sharpRoguelike.Core.Items
     {
         public static HealthPotion Create()
         {
-            return new HealthPotion
+            HealthPotion potion=  new HealthPotion
             {
                 symbol = '!',
                 color = Colors.HealthPotion,
                 name = "Health Potion",
-                effect = new HealEffect()
             };
+            potion.effects = new List<Useable>();
+            potion.effects.Add(new HealEffect());
+            return potion;
 
         }
 
-   
+
     }
 }
