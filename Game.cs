@@ -146,7 +146,7 @@ namespace sharpRoguelike
         {
             DungeonMap.UpdatePlayerFOV();
 
-            playerInventory = new InventoryMenu(Player.inventory);
+            playerInventory = new InventoryMenu(Player.inventory, Player.equipmentSlots);
             shouldUpdateDraw = true;
             CurrentGameMode = GameMode.PLAYING;
         }

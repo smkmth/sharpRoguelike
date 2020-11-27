@@ -1,4 +1,5 @@
 ﻿using sharpRoguelike.Core.Items;
+using sharpRoguelike.Core.Systems;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,6 +37,15 @@ namespace sharpRoguelike.Core.Components
             owner.actor.Speed = 10;
             owner.inventory = new Inventory(owner);
             owner.inventory.AddItem(HealthPotion.Create());
+
+            owner.equipmentSlots = new List<EquipmentSlot>();
+            owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));
+            owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.WEAPON));
+            owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.LEGS));
+            owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
+            owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
+
+            EquipmentManager.EquipItem(owner, Dagger.Create());
         }
     }
 }

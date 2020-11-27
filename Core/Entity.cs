@@ -37,15 +37,20 @@ namespace sharpRoguelike.Core
         public int y { get; set; }
         public string name { get; set; }
 
-        public Inventory inventory = null;  //does this entity have an inventory
-        public Attacker attacker = null;    //does this entity attack
-        public Actor actor = null;          //does this entity move
-        public Useable effect = null;       //does this enity have an effect when used
-        public Entity corpse = null;        //does this entity have a corpse
-        public Surface surface = null;      //does this entity have an effect when walked on
-        public Player player = null;        //is this entity a player
-        public AI ai = null;                //does this entity have AI
+        public string description { get; set; }
 
+
+        public Inventory inventory = null;              //does this entity have an inventory
+        public Attacker attacker = null;                //does this entity attack
+        public Actor actor = null;                      //does this entity move
+        public Useable effect = null;                   //does this enity have an effect when used
+        public Entity corpse = null;                    //does this entity have a corpse
+        public Surface surface = null;                  //does this entity have an effect when walked on
+        public AI ai = null;                            //does this entity have AI
+        public List<EquipmentSlot> equipmentSlots;      //does this entity have any equipment equipped
+
+        public Player player = null;                    //is this entity a player
+        public Equipment equipment =null;               //is this entity equipment
 
         public virtual void Draw(RLConsole con, IMap map)
         {

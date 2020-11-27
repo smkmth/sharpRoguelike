@@ -20,7 +20,7 @@ namespace sharpRoguelike.Core
         public bool targetable;     //can the effect be targeted
         public bool consume;        //does the effect consume the item
 
-
+        
         public virtual bool Use(char UseLike, Entity user, Entity target = null)
         {
             Game.MessageLog.Add($"Tried to use {owner.name}", Colors.HelpMessage);

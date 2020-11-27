@@ -149,7 +149,7 @@ namespace sharpRoguelike.Core
                 actor.y = y;
 
                 SetIsWalkable(actor.x, actor.y, false);
-                if (actor is Player)
+                if (actor.player != null)
                 {
                     UpdatePlayerFOV();
                 }
@@ -183,23 +183,9 @@ namespace sharpRoguelike.Core
         {
 
             //TODO move player recipie 
-            player.color = Colors.Player;
-            player.symbol = '@';
-            player.name = "Rogue";
-            player.attacker = new Attacker(player);
-            player.attacker.Attack = 2;
-            player.attacker.AttackChance = 50;
-            player.attacker.Defense = 2;
-            player.attacker.DefenseChance = 20;
-            player.attacker.Health = 100;
-            player.attacker.MaxHealth = 100;
-            player.actor = new Actor(player);
-            player.actor.Awareness = 15;
-            player.actor.Speed = 10;
-            player.inventory = new Inventory(player);
-            player.inventory.AddItem(HealthPotion.Create());
-            player.player = new Player(player);
             Game.Player = player;
+            player.player = new Player(player);
+            player.player.ResetPlayer();
 
             SetIsWalkable(player.x, player.y, false);
             UpdatePlayerFOV();

@@ -25,6 +25,16 @@ namespace sharpRoguelike.Core.Components
         {
             get
             {
+                if (owner.equipmentSlots != null)       //can have equipment
+                {
+                    foreach(EquipmentSlot slot in owner.equipmentSlots)
+                    {
+                        if (slot.attachedEquipment != null)
+                        {
+                            return _attack + slot.attachedEquipment.attackModifier; 
+                        }
+                     }
+                }
                 return _attack;
             }
             set
@@ -37,6 +47,17 @@ namespace sharpRoguelike.Core.Components
         {
             get
             {
+                if (owner.equipmentSlots != null)       //can have equipment
+                {
+                    foreach (EquipmentSlot slot in owner.equipmentSlots)
+                    {
+                        if (slot.attachedEquipment != null)
+                        {
+                            return _attackChance + slot.attachedEquipment.attackChanceModifier;
+                        }
+                    }
+                }
+
                 return _attackChance;
             }
             set
@@ -50,6 +71,16 @@ namespace sharpRoguelike.Core.Components
         {
             get
             {
+                if (owner.equipmentSlots != null)       //can have equipment
+                {
+                    foreach (EquipmentSlot slot in owner.equipmentSlots)
+                    {
+                        if (slot.attachedEquipment != null)
+                        {
+                            return _defense + slot.attachedEquipment.attackModifier;
+                        }
+                    }
+                }
                 return _defense;
             }
             set
@@ -62,6 +93,16 @@ namespace sharpRoguelike.Core.Components
         {
             get
             {
+                if (owner.equipmentSlots != null)       //can have equipment
+                {
+                    foreach (EquipmentSlot slot in owner.equipmentSlots)
+                    {
+                        if (slot.attachedEquipment != null)
+                        {
+                            return _defenseChance + slot.attachedEquipment.defenceChanceModifier;
+                        }
+                    }
+                }
                 return _defenseChance;
             }
             set
@@ -75,6 +116,7 @@ namespace sharpRoguelike.Core.Components
         {
             get
             {
+              
                 return _health;
             }
             set
@@ -87,6 +129,17 @@ namespace sharpRoguelike.Core.Components
         {
             get
             {
+
+                if (owner.equipmentSlots != null)       //can have equipment
+                {
+                    foreach (EquipmentSlot slot in owner.equipmentSlots)
+                    {
+                        if (slot.attachedEquipment != null)
+                        {
+                            return _maxHealth + slot.attachedEquipment.maxHealthModifier;
+                        }
+                    }
+                }
                 return _maxHealth;
             }
             set
