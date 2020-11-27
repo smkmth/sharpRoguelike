@@ -18,6 +18,8 @@ namespace sharpRoguelike.Core
         public Stairs StairsDown;
         public List<Entity> Entities;
         public List<SerialiseableCells> s_cells;
+        List<Monster> monstersInFov;
+
         public DungeonMap()
         {
             Game.SchedulingSytem.Clear();
@@ -28,6 +30,7 @@ namespace sharpRoguelike.Core
             Surfaces = new List<Entity>();
             Entities = new List<Entity>();
             s_cells = new List<SerialiseableCells>();
+            monstersInFov = new List<Monster>();
         }
 
 
@@ -76,16 +79,16 @@ namespace sharpRoguelike.Core
             {
                 door.Draw(mapConsole, this);
             }
-            int i = 0;
-            foreach(Monster monster in Monsters)
+            monstersInFov.Clear();
+            foreach (Monster monster in Monsters)
             {
                 monster.Draw(mapConsole, this);
                 if (IsInFov(monster.x, monster.y))
                 {
-                    monster.DrawStats(statConsole, i);
-                    i++;
+                    monstersInFov.Add(monster);
                 }
             }
+            Game.statDisplay.DrawMonsters(statConsole, monstersInFov);
         }
 
         public void SetConsoleSymbolForCell(RLConsole con, Cell cell)

@@ -40,7 +40,7 @@ namespace sharpRoguelike
         public static SaveLoadSystem saveLoad { get; private set; }
 
         public static InventoryMenu playerInventory { get; private set; }
-
+        public static StatDisplay statDisplay { get; private set; }
         public static MainMenu mainMenu { get; private set; }
         public static CommandSystem CommandSystem { get; private set; }
         public static DungeonMap DungeonMap { get; private set; }
@@ -78,6 +78,7 @@ namespace sharpRoguelike
             SchedulingSytem = new SchedulingSystem();
             MessageLog = new MessageLog(messageWidth);
             mainMenu = new MainMenu();
+            statDisplay = new StatDisplay();
 
             shouldUpdateDraw = false;
             mainMenu.OnFirstEnter();
@@ -423,7 +424,7 @@ namespace sharpRoguelike
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);
-                Player.DrawStats(statConsole, 0);
+                statDisplay.DrawPlayer(statConsole, Player);
             }
         }
 
