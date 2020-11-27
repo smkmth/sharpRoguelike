@@ -375,7 +375,7 @@ namespace sharpRoguelike.Core
             foreach (SerialiseableCells cell in s_cells)
             {
                 ICell icell = GetCell(cell.x, cell.y);
-                SetCellProperties(cell.x, cell.y, icell.IsTransparent, icell.IsWalkable, cell.explored);
+                SetCellProperties(cell.x, cell.y, cell.transparent, icell.IsWalkable, cell.explored);
             }
 
             Entities.AddRange(Monsters);
@@ -416,7 +416,7 @@ namespace sharpRoguelike.Core
 
             foreach(ICell cell in GetAllCells())
             {
-                s_cells.Add(new SerialiseableCells(cell.X, cell.Y, cell.IsExplored));
+                s_cells.Add(new SerialiseableCells(cell.X, cell.Y, cell.IsTransparent, cell.IsExplored));
             }
         }
     }
@@ -428,12 +428,14 @@ namespace sharpRoguelike.Core
         public int x;
         public int y;
         public bool explored;
+        public bool transparent;
 
-        public SerialiseableCells(int x, int y, bool explored)
+        public SerialiseableCells(int x, int y, bool transparent, bool explored)
         {
             this.x = x;
             this.y = y;
             this.explored = explored;
+            this.transparent = transparent;
         }
     }
 }

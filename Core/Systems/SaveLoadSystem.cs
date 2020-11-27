@@ -55,6 +55,7 @@ namespace sharpRoguelike.Core.Systems
             FileStream stream = File.Create(seedName);
             var formatter = new BinaryFormatter();
             formatter.Serialize(stream, Game.seed);
+            formatter.Serialize(stream, Game.mapLevel);
             stream.Close();
 
         }
@@ -77,8 +78,9 @@ namespace sharpRoguelike.Core.Systems
         public void LoadSeed()
         {
             var formatter = new BinaryFormatter();
-            FileStream stream = File.OpenRead(saveName);
+            FileStream stream = File.OpenRead(seedName);
             Game.seed = (int)formatter.Deserialize(stream);
+            Game.mapLevel = (int)formatter.Deserialize(stream);
             stream.Close();
         }
     }

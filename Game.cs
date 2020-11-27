@@ -371,7 +371,9 @@ namespace sharpRoguelike
             }
         }
 
-        //render function - called every frame 
+        //render function - called every frame - game works using mutliple
+        //consoles that each draw to a main console - flow should go - clear
+        //all subconsoles - draw subconsoles - draw root console -blit 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
 
