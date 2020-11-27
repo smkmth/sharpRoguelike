@@ -125,10 +125,10 @@ namespace sharpRoguelike.Core
 
         private void PlacePlayer()
         {
-            Player player = Game.Player;
+            Entity player = Game.Player;
             if (player == null)
             {
-                player = new Player();
+                player = new Entity();
             }
             player.x = map.Rooms[0].Center.X;
             player.y = map.Rooms[0].Center.Y;

@@ -20,7 +20,7 @@ namespace sharpRoguelike.Core.Systems
         public void ActivateMonsters()
         {
             IScheduleable scheduleable = Game.SchedulingSytem.Get();
-            if (scheduleable.owner is Player)
+            if (scheduleable.owner.player != null)
             {
                 IsPlayerTurn = true;
                 Game.SchedulingSytem.Add(Game.Player.actor);
@@ -220,7 +220,7 @@ namespace sharpRoguelike.Core.Systems
         // Remove the defender from the map and add some messages upon death.
         private static void ResolveDeath(Entity defender)
         {
-            if (defender is Player)
+            if (defender.player != null)
             {
                 Game.MessageLog.Add($"  {defender.name} was killed, GAME OVER MAN!",Colors.CombatMessage);
                 Game.ResetGame();

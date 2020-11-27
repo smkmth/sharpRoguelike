@@ -43,6 +43,7 @@ namespace sharpRoguelike.Core
         public Useable effect = null;       //does this enity have an effect when used
         public Entity corpse = null;        //does this entity have a corpse
         public Surface surface = null;      //does this entity have an effect when walked on
+        public Player player = null;        //is this entity a player
 
         public virtual void Draw(RLConsole con, IMap map)
         {

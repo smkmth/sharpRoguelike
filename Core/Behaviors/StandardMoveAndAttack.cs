@@ -15,7 +15,7 @@ namespace sharpRoguelike.Core.Behaviors
         public bool Act(Monster monster, CommandSystem commandSystem)
         {
             DungeonMap dungeonMap = Game.DungeonMap;
-            Player player = Game.Player;
+            Entity player = Game.Player;
             FieldOfView monsterFov = new FieldOfView(dungeonMap);
 
             if (!monster.TurnsAlerted.HasValue)

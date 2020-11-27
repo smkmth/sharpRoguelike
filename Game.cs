@@ -35,7 +35,7 @@ namespace sharpRoguelike
         private static RLConsole menuConsole;
         
         public static bool fullScreen = false;
-        public static Player Player { get;  set; }
+        public static Entity Player { get;  set; }
         
         public static SaveLoadSystem saveLoad { get; private set; }
 
@@ -116,7 +116,7 @@ namespace sharpRoguelike
             //gen map
             MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
             DungeonMap = mapGenerator.CreateMap(true);
-            Player.ResetPlayer();
+            Player.player.ResetPlayer();
 
             //start messages
             MessageLog.Add("The rogue arrives on level 1, blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ", Colors.NormalMessage);

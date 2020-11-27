@@ -11,7 +11,7 @@ namespace sharpRoguelike.Core.Systems
     {
         int stepDistance = 20;
         int offset = 5;
-        public void DrawPlayer(RLConsole con, Player player)
+        public void DrawPlayer(RLConsole con, Entity player)
         {
 
             con.Print(1, 1, $"Name:    {player.name}", Colors.Text);

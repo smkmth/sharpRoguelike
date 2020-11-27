@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using RLNET;
 using RogueSharp;
+using sharpRoguelike.Core.Components;
+using sharpRoguelike.Core.Items;
 
 namespace sharpRoguelike.Core
 {
@@ -125,7 +127,7 @@ namespace sharpRoguelike.Core
 
         public void UpdatePlayerFOV()
         {
-            Player player = Game.Player;
+            Entity player = Game.Player;
             ComputeFov(player.x, player.y, player.actor.Awareness, true);
             foreach(Cell cell in GetAllCells())
             {
@@ -177,9 +179,28 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void AddPlayer(Player player)
+        public void AddPlayer(Entity player)
         {
+
+            //TODO move player recipie 
+            player.color = Colors.Player;
+            player.symbol = '@';
+            player.name = "Rogue";
+            player.attacker = new Attacker(player);
+            player.attacker.Attack = 2;
+            player.attacker.AttackChance = 50;
+            player.attacker.Defense = 2;
+            player.attacker.DefenseChance = 20;
+            player.attacker.Health = 100;
+            player.attacker.MaxHealth = 100;
+            player.actor = new Actor(player);
+            player.actor.Awareness = 15;
+            player.actor.Speed = 10;
+            player.inventory = new Inventory(player);
+            player.inventory.AddItem(HealthPotion.Create());
+            player.player = new Player(player);
             Game.Player = player;
+
             SetIsWalkable(player.x, player.y, false);
             UpdatePlayerFOV();
             Game.SchedulingSytem.Add(player.actor);
@@ -282,7 +303,7 @@ namespace sharpRoguelike.Core
         
         public bool CanMoveDownToNextLevel()
         {
-            Player player = Game.Player;
+            Entity player = Game.Player;
             return StairsDown.x == player.x && StairsDown.y == player.y;
 
         }
