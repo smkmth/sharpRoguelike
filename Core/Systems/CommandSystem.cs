@@ -144,7 +144,7 @@ namespace sharpRoguelike.Core.Systems
             }
             int hits = 0;
 
-            attackMessage.AppendFormat("{0} attacks {1} and rolls: ", attacker.name, defender.name);
+            attackMessage.AppendFormat("{0} attacks {1}.", attacker.name, defender.name);
 
             // Roll a number of 100-sided dice equal to the Attack value of the attacking actor
             DiceExpression attackDice = new DiceExpression().Dice(attacker.attacker.Attack, 100);
@@ -153,7 +153,6 @@ namespace sharpRoguelike.Core.Systems
             // Look at the face value of each single die that was rolled
             foreach (TermResult termResult in attackResult.Results)
             {
-                attackMessage.Append(termResult.Value + ", ");
                 // Compare the value to 100 minus the attack chance and add a hit if it's greater
                 if (termResult.Value >= 100 - attacker.attacker.AttackChance)
                 {
@@ -175,8 +174,6 @@ namespace sharpRoguelike.Core.Systems
 
             if (hits > 0)
             {
-                attackMessage.AppendFormat("scoring {0} hits.", hits);
-                defenseMessage.AppendFormat("  {0} defends and rolls: ", defender.name);
 
                 // Roll a number of 100-sided dice equal to the Defense value of the defendering actor
                 DiceExpression defenseDice = new DiceExpression().Dice(defender.attacker.Defense, 100);
@@ -185,18 +182,16 @@ namespace sharpRoguelike.Core.Systems
                 // Look at the face value of each single die that was rolled
                 foreach (TermResult termResult in defenseRoll.Results)
                 {
-                    defenseMessage.Append(termResult.Value + ", ");
                     // Compare the value to 100 minus the defense chance and add a block if it's greater
                     if (termResult.Value >= 100 - defender.attacker.DefenseChance)
                     {
                         blocks++;
                     }
                 }
-                defenseMessage.AppendFormat("resulting in {0} blocks.", blocks);
             }
             else
             {
-                attackMessage.Append("and misses completely.");
+                attackMessage.Append(" and misses completely.");
             }
 
             return blocks;
