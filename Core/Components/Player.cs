@@ -5,6 +5,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components
 {
+    [Serializable]
     public class Player
     {
         public Entity owner;

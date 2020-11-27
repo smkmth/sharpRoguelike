@@ -28,10 +28,10 @@ namespace sharpRoguelike.Core.Systems
             }
             else
             {
-                Monster monster = scheduleable.owner as Monster;
+                Entity monster = scheduleable.owner;
                 if (monster != null)
                 {
-                    monster.PerformAction(this);
+                    monster.ai.PerformAction(this);
                     Game.SchedulingSytem.Add(monster.actor);
                 }
                 ActivateMonsters();
@@ -39,7 +39,7 @@ namespace sharpRoguelike.Core.Systems
             }
         }
 
-        public void MoveMonster( Monster monster, ICell cell)
+        public void MoveMonster( Entity monster, ICell cell)
         {
             if (!Game.DungeonMap.SetActorPosition(monster, cell.X, cell.Y))
             {
@@ -227,7 +227,7 @@ namespace sharpRoguelike.Core.Systems
             }
             else 
             {
-                Game.DungeonMap.RemoveMonster((Monster)defender);
+                Game.DungeonMap.RemoveMonster(defender);
                 defender.corpse.x = defender.x;
                 defender.corpse.y = defender.y;
                 

@@ -7,6 +7,6 @@ namespace sharpRoguelike.Core.Interfaces
 {
     interface IBehavior
     {
-        bool Act(Monster monster, CommandSystem commandSystem);
+        bool Act(Entity monster, CommandSystem commandSystem);
     }
 }

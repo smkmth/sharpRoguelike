@@ -8,14 +8,15 @@ using System.Text;
 namespace sharpRoguelike.Core
 {
     [Serializable]
-    public class Monster : Entity
+    public class AI 
     {
+        public Entity owner;
         public int? TurnsAlerted { get; set; }
 
         public virtual void PerformAction(CommandSystem commandSystem)
         {
             var behavior = new StandardMoveAndAttack();
-            behavior.Act(this, commandSystem);
+            behavior.Act(owner, commandSystem);
         }
     }
 }

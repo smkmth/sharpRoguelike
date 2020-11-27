@@ -21,12 +21,12 @@ namespace sharpRoguelike.Core.Systems
 
         }
 
-        public void DrawMonsters(RLConsole con, List<Monster> monsters)
+        public void DrawMonsters(RLConsole con, List<Entity> monsters)
         {
             int moncount = 0;
             int xoffset = 0;
             int yoffset = 1;
-            foreach (Monster monster in monsters)
+            foreach (Entity monster in monsters)
             {
                 yoffset = 1;
                 if ((moncount % 2) == 0)

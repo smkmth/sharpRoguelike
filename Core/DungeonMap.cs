@@ -12,7 +12,7 @@ namespace sharpRoguelike.Core
     public class DungeonMap : Map 
     {
         public List<Rectangle> Rooms;
-        public List<Monster> Monsters;
+        public List<Entity> Monsters;
         public List<Door> Doors;
         public List<Entity> Items;
         public List<Entity> Surfaces;
@@ -20,19 +20,19 @@ namespace sharpRoguelike.Core
         public Stairs StairsDown;
         public List<Entity> Entities;
         public List<SerialiseableCells> s_cells;
-        List<Monster> monstersInFov;
+        List<Entity> monstersInFov;
 
         public DungeonMap()
         {
             Game.SchedulingSytem.Clear();
             Rooms = new List<Rectangle>();
-            Monsters = new List<Monster>();
+            Monsters = new List<Entity>();
             Doors = new List<Door>();
             Items = new List<Entity>();
             Surfaces = new List<Entity>();
             Entities = new List<Entity>();
             s_cells = new List<SerialiseableCells>();
-            monstersInFov = new List<Monster>();
+            monstersInFov = new List<Entity>();
         }
 
 
@@ -82,7 +82,7 @@ namespace sharpRoguelike.Core
                 door.Draw(mapConsole, this);
             }
             monstersInFov.Clear();
-            foreach (Monster monster in Monsters)
+            foreach (Entity monster in Monsters)
             {
                 monster.Draw(mapConsole, this);
                 if (IsInFov(monster.x, monster.y))
@@ -207,7 +207,7 @@ namespace sharpRoguelike.Core
             Entities.Add(player);
         }
 
-        public void AddMonster(Monster monster)
+        public void AddMonster(Entity monster)
         {
             Monsters.Add(monster);
             SetIsWalkable(monster.x, monster.y, false);
@@ -216,7 +216,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void RemoveMonster(Monster monster)
+        public void RemoveMonster(Entity monster)
         {
             Monsters.Remove(monster);
             Entities.Remove(monster);
@@ -226,7 +226,7 @@ namespace sharpRoguelike.Core
         }
         
 
-        public Monster GetMonsterAt(int x, int y)
+        public Entity GetMonsterAt(int x, int y)
         {
             return Monsters.FirstOrDefault(m => m.x == x && m.y == y);
         }
@@ -386,7 +386,7 @@ namespace sharpRoguelike.Core
             }
 
             Entities.AddRange(Monsters);
-            foreach(Monster monster in Monsters)
+            foreach(Entity monster in Monsters)
             {
                 Game.SchedulingSytem.Add(monster.actor);
             }

@@ -7,7 +7,7 @@ using System.Text;
 namespace sharpRoguelike.Core.Monsters
 {
     [Serializable]
-    public class Kobold : Monster
+    public class Kobold : Entity
     {
         public static Kobold Create(int level)
         {
@@ -45,6 +45,8 @@ namespace sharpRoguelike.Core.Monsters
             };
             kobold.corpse = corpse;
 
+            kobold.ai = new AI();
+            kobold.ai.owner = kobold;
             return kobold;
 
         }

@@ -44,6 +44,8 @@ namespace sharpRoguelike.Core
         public Entity corpse = null;        //does this entity have a corpse
         public Surface surface = null;      //does this entity have an effect when walked on
         public Player player = null;        //is this entity a player
+        public AI ai = null;                //does this entity have AI
+
 
         public virtual void Draw(RLConsole con, IMap map)
         {

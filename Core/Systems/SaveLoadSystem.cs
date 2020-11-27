@@ -61,7 +61,7 @@ namespace sharpRoguelike.Core.Systems
             Game.Player = (Entity)formatter.Deserialize(stream);
             Game.DungeonMap.s_cells = (List<SerialiseableCells>)formatter.Deserialize(stream);
             Game.DungeonMap.Doors = (List<Door>)formatter.Deserialize(stream);
-            Game.DungeonMap.Monsters = (List<Monster>)formatter.Deserialize(stream);
+            Game.DungeonMap.Monsters = (List<Entity>)formatter.Deserialize(stream);
             Game.DungeonMap.Items = (List<Entity>)formatter.Deserialize(stream);
             Game.DungeonMap.Surfaces = (List<Entity>)formatter.Deserialize(stream);
             Game.DungeonMap.StairsDown = (Stairs)formatter.Deserialize(stream);

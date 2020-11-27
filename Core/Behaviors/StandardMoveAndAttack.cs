@@ -12,19 +12,19 @@ namespace sharpRoguelike.Core.Behaviors
     {
         int longPathWait = 0;
 
-        public bool Act(Monster monster, CommandSystem commandSystem)
+        public bool Act(Entity monster, CommandSystem commandSystem)
         {
             DungeonMap dungeonMap = Game.DungeonMap;
             Entity player = Game.Player;
             FieldOfView monsterFov = new FieldOfView(dungeonMap);
 
-            if (!monster.TurnsAlerted.HasValue)
+            if (!monster.ai.TurnsAlerted.HasValue)
             {
                 monsterFov.ComputeFov(monster.x, monster.y, monster.actor.Awareness, true);
                 if (monsterFov.IsInFov(player.x, player.y))
                 {
                     Game.MessageLog.Add($" The {monster.name} sees {player.name}", Colors.NormalMessage);
-                    monster.TurnsAlerted = 1;
+                    monster.ai.TurnsAlerted = 1;
                 }
 
             }
@@ -71,10 +71,10 @@ namespace sharpRoguelike.Core.Behaviors
 
                     }
                 }
-                monster.TurnsAlerted++;
-                if(monster.TurnsAlerted > 15)
+                monster.ai.TurnsAlerted++;
+                if(monster.ai.TurnsAlerted > 15)
                 {
-                    monster.TurnsAlerted = null;
+                    monster.ai.TurnsAlerted = null;
                 }
             }
             return true;
