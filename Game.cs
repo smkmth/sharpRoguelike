@@ -392,29 +392,22 @@ namespace sharpRoguelike
             mapConsole.Clear();
             messageConsole.Clear();
 
-            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole,0, 0);
+
+            MessageLog.Draw(messageConsole);
+            playerInventory.Draw(menuConsole, screenWidth -(messageWidth + 2));
+            rootConsole.Draw();
+
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, mapWidth, 0);
             RLConsole.Blit(menuConsole, 0, 0, screenWidth- messageWidth, screenHeight , rootConsole, 0, 0);
 
-            Console.WriteLine($"width in game.cs {screenWidth - messageWidth}");
-
-            rootConsole.Draw();
-            playerInventory.Draw(menuConsole, screenWidth -(messageWidth + 2));
-            MessageLog.Draw(messageConsole);
 
         }
 
         private static void DrawMainGame()
         {
-            // Blit the sub consoles to the root console in the correct locations
-            RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight, rootConsole, 0, lookHeight);
-            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, mapWidth, 0);
-            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, 0, screenHeight - statHeight);
-            RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight, rootConsole, 0, 0);
-
 
             if (shouldUpdateDraw)
             {
-                rootConsole.Draw();
 
                 mapConsole.Clear();
                 messageConsole.Clear();
@@ -425,7 +418,14 @@ namespace sharpRoguelike
                 MessageLog.Draw(messageConsole);
                 Player.Draw(mapConsole, DungeonMap);
                 statDisplay.DrawPlayer(statConsole, Player);
+                rootConsole.Draw();
             }
+            // Blit the sub consoles to the root console in the correct locations
+            RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight, rootConsole, 0, lookHeight);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, mapWidth , 0);
+            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, 0, screenHeight - statHeight);
+            RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight, rootConsole, 0, 0);
+
         }
 
    

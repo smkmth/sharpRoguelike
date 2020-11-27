@@ -55,9 +55,6 @@ namespace sharpRoguelike.Core.Menus
 
             if (currentInventoryState == InventoryState.SELECTED_ITEM)
             {
-                Console.WriteLine($"width in menu.cs {width }");
-
-
                 int index = 2;
 
                 string itemname = $"Selected: {currentlySelectedItem.name}";

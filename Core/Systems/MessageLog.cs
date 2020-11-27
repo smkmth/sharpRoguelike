@@ -20,7 +20,7 @@ namespace sharpRoguelike.Core.Systems
 
     public class MessageLog
     {
-        private static readonly int maxLines = 70;
+        private static readonly int maxLines = 79;
 
         private readonly Queue<Message> lines;
         Message[] arlines;
@@ -49,12 +49,9 @@ namespace sharpRoguelike.Core.Systems
                 lines.Enqueue(new Message("                                     ", color));
 
             }
-            if (lines.Count > maxLines)
-            {
-                lines.Dequeue();
-            }
             lines.Enqueue(new Message("-------------------------------------", color));
-            if (lines.Count > maxLines)
+
+            while(lines.Count > maxLines)
             {
                 lines.Dequeue();
             }
@@ -63,11 +60,11 @@ namespace sharpRoguelike.Core.Systems
 
         public void Draw(RLConsole con)
         {
-            con.Clear();
-
+            con.Print(1, 1, "Messages", RLColor.White);
             if (update)
             {
                 arlines = lines.ToArray();
+                update = false;
             }
 
 
@@ -81,9 +78,6 @@ namespace sharpRoguelike.Core.Systems
         {
             lines.Clear();
             arlines = lines.ToArray();
-
-            
-
         }
     }
 }

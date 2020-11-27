@@ -17,7 +17,5 @@ namespace sharpRoguelike.Core
             var behavior = new StandardMoveAndAttack();
             behavior.Act(this, commandSystem);
         }
-
-   
     }
 }
