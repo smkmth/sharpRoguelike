@@ -5,6 +5,10 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Systems
 {
+    //resposible for handling messages that appear on the right of the screen
+    //that tell you whats going on. easy enough really just manages a queue of 
+    //'messages' holding a message string and message color - with some rudimentary
+    //text wrapping
     public class Message
     {
         public string message;

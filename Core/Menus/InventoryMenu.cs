@@ -120,7 +120,7 @@ namespace sharpRoguelike.Core.Menus
             if (currentInventoryState == InventoryState.SELECTED_EQUIPMENT)
             {
                 int index = 2;
-                string equipSlotName = $"Selected: {currentlySelectedSlot.name}";
+                string equipSlotName = $"Selected: {currentlySelectedSlot.equipType.ToString()}";
                 con.Print(width - equipSlotName.Length, index, equipSlotName, RLColor.White);
                 index += 2;
 
@@ -238,7 +238,7 @@ namespace sharpRoguelike.Core.Menus
                 {
                     con.Clear();
                     currentInventoryState = InventoryState.INVENTORY;
-                    currentlySelectedItem = null;
+                    currentlySelectedSlot = null;
                     return;
                 }
                 if (keypress.Key == RLKey.Down || keypress.Key == RLKey.Up || keypress.Key == RLKey.Left || keypress.Key == RLKey.Right)

@@ -8,6 +8,8 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    //responsible for placing all the entities and creating the rooms - builds 
+    //a 'map' and returns in the CreateMap function
     public class MapGenerator
     {
         private readonly int width;

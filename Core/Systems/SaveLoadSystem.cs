@@ -7,6 +7,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace sharpRoguelike.Core.Systems
 {
+    //boring - serialisation boilerplate stuff. at least its not cpp. 
+    //so all classes that can be serialised need to be marked with [serliazalble] on 
+    //the top - which is pretty much everything in the whole game, with exception 
+    //to any of the API stuff, like RLColor, or - ITile or whatever -so these things 
+    //have to be kind of manually done. i have just extracted these parts to structs and
+    //seralised the structs - and then reapplied the structs back to api language after 
     public class SaveLoadSystem
     {
         public string savePathName = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDoc‌​uments), "ALCHYMIA");

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 namespace sharpRoguelike.Core
 {
+    //struct so i can pull out the color of an entity or thing or whatever
+    //and serialise it as RLColor is locked off to me
     [Serializable]
     public struct RLSerialiseableColor
     {
@@ -22,6 +24,17 @@ namespace sharpRoguelike.Core
         }
     }
 
+    //the main class that things 'are'. Everything in the game 
+    //is an entity - entities have components - that i can query. 
+    //a player is nto a unique type of entity - but an entity with
+    //a player component attached to it. I just to a null check 
+    //to see if an entity has some relevant component attached. 
+    //there are some unique entities - but they are only unique 
+    //in the way they are drawn - not functionality. 
+
+    //components can express a has a or is a relationship. a entity 
+    //with a player component is a player, a component with a effect
+    //component can be 'used' in a inventory - so it is an item
     [Serializable]
     public class Entity : IDrawable
     {
@@ -32,11 +45,11 @@ namespace sharpRoguelike.Core
             get { return _color; }
             set { _color = value; }
         }
+
         public char symbol { get; set; }
         public int x { get; set; }
         public int y { get; set; }
         public string name { get; set; }
-
         public string description { get; set; }
 
 
@@ -86,6 +99,5 @@ namespace sharpRoguelike.Core
         }
 
 
-        public virtual void DrawStats(RLConsole statConsole, int pos) {}
     }
 }

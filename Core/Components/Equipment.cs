@@ -12,12 +12,15 @@ namespace sharpRoguelike.Core.Components
         LEGS,
         RING
     }
-
+    //equipment expresses that its owner item is a piece of equipment- 
+    //i am useing ownerItem here to EMPHASISE that an equipments 'owner'
+    //is the 'item' entity that it is contained it - so for instance 
+    //it might be owned by a dagger - not as you might think - be owned by 
+    //a player or enemy or some such 
     [Serializable]
     public class Equipment
     {
-        public Entity ownerItem;
-        public Entity ownerCreature;
+        public Entity ownerItem;    
 
         public int attackModifier;
         public int attackChanceModifier;

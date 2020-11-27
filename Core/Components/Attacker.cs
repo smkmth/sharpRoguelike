@@ -5,6 +5,8 @@ using System.Text;
 namespace sharpRoguelike.Core.Components
 {
     [Serializable]
+    // attacker is mostly a plain old data file - it just holds on to the owners base attack stats
+    // but it also pulls and modifies those stats with equipment if the owner has equipment
     public class Attacker
     {
 

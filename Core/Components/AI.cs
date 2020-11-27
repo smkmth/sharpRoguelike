@@ -7,6 +7,9 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    //if its a thing that moves around - it needs to have this component on it - will 
+    //call its perform action function when it gets told to by command system HandleTurnOrder
+
     [Serializable]
     public class AI 
     {

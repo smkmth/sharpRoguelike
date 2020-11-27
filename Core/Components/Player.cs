@@ -6,6 +6,11 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components
 {
+    //the big cahoona - the player is a component that marks an entity as a player- 
+    //if an entities .player != null - then you have a player. One thing to note
+    //is that the ResetPlayer function here stores all the players data - just 
+    //a lazy ease of use thing really. 
+    //TODO - let the player migrate by giving another entity a .player
     [Serializable]
     public class Player
     {

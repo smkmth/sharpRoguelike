@@ -40,7 +40,7 @@ namespace sharpRoguelike.Core.Monsters
             Entity corpse = new Entity()
             {
                 name = "Kolbold Corpse",
-                color = Swatch.DbBlood,
+                color = Colors.Corpse,
                 symbol = '%'
             };
             kobold.corpse = corpse;

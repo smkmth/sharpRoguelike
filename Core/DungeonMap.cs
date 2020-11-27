@@ -9,16 +9,23 @@ using sharpRoguelike.Core.Items;
 
 namespace sharpRoguelike.Core
 {
+    //the main - API - thing in the project - derives from map, which 
+    //seems to just be a collection of cells and some ways to access those cells
+    //dungon map contains multiple lists of entity 'types' for ease of access more 
+    //than anything, and an entity master list that holds all the entities.
+    //yes this is wierd since all the things are entities- and TODO refactor this - 
+    //but it works for now. 
     public class DungeonMap : Map 
     {
         public List<Rectangle> Rooms;
-        public List<Entity> Monsters;
         public List<Door> Doors;
+        public List<Entity> Monsters;
         public List<Entity> Items;
         public List<Entity> Surfaces;
+        public List<Entity> Entities;
         public Stairs StairsUp;
         public Stairs StairsDown;
-        public List<Entity> Entities;
+
         public List<SerialiseableCells> s_cells;
         List<Entity> monstersInFov;
 
@@ -413,6 +420,8 @@ namespace sharpRoguelike.Core
             }
         }
     }
+
+    //another serialisation class - exists so i can set all the tiles i have seen back to explored
     [Serializable]
     public struct SerialiseableCells
     {

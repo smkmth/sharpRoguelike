@@ -4,6 +4,12 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+
+    //an inventory is a space to put items - inventories are quired by inventory menus, and
+    //they can hold any kind of entity. This is kind of flexible because it means anything can
+    //potentially be picked up by anything with an inventory.
+    //the only really intersting thing to note is that dropping items has some functionality
+    //here - it instantiates the item into the world. 
     [Serializable]
     public class Inventory
     {

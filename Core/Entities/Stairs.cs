@@ -7,6 +7,9 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    //stairs are a unique entity because again they are drawn in a
+    //funny way - up stairs and down stairs need to be drawn differently
+
     [Serializable]
     public class Stairs : Entity 
     { 

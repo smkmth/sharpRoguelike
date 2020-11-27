@@ -6,6 +6,9 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Systems
 {
+    //kind of hate this dogshit - but its here anyway. its functionally pretty okay - it lets things
+    // move at different speeds - so monsters might move faster - take more turns then player or visa
+    //versa. i just hate all this complicated interface stuff but cant be bothered to redesign
     public class SchedulingSystem
     {
         private int time;

@@ -7,6 +7,8 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    //a door is a unique entity because its drawn wierd - it has two states
+    //open or not open - which changes how its drawn. 
     [Serializable]
     public class Door :  Entity
     {

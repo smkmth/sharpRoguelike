@@ -6,7 +6,7 @@ using System.Text;
 namespace sharpRoguelike.Core.Systems
 {
    
-
+    //responsible for displaying the monsters / players health on the bottom of the screen 
     public class StatDisplay
     {
         int stepDistance = 20;
@@ -41,8 +41,8 @@ namespace sharpRoguelike.Core.Systems
                 int width = Convert.ToInt32(((double)monster.attacker.Health / (double)monster.attacker.MaxHealth) * 16.0);
                 int remainingWidth = 16 - width;
 
-                con.SetBackColor(xPosition, yoffset + 2, width, 1, Swatch.Primary);
-                con.SetBackColor(xPosition + width, yoffset+2, remainingWidth, 1, Swatch.PrimaryDarkest);
+                con.SetBackColor(xPosition, yoffset + 2, width, 1, Colors.Primary);
+                con.SetBackColor(xPosition + width, yoffset+2, remainingWidth, 1, Colors.PrimaryDarkest);
 
                 moncount++;
             }

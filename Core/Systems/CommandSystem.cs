@@ -7,6 +7,11 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Systems
 {
+
+    //TODO refactor and fuck with this class - maybe?
+    //not really my class - i have done stuff with this - but this was a left over from a tutorial
+    //and works- OKAY - it basically handles movement and attacking- but is not like all componently 
+    //and modular as i like 
     public class CommandSystem
     {
 
@@ -17,7 +22,7 @@ namespace sharpRoguelike.Core.Systems
             IsPlayerTurn = false;
         }
 
-        public void ActivateMonsters()
+        public void HandleTurnOrder()
         {
             IScheduleable scheduleable = Game.SchedulingSytem.Get();
             if (scheduleable.owner.player != null)
@@ -34,7 +39,7 @@ namespace sharpRoguelike.Core.Systems
                     monster.ai.PerformAction(this);
                     Game.SchedulingSytem.Add(monster.actor);
                 }
-                ActivateMonsters();
+                HandleTurnOrder();
 
             }
         }
@@ -232,7 +237,7 @@ namespace sharpRoguelike.Core.Systems
                 defender.corpse.y = defender.y;
                 
                 Game.DungeonMap.AddItem(defender.corpse);
-                Game.MessageLog.Add($" {defender.name} died !", Swatch.DbBlood);
+                Game.MessageLog.Add($" {defender.name} died !", Colors.CombatMessage);
             }
             defender.attacker = null;
         }

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core
 {
+    //stupid -TODO clean this unnessosary tutorial shit up  
     public enum Direction
     {
         None = 0,

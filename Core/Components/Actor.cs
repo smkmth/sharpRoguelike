@@ -6,6 +6,9 @@ using RogueSharp;
 using sharpRoguelike.Core.Interfaces;
 namespace sharpRoguelike.Core
 {
+    //TODO refactor this! 
+    //actor components let things move around and have fov- its a bit of a left over from bunk tutorial code
+    //need to refactor at some point - but yeah it works for now
     [Serializable]
     public class Actor :  IScheduleable
     {

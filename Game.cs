@@ -8,6 +8,17 @@ using sharpRoguelike.Core.Systems;
 
 namespace sharpRoguelike
 {
+    //the main class - and yeah this is a mess sorry lol. everything here is static 
+    //so i can access it everywhere - and you might be saying - hey doesnt that lead to 
+    //data getting modified all over the place? and - yeah kind of but like its fine
+    //for now. 
+
+    //when running the game make sure to tweak the scale factor - because this api shits
+    //the bed when it comes to screen res - not found a good solution - just fuck around with the 
+    //value untill you can see the whole console - the stat bar the message console ect.
+
+    //class is split mostly between draw stuff at the bottom - update stuff (getting keys) 
+    //in the middle, start game stuff towards the top and the entry point at the v.top
     public static class Game
     {
 
@@ -34,7 +45,6 @@ namespace sharpRoguelike
 
         private static RLConsole menuConsole;
         
-        public static bool fullScreen = false;
         public static Entity Player { get;  set; }
         
         public static SaveLoadSystem saveLoad { get; private set; }
@@ -50,57 +60,77 @@ namespace sharpRoguelike
 
 
 
+        public static bool fullScreen = false;
         public static bool didPlayerAct;
         public static bool shouldUpdateDraw =true;
         public static int steps;
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
         public static int seed;
-
+        public static float scaleFactor = 1.4f;
 
 
         static void Main(string[] args)
         {
-            saveLoad = new SaveLoadSystem();
-            CurrentGameMode = GameMode.MAINMENU;
+            //get font file from folder dir
             string fontFileName = "terminal8x8.png";
             string consoleTitle = "alchymia";
-            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, 1.4f, consoleTitle);
+
+            rootConsole = new RLRootConsole(fontFileName, screenWidth, screenHeight, 8,8, scaleFactor, consoleTitle);
             rootConsole.SetWindowState(RLWindowState.Maximized);
           
+            CurrentGameMode = GameMode.MAINMENU;
+
+            // new all the stuff that needs newing 
+
+            saveLoad = new SaveLoadSystem();
             mapConsole = new RLConsole(mapWidth, mapHeight);
             messageConsole = new RLConsole(messageWidth, messageHeight);
             lookConsole = new RLConsole(lookWidth, lookHeight);
             statConsole = new RLConsole(statWidth, statHeight);
             menuConsole = new RLConsole(screenWidth, screenHeight);
-            
             CommandSystem = new CommandSystem();
             SchedulingSytem = new SchedulingSystem();
             MessageLog = new MessageLog(messageWidth);
             mainMenu = new MainMenu();
             statDisplay = new StatDisplay();
 
-            shouldUpdateDraw = false;
+            //set up main menu
             mainMenu.OnFirstEnter();
 
+            //attach all the hooks to the console update and render
             rootConsole.Render += OnRootConsoleRender;
             rootConsole.Update += OnRootConsoleUpdate;
+
+            //all downhill from here
             rootConsole.Run();
 
 
         }
 
-        public static void ResetGame()
+        private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            
-            CurrentGameMode = GameMode.MAINMENU;
-            mainMenu.OnFirstEnter();
-            statConsole.Clear();
-            MessageLog.Clear();
+            if (CurrentGameMode == GameMode.MAINMENU)
+            {
+                HandleMainMenu();
+            }
+            else
+            {
+                HandleGame();
+            }
+
         }
 
-
-        public static void StartGame(int? enter_seed=null)
+        public static void HandleMainMenu()
+        {
+            shouldUpdateDraw = true;
+            RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
+            if (keyPress != null)
+            {
+                mainMenu.HandleInput(keyPress, menuConsole);
+            }
+        }
+        public static void StartGame(int? enter_seed = null)
         {
             //get seed
             if (enter_seed != null)
@@ -119,8 +149,8 @@ namespace sharpRoguelike
             Player.player.ResetPlayer();
 
             //start messages
-            MessageLog.Add("The rogue arrives on level 1, blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ", Colors.NormalMessage);
-            MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
+            MessageLog.Add("The rogue arrives on level 1. ", Colors.NormalMessage);
+            MessageLog.Add($"Level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
 
             StartGeneric();
 
@@ -142,40 +172,30 @@ namespace sharpRoguelike
             StartGeneric();
         }
 
+        //always do this - if we are loading or starting fresh
         public static void StartGeneric()
         {
             DungeonMap.UpdatePlayerFOV();
 
             playerInventory = new InventoryMenu(Player.inventory, Player.equipmentSlots);
-            shouldUpdateDraw = true;
             CurrentGameMode = GameMode.PLAYING;
         }
 
-        private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
+        public static void ResetGame()
         {
-            if (CurrentGameMode == GameMode.MAINMENU)
-            {
-                 HandleMainMenu();
-            }
-            else
-            { 
-                HandleGame();
-            }
-       
-            // In OnRootConsoleUpdate() replace the if ( didPlayerAct ) block
-
-        }
-        public static void HandleMainMenu()
-        {
-            RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
-            if (keyPress != null)
-            {
-                mainMenu.HandleInput(keyPress, menuConsole);
-            }
+            
+            CurrentGameMode = GameMode.MAINMENU;
+            mainMenu.OnFirstEnter();
+            statConsole.Clear();
+            MessageLog.Clear();
         }
 
+
+        //get keyboard input while in game
         public static void HandleGame()
         {
+            shouldUpdateDraw = false;
+
             bool didPlayerAct = false;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
             HandleMouse();
@@ -292,17 +312,21 @@ namespace sharpRoguelike
             }
             else
             {
-                CommandSystem.ActivateMonsters();
+                CommandSystem.HandleTurnOrder();
                 shouldUpdateDraw = true;
             }
+            shouldUpdateDraw = true;                            //TODO figure out why this is being funny
+
         }
 
-        public static Action<int, int> targetCallback;
-        public static Action<bool> targetCancelCallback;
+        public static Action<int, int> targetCallback;          //subscibe to this when in targeting mode - invoke when you have selected the tile
+        public static Action<bool> targetCancelCallback;        //subscribe to this when in targeting mode - invoke if player cancels
+
+        //get mouse input when in game
         private static void HandleMouse()
         {
             int mx = rootConsole.Mouse.X;
-            int my = rootConsole.Mouse.Y - lookHeight;
+            int my = rootConsole.Mouse.Y - lookHeight;          //mouse is messured from top left of screen so the look console offsets this value 
 
             if (rootConsole.Mouse.GetLeftClick())
             {
@@ -327,6 +351,8 @@ namespace sharpRoguelike
                     targetCancelCallback = null;
                 }
             }
+
+            //tell us what entities are under the mouse pointer
             if (mx > 0 && my > 0)
             {
                 List<string> names = DungeonMap.InterigateEntityAtLocation(mx, my);
@@ -345,6 +371,7 @@ namespace sharpRoguelike
             }
         }
 
+        //render function - called every frame 
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
 
@@ -377,13 +404,10 @@ namespace sharpRoguelike
         private static void DrawMainMenu()
         {
         
+            mainMenu.Draw(menuConsole);
+            rootConsole.Draw();
             RLConsole.Blit(menuConsole, 0, 0, screenWidth, screenHeight, rootConsole, 0, 0);
             RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, 0, screenHeight );
-
-
-
-            rootConsole.Draw();
-            mainMenu.Draw(menuConsole);
 
         }
 
