@@ -64,17 +64,17 @@ namespace sharpRoguelike.Core
 
         public Player player = null;                    //is this entity a player
         public Equipment equipment =null;               //is this entity equipment
-
+        public bool Clairvoince =false;
         public virtual void Draw(RLConsole con, IMap map)
         {
             ICell cell = map.GetCell(x, y);
 
-            if (!cell.IsExplored)
+            if (!cell.IsExplored && !Clairvoince)
             {
                 return;
             }
 
-            if (map.IsInFov(x, y))
+            if (map.IsInFov(x, y) || Clairvoince)
             {
                 con.Set(x, y, color, Colors.FloorBackgroundFov, symbol);
 

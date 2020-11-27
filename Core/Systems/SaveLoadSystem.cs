@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using RogueSharp.Random;
 
 namespace sharpRoguelike.Core.Systems
 {
@@ -41,7 +42,7 @@ namespace sharpRoguelike.Core.Systems
             formatter.Serialize(stream, Game.DungeonMap.Items);
             formatter.Serialize(stream, Game.DungeonMap.Surfaces);
             formatter.Serialize(stream, Game.DungeonMap.StairsDown);
- 
+
 
             Game.Player.color = Colors.Player;
             Game.Player.symbol = '@';
@@ -56,6 +57,8 @@ namespace sharpRoguelike.Core.Systems
             var formatter = new BinaryFormatter();
             formatter.Serialize(stream, Game.seed);
             formatter.Serialize(stream, Game.mapLevel);
+            formatter.Serialize(stream, Game.Random);
+
             stream.Close();
 
         }
@@ -81,6 +84,9 @@ namespace sharpRoguelike.Core.Systems
             FileStream stream = File.OpenRead(seedName);
             Game.seed = (int)formatter.Deserialize(stream);
             Game.mapLevel = (int)formatter.Deserialize(stream);
+            Game.Random = (RandomWrapper)formatter.Deserialize(stream);
+            Game.Random.random = new DotNetRandom(Game.seed);
+            Game.Random.Restore();
             stream.Close();
         }
     }

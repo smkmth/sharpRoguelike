@@ -71,11 +71,9 @@ namespace sharpRoguelike.Core
             mapConsole.Clear();
             foreach(Cell cell in GetAllCells())
             {
-
                 SetConsoleSymbolForCell(mapConsole, cell);
             }
-            StairsUp?.Draw(mapConsole, this);
-            StairsDown.Draw(mapConsole, this);
+
             foreach(Entity surface in Surfaces)
             {
                 surface.Draw(mapConsole, this);
@@ -98,6 +96,11 @@ namespace sharpRoguelike.Core
                 }
             }
             Game.statDisplay.DrawMonsters(statConsole, monstersInFov);
+
+            //stairs always at the v top 
+            StairsUp?.Draw(mapConsole, this);
+            StairsDown.Draw(mapConsole, this);
+
         }
 
         public void SetConsoleSymbolForCell(RLConsole con, Cell cell)
@@ -146,6 +149,28 @@ namespace sharpRoguelike.Core
             }
 
         }
+        public void Wallhack(bool setOn)
+        {
+            foreach (Cell cell in GetAllCells())
+            {
+                SetCellProperties(cell.X, cell.Y, setOn, cell.IsWalkable, setOn);
+            }
+        }
+        public void SeeAllWalls(bool setOn)
+        {
+            foreach (Cell cell in GetAllCells())
+            {
+                SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, setOn);
+            }
+        }
+        public void SeeAllEntities(bool setOn)
+        {
+            foreach(Entity entity in Entities)
+            {
+                entity.Clairvoince = setOn;
+            }
+        }
+
 
         public bool SetActorPosition(Entity actor, int x, int y)
         {
@@ -371,13 +396,12 @@ namespace sharpRoguelike.Core
 
         public void LoadEntities()
         {
-
             foreach (SerialiseableCells cell in s_cells)
             {
                 ICell icell = GetCell(cell.x, cell.y);
-                SetCellProperties(cell.x, cell.y, cell.transparent, icell.IsWalkable, cell.explored);
+                SetCellProperties(cell.x, cell.y, cell.transparent, cell.walkable, cell.explored);
             }
-
+           
             Entities.AddRange(Monsters);
             foreach(Entity monster in Monsters)
             {
@@ -413,10 +437,10 @@ namespace sharpRoguelike.Core
 
                 }
             }
-
+            s_cells.Clear();
             foreach(ICell cell in GetAllCells())
             {
-                s_cells.Add(new SerialiseableCells(cell.X, cell.Y, cell.IsTransparent, cell.IsExplored));
+                s_cells.Add(new SerialiseableCells(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, cell.IsExplored));
             }
         }
     }
@@ -429,13 +453,15 @@ namespace sharpRoguelike.Core
         public int y;
         public bool explored;
         public bool transparent;
+        public bool walkable;
 
-        public SerialiseableCells(int x, int y, bool transparent, bool explored)
+        public SerialiseableCells(int x, int y, bool transparent,bool walkable, bool explored)
         {
             this.x = x;
             this.y = y;
             this.explored = explored;
             this.transparent = transparent;
+            this.walkable = walkable;
         }
     }
 }

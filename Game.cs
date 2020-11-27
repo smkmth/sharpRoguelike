@@ -56,7 +56,7 @@ namespace sharpRoguelike
         public static DungeonMap DungeonMap { get; private set; }
         public static MessageLog MessageLog { get; set; }
         public static SchedulingSystem SchedulingSytem { get; private set; }
-        public static IRandom Random { get; private set; }
+        public static RandomWrapper Random { get; set; }
 
 
 
@@ -69,6 +69,10 @@ namespace sharpRoguelike
         public static int seed;
         public static float scaleFactor = 1.4f;
 
+        public static bool DebugCheats = true;
+        public static bool wallhack = false;
+        public static bool seeallwalls = false;
+        public static bool seeallentities = false;
 
         static void Main(string[] args)
         {
@@ -142,14 +146,13 @@ namespace sharpRoguelike
                 seed = (int)DateTime.UtcNow.Ticks;
             }
 
-            Random = new DotNetRandom(seed);
+            Random = new RandomWrapper(new DotNetRandom(seed));
             //gen map
             MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
             DungeonMap = mapGenerator.CreateMap(true);
             Player.player.ResetPlayer();
 
             //start messages
-            MessageLog.Add("The rogue arrives on level 1. ", Colors.NormalMessage);
             MessageLog.Add($"Level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
 
             StartGeneric();
@@ -159,16 +162,16 @@ namespace sharpRoguelike
 
         public static void LoadGame()
         {
+            
             saveLoad.LoadSeed();
 
-            Random = new DotNetRandom(seed);
             //gen map
-            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
-            DungeonMap = mapGenerator.CreateMap(false);
+            //MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
+            DungeonMap = new DungeonMap();
+            DungeonMap.Initialize(mapWidth, mapHeight);
             saveLoad.LoadGame();
-
             DungeonMap.LoadEntities();
-
+            
             StartGeneric();
         }
 
@@ -179,6 +182,8 @@ namespace sharpRoguelike
 
             playerInventory = new InventoryMenu(Player.inventory, Player.equipmentSlots);
             CurrentGameMode = GameMode.PLAYING;
+            MessageLog.Add($"The rogue arrives on level {mapLevel} ", Colors.NormalMessage);
+
         }
 
         public static void ResetGame()
@@ -249,6 +254,7 @@ namespace sharpRoguelike
                                 DungeonMap = mapGenerator.CreateMap(true);
                                 MessageLog = new MessageLog(messageWidth);
                                 CommandSystem = new CommandSystem();
+                                MessageLog.Add($"Rogue travels down the stairs to level {mapLevel}",Colors.NormalMessage);
                                 rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";
                                 didPlayerAct = true;
 
@@ -269,6 +275,22 @@ namespace sharpRoguelike
                         else if( keyPress.Key == RLKey.L)
                         {
                             saveLoad.LoadGame();
+                        }
+                        if (DebugCheats)
+                        {
+                            if (keyPress.Key == RLKey.E)
+                            {
+                                seeallwalls = !seeallwalls;
+                                DungeonMap.SeeAllWalls(seeallwalls);
+                                DungeonMap.UpdatePlayerFOV();
+                            }
+                            else if (keyPress.Key == RLKey.Q)
+                            {
+                                seeallentities = !seeallentities;
+                                DungeonMap.SeeAllEntities(seeallentities);
+                                DungeonMap.UpdatePlayerFOV();
+
+                            }
                         }
                     }
                     else if (CurrentGameMode == GameMode.INVENTORY)
