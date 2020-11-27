@@ -33,14 +33,14 @@ namespace sharpRoguelike.Core.Menus
             currentlySelectedItem = null;
         }
 
-        public void Draw(RLConsole con)
+        public void Draw(RLConsole con, int width)
         {
             con.Clear();
 
             con.Print(2, 0, "Inventory", RLColor.White);
 
             string backToGame = "(escape) back to game";
-            con.Print(con.Width - backToGame.Length, 0, backToGame, RLColor.White);
+            con.Print(width - backToGame.Length, 0, backToGame, RLColor.White);
 
             for (int i = 0; i < inv.storedItems.Count; i++)
             {
@@ -55,12 +55,13 @@ namespace sharpRoguelike.Core.Menus
 
             if (currentInventoryState == InventoryState.SELECTED_ITEM)
             {
+                Console.WriteLine($"width in menu.cs {width }");
 
 
                 int index = 2;
 
                 string itemname = $"Selected: {currentlySelectedItem.name}";
-                con.Print(con.Width - itemname.Length, index, itemname, RLColor.White);
+                con.Print(width - itemname.Length, index, itemname, RLColor.White);
                 index+=2;
 
                 if (currentlySelectedItem.effect != null)
@@ -68,18 +69,18 @@ namespace sharpRoguelike.Core.Menus
                     for (int i = 0; i< currentlySelectedItem.effect.usageChars.Count; i++ )
                     {
                         string useItem = $" ({currentlySelectedItem.effect.displayChars[i]}) {currentlySelectedItem.effect.usageNames[i] } ";
-                        con.Print(con.Width - useItem.Length, index, useItem, RLColor.White);
+                        con.Print(width - useItem.Length, index, useItem, RLColor.White);
                         index += 2;
                     }
                 }
 
                 string dropItem = $" (d) drop item ";
-                con.Print(con.Width - dropItem.Length, index, dropItem, RLColor.White);
+                con.Print(width - dropItem.Length, index, dropItem, RLColor.White);
                 index += 2;
 
 
                 string goBack = "(backspace) go back to inventory selection ";
-                con.Print(con.Width - goBack.Length, index, goBack, RLColor.White);
+                con.Print(width - goBack.Length, index, goBack, RLColor.White);
                 index += 2;
 
             }

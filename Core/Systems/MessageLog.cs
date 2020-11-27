@@ -20,21 +20,40 @@ namespace sharpRoguelike.Core.Systems
 
     public class MessageLog
     {
-        private static readonly int maxLines = 9;
+        private static readonly int maxLines = 70;
 
         private readonly Queue<Message> lines;
         Message[] arlines;
         bool update;
+        int screenWidth;
 
-        public MessageLog()
+        public MessageLog(int _screenWidth )
         {
+            screenWidth = _screenWidth - 1; //leave ourselves a buffer
             lines = new Queue<Message>();
             update = true;
+        }
+        static IEnumerable<string> ChunksUpto(string str, int maxChunkSize)
+        {
+            for (int i = 0; i < str.Length; i += maxChunkSize)
+                yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
         }
 
         public void Add(string message ,RLColor color )
         {
-            lines.Enqueue(new Message(message,color));
+            var brokenStrings = ChunksUpto(message, screenWidth);
+     
+            foreach (var brokestring in brokenStrings)
+            {
+                lines.Enqueue(new Message(brokestring, color));
+                lines.Enqueue(new Message("                                     ", color));
+
+            }
+            if (lines.Count > maxLines)
+            {
+                lines.Dequeue();
+            }
+            lines.Enqueue(new Message("-------------------------------------", color));
             if (lines.Count > maxLines)
             {
                 lines.Dequeue();

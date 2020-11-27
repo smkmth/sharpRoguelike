@@ -16,20 +16,20 @@ namespace sharpRoguelike
         private static RLRootConsole rootConsole;
         
 
-        private static readonly int statWidth = 20;
-        private static readonly int statHeight = screenHeight;
-        private static RLConsole statConsole;
+        private static readonly int messageWidth = 40;
+        private static readonly int messageHeight = screenHeight;
+        private static RLConsole messageConsole;
 
-        private static readonly int lookWidth = screenWidth - 20;
+        private static readonly int lookWidth = screenWidth - 40;
         private static readonly int lookHeight = 11;
         private static RLConsole lookConsole;
 
-        private static readonly int messageWidth = screenWidth - statWidth;
-        private static readonly int messageHeight = 11;
-        private static RLConsole messageConsole;
+        private static readonly int statWidth = screenWidth - messageWidth;
+        private static readonly int statHeight = 11;
+        private static RLConsole statConsole;
 
-        private static readonly int mapWidth = screenWidth - statWidth;
-        private static readonly int mapHeight = screenHeight - (messageHeight + lookHeight);
+        private static readonly int mapWidth = screenWidth - messageWidth;
+        private static readonly int mapHeight = screenHeight - (statHeight + lookHeight);
         private static RLConsole mapConsole;
 
         private static RLConsole menuConsole;
@@ -69,14 +69,14 @@ namespace sharpRoguelike
             rootConsole.SetWindowState(RLWindowState.Maximized);
           
             mapConsole = new RLConsole(mapWidth, mapHeight);
-            statConsole = new RLConsole(statWidth, statHeight);
-            lookConsole = new RLConsole(lookWidth, lookHeight);
             messageConsole = new RLConsole(messageWidth, messageHeight);
+            lookConsole = new RLConsole(lookWidth, lookHeight);
+            statConsole = new RLConsole(statWidth, statHeight);
             menuConsole = new RLConsole(screenWidth, screenHeight);
             
             CommandSystem = new CommandSystem();
             SchedulingSytem = new SchedulingSystem();
-            MessageLog = new MessageLog();
+            MessageLog = new MessageLog(messageWidth);
             mainMenu = new MainMenu();
 
             shouldUpdateDraw = false;
@@ -94,7 +94,7 @@ namespace sharpRoguelike
             
             CurrentGameMode = GameMode.MAINMENU;
             mainMenu.OnFirstEnter();
-            messageConsole.Clear();
+            statConsole.Clear();
             MessageLog.Clear();
         }
 
@@ -118,7 +118,7 @@ namespace sharpRoguelike
             Player.ResetPlayer();
 
             //start messages
-            MessageLog.Add("The rogue arrives on level 1", Colors.NormalMessage);
+            MessageLog.Add("The rogue arrives on level 1, blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ", Colors.NormalMessage);
             MessageLog.Add($" level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
 
             StartGeneric();
@@ -154,7 +154,7 @@ namespace sharpRoguelike
         {
             if (CurrentGameMode == GameMode.MAINMENU)
             {
-                HandleMainMenu();
+                 HandleMainMenu();
             }
             else
             { 
@@ -226,7 +226,7 @@ namespace sharpRoguelike
                             {
                                 MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
                                 DungeonMap = mapGenerator.CreateMap(true);
-                                MessageLog = new MessageLog();
+                                MessageLog = new MessageLog(messageWidth);
                                 CommandSystem = new CommandSystem();
                                 rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";
                                 didPlayerAct = true;
@@ -376,8 +376,10 @@ namespace sharpRoguelike
         private static void DrawMainMenu()
         {
         
-            RLConsole.Blit(menuConsole, 0, 0, screenWidth, screenHeight - messageHeight, rootConsole, 0, 0);
-            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
+            RLConsole.Blit(menuConsole, 0, 0, screenWidth, screenHeight, rootConsole, 0, 0);
+            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, 0, screenHeight );
+
+
 
             rootConsole.Draw();
             mainMenu.Draw(menuConsole);
@@ -387,13 +389,15 @@ namespace sharpRoguelike
         private static void DrawInventory()
         {
             mapConsole.Clear();
-            statConsole.Clear();
+            messageConsole.Clear();
 
-            RLConsole.Blit(menuConsole, 0, 0, screenWidth, screenHeight - messageHeight, rootConsole, 0, 0);
-            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole,0, 0);
+            RLConsole.Blit(menuConsole, 0, 0, screenWidth- messageWidth, screenHeight , rootConsole, 0, 0);
+
+            Console.WriteLine($"width in game.cs {screenWidth - messageWidth}");
 
             rootConsole.Draw();
-            playerInventory.Draw(menuConsole);
+            playerInventory.Draw(menuConsole, screenWidth -(messageWidth + 2));
             MessageLog.Draw(messageConsole);
 
         }
@@ -402,8 +406,8 @@ namespace sharpRoguelike
         {
             // Blit the sub consoles to the root console in the correct locations
             RLConsole.Blit(mapConsole, 0, 0, mapWidth, mapHeight, rootConsole, 0, lookHeight);
-            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, mapWidth, 0);
-            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, 0, screenHeight - messageHeight);
+            RLConsole.Blit(messageConsole, 0, 0, messageWidth, messageHeight, rootConsole, mapWidth, 0);
+            RLConsole.Blit(statConsole, 0, 0, statWidth, statHeight, rootConsole, 0, screenHeight - statHeight);
             RLConsole.Blit(lookConsole, 0, 0, lookWidth, lookHeight, rootConsole, 0, 0);
 
 
@@ -412,8 +416,9 @@ namespace sharpRoguelike
                 rootConsole.Draw();
 
                 mapConsole.Clear();
-                statConsole.Clear();
                 messageConsole.Clear();
+                statConsole.Clear();
+
 
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
