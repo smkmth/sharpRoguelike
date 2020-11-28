@@ -1,0 +1,19 @@
+TODO list for roguelike game :
+
+
+-make more / harder enemeies as game goes on (progression)
+-level up player (progression)
+-more variety in level generation - at the moment its just boxes 
+-ranged combat both for the enemeies and player 
+-make player able to migrate by giving another entity .player
+
+
+boring things 
+-remove unnessosary interfaces - maybee?
+-refactor dungon map to have less different lists - unified entities basically 
+-remove direction enum
+-refactor command system 
+
+minor things
+-refactor actor component - 
+-figure out why 'shouldUpdateDraw' gets set to false on first frame if its not always true

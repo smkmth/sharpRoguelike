@@ -36,7 +36,7 @@ namespace sharpRoguelike.Core
     //with a player component is a player, a component with a effect
     //component can be 'used' in a inventory - so it is an item
     [Serializable]
-    public class Entity : IDrawable
+    public class Entity 
     {
         RLSerialiseableColor s_color;
         [NonSerialized()] private RLColor _color;

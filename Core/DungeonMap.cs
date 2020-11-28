@@ -213,8 +213,6 @@ namespace sharpRoguelike.Core
 
         public void AddPlayer(Entity player)
         {
-
-            //TODO move player recipie 
             Game.Player = player;
             player.player = new Player(player);
             player.player.ResetPlayer();
