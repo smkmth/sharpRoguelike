@@ -4,10 +4,12 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components.StatusEffects
 {
+    [Serializable]
     class Slimed : StatusEffect
     {
         public Slimed(Entity _owner, int _counter, StatusEffectsComp _comp) :base (_owner, _counter, _comp)
         {
+            statusEffectAppliedName = "slimed";
 
         }
 

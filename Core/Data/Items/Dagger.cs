@@ -14,7 +14,7 @@ namespace sharpRoguelike.Core.Items
             Dagger dagger = new Dagger
             {
                 symbol = '/',
-                color = Colors.LowTierWeapon,
+                color = Colors.LowTeirItem,
                 name = "Dagger",
                 description = "A crude dagger - adds 2 to attack"
             };

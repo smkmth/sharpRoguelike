@@ -8,6 +8,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Data.Monsters
 {
+    [Serializable]
     class Slimehulk : Entity
     {
 
@@ -67,7 +68,7 @@ namespace sharpRoguelike.Core.Data.Monsters
             liquid.symbol = '~';
             liquid.surface = new SlimeSurface();
 
-            Game.DungeonMap.CreateSurface(x, y, 3, liquid);
+            Game.DungeonMap.CreateSurface(x, y, 2, liquid);
         }
     }
 }

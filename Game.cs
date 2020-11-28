@@ -68,7 +68,7 @@ namespace sharpRoguelike
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
         public static int seed;
-        public static float scaleFactor = 1.4f;
+        public static float scaleFactor = 1f;
 
         public static bool DebugCheats = true;
         public static bool wallhack = false;
@@ -181,7 +181,7 @@ namespace sharpRoguelike
         {
             DungeonMap.UpdatePlayerFOV();
 
-            playerInventory = new InventoryMenu(Player.inventory, Player.equipmentSlots);
+            playerInventory = new InventoryMenu();
             CurrentGameMode = GameMode.PLAYING;
             MessageLog.Add($"The rogue arrives on level {mapLevel} ", Colors.NormalMessage);
 
@@ -232,6 +232,9 @@ namespace sharpRoguelike
                         }
                         else if (keyPress.Key == RLKey.Escape)
                         {
+                            MessageLog.Add("Game Saved!", Colors.HelpMessage);
+                            saveLoad.SaveGame();
+                            saveLoad.SaveSeed();
                             rootConsole.Close();
                         }
                         else if (keyPress.Key == RLKey.G)
@@ -246,6 +249,29 @@ namespace sharpRoguelike
                                 }
                             }
                            
+                        }
+                        else if (keyPress.Key == RLKey.S)
+                        {
+                            CurrentGameMode = GameMode.INVENTORY;
+                            List<Entity> checkThis = DungeonMap.GetAllEntitiesAt(Player.x,Player.y);
+                            List<Inventory> inventories = new List<Inventory>();
+                            foreach(Entity entity in checkThis)
+                            {
+                                if(entity.player == null && entity.inventory != null)
+                                {
+                                    inventories.Add(entity.inventory);
+                                }
+                            }
+                            if (inventories.Count == 1)
+                            {
+                                playerInventory.OpenInventory(menuConsole, inventories[0],null,  true);
+                                
+                            }
+                            else if (inventories.Count > 1)
+                            {
+                                playerInventory.OpenInventorySelect(menuConsole, inventories);
+
+                            }
                         }
                         else if (keyPress.Key == RLKey.Period)
                         {
@@ -265,13 +291,7 @@ namespace sharpRoguelike
                         {
 
                             CurrentGameMode = GameMode.INVENTORY;
-                            playerInventory.OnFirstEnter(menuConsole);
-                        }
-                        else if (keyPress.Key == RLKey.S)
-                        {
-                            MessageLog.Add("Game Saved!", Colors.HelpMessage);
-                            saveLoad.SaveGame();
-                            saveLoad.SaveSeed();
+                            playerInventory.OpenInventory(menuConsole, Player.inventory, Player.equipmentSlots);
                         }
                         else if( keyPress.Key == RLKey.L)
                         {

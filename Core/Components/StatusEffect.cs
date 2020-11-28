@@ -10,12 +10,14 @@ namespace sharpRoguelike.Core.Components
         Slimed
 
     }
+    [Serializable]
     public class StatusEffect
     {
         public Entity owner;
         public int counter;
         public int start_counter;
         public StatusEffectsComp comp;
+        public string statusEffectAppliedName;
 
         public StatusEffect(Entity _owner, int _counter, StatusEffectsComp _comp)
         {

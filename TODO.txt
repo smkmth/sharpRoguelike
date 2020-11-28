@@ -1,8 +1,9 @@
 TODO list for roguelike game :
 
--status effects
+-status effects [X]
+-popup menus
 -make more / harder enemeies as game goes on (progression)
--enemeies have inventories - and you can search enemeies
+-enemeies have inventories - and you can search enemeies [X]
 -level up player (progression)
 -more variety in level generation - at the moment its just boxes 
 -ranged combat both for the enemeies and player 

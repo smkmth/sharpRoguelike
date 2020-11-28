@@ -1,5 +1,6 @@
 ﻿using RogueSharp.DiceNotation;
 using sharpRoguelike.Core.Components;
+using sharpRoguelike.Core.Data.Items;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,7 +46,12 @@ namespace sharpRoguelike.Core.Monsters
                 symbol = '%'
             };
 
+
             cryoFailure.corpse = corpse;
+
+            cryoFailure.corpse.inventory = new Inventory(cryoFailure);
+
+            cryoFailure.corpse.inventory.AddItem(MedicalRags.Create(),true);
 
             cryoFailure.ai = new AI();
             cryoFailure.ai.owner = cryoFailure;

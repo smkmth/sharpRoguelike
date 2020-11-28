@@ -1,4 +1,5 @@
-﻿using sharpRoguelike.Core.Items;
+﻿using sharpRoguelike.Core.Data.Items;
+using sharpRoguelike.Core.Items;
 using sharpRoguelike.Core.Systems;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,10 @@ namespace sharpRoguelike.Core.Components
             owner.actor.Speed = 10;
             owner.inventory = new Inventory(owner);
             owner.inventory.AddItem(HealthPotion.Create());
+            owner.inventory.AddItem(SlimePotion.Create());
+            owner.inventory.AddItem(WaterPotion.Create());
+            owner.inventory.AddItem(WaterPotion.Create());
+            owner.inventory.AddItem(WaterPotion.Create());
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));

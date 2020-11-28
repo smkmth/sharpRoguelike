@@ -11,37 +11,71 @@ namespace sharpRoguelike.Core.Menus
     {
         INVENTORY,
         SELECTED_ITEM,
-        SELECTED_EQUIPMENT
+        SELECTED_EQUIPMENT,
+        SELECT_INVENTORY
     }
 
     public class InventoryMenu
     {
         InventoryState currentInventoryState;
-        Inventory inv;
+        List<Inventory> posInventories;
+        public Inventory inv;
         int offset = 5;
         List<EquipmentSlot> equip;
         Entity currentlySelectedItem;
         EquipmentSlot currentlySelectedSlot;
+        bool enemy_inventory = false;
 
-        public InventoryMenu(Inventory _inv, List<EquipmentSlot> _equip = null)
+
+        public void OpenInventorySelect(RLConsole con, List<Inventory> _posInventories)
         {
+            posInventories = _posInventories;
+            currentInventoryState = InventoryState.SELECT_INVENTORY;
+            con.Clear();
+        }
+
+        public void OpenInventory(RLConsole con, Inventory _inv, List<EquipmentSlot> _equip = null, bool _enemy_inventory=false)
+        {
+
             inv = _inv;
             if (_equip != null)
             {
                 equip = _equip;
             }
-        }
-
-        public void OnFirstEnter(RLConsole con)
-        {
+            else
+            {
+                equip = null;
+            }
+            
+            enemy_inventory = _enemy_inventory;
+            
             con.Clear();
             currentInventoryState = InventoryState.INVENTORY;
             currentlySelectedItem = null;
+            currentlySelectedSlot = null;
         }
 
         public void Draw(RLConsole con, int width)
         {
             con.Clear();
+
+            if(currentInventoryState == InventoryState.SELECT_INVENTORY)
+            {
+                con.Print(2, 0, "Select Inventory", RLColor.White);
+                con.Print(4, 0, "multiple inventories are under this tile, select which one to open.", RLColor.White);
+
+                for (int i = 0; i < posInventories.Count; i++)
+                {
+                    RLColor color = RLColor.White;
+                    string inventoryClear = "";
+                    if (posInventories[i].storedItems.Count == 0)
+                    {
+                        inventoryClear = " (empty)";
+                    }
+                    con.Print(2, i + 8, "(" + Convert.ToChar(i + 97).ToString() + ") " + posInventories[i].owner.name + inventoryClear , color);
+                }
+                return;
+            }
 
             con.Print(2, 0, "Inventory", RLColor.White);
 
@@ -110,6 +144,12 @@ namespace sharpRoguelike.Core.Menus
                 con.Print(width - dropItem.Length, index, dropItem, RLColor.White);
                 index += 2;
 
+                if (enemy_inventory)
+                {
+                    string takeItem = $" (g) take item ";
+                    con.Print(width - dropItem.Length, index, takeItem, RLColor.White);
+                    index += 2;
+                }
 
                 string goBack = "(backspace) go back to inventory selection ";
                 con.Print(width - goBack.Length, index, goBack, RLColor.White);
@@ -159,7 +199,20 @@ namespace sharpRoguelike.Core.Menus
         public void HandleInput(RLKeyPress keypress, RLConsole con)
         {
             char useSelection = keypress.Key.ToString().ToCharArray().Last();
+            if (currentInventoryState == InventoryState.SELECT_INVENTORY)
+            {
+                int itemindex = Convert.ToInt32(useSelection - 65);
 
+                if (itemindex >= 0 && itemindex < posInventories.Count)
+                {
+
+                    con.Clear();
+                    OpenInventory(con,posInventories[itemindex], null, true);
+
+                    return;
+                }
+
+            }
             if (currentInventoryState == InventoryState.INVENTORY)
             {
                 //if we get a number-  we want to select some equipment
@@ -212,6 +265,11 @@ namespace sharpRoguelike.Core.Menus
                     currentInventoryState = InventoryState.INVENTORY;
                     return;
                 }
+                else if (useSelection == 'G' && enemy_inventory)
+                {
+                    inv.ConsumeItem(currentlySelectedItem);
+                    Game.Player.inventory.AddItem(currentlySelectedItem);
+                }
                 else
                 {   
                     if (currentlySelectedItem.effect != null && currentlySelectedItem.effect.usageChars.Count != 0)
@@ -228,6 +286,7 @@ namespace sharpRoguelike.Core.Menus
                     }
                     return;
                 }
+               
                     
                 
             }

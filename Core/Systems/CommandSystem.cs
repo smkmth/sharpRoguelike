@@ -28,8 +28,8 @@ namespace sharpRoguelike.Core.Systems
             if (scheduleable.owner.player != null)
             {
                 IsPlayerTurn = true;
-                scheduleable.owner.ApplyStatusEffects();
                 Game.SchedulingSytem.Add(Game.Player.actor);
+                scheduleable.owner.ApplyStatusEffects();
 
             }
             else
@@ -39,7 +39,12 @@ namespace sharpRoguelike.Core.Systems
                 {
                     monster.ai.PerformAction(this);
                     monster.ApplyStatusEffects();
-                    Game.SchedulingSytem.Add(monster.actor);
+                    if (monster.attacker != null)
+                    {
+                        Game.SchedulingSytem.Add(monster.actor);
+
+                    }
+                   
                 }
                 HandleTurnOrder();
 
@@ -212,11 +217,6 @@ namespace sharpRoguelike.Core.Systems
                 defender.attacker.Health = defender.attacker.Health - damage;
 
                 Game.MessageLog.Add($"  {defender.name} was hit for {damage} damage", Colors.CombatMessage);
-
-                if (defender.attacker.Health <= 0)
-                {
-                    ResolveDeath(defender);
-                }
             }
             else
             {
@@ -225,11 +225,11 @@ namespace sharpRoguelike.Core.Systems
         }
 
         // Remove the defender from the map and add some messages upon death.
-        private static void ResolveDeath(Entity defender)
+        public static void ResolveDeath(Entity defender)
         {
             if (defender.player != null)
             {
-                Game.MessageLog.Add($"  {defender.name} was killed, GAME OVER MAN!",Colors.CombatMessage);
+                Game.MessageLog.Add($"{defender.name} was killed, GAME OVER MAN!",Colors.CombatMessage);
                 Game.ResetGame();
             }
             else 
@@ -237,13 +237,15 @@ namespace sharpRoguelike.Core.Systems
                 Game.DungeonMap.RemoveMonster(defender);
                 defender.corpse.x = defender.x;
                 defender.corpse.y = defender.y;
-                
+                defender.attacker = null;
+                defender.ai = null;
                 Game.DungeonMap.AddItem(defender.corpse);
                 Game.MessageLog.Add($" {defender.name} died !", Colors.CombatMessage);
             }
             defender.attacker = null;
         }
 
+        
 
     }
 

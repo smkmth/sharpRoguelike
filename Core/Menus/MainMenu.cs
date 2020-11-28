@@ -56,6 +56,10 @@ namespace sharpRoguelike.Core.Menus
 
         public void HandleInput(RLKeyPress keypress, RLConsole con)
         {
+            if (keypress.Key == RLKey.Down || keypress.Key == RLKey.Up || keypress.Key == RLKey.Left || keypress.Key == RLKey.Right)
+            {
+                return;
+            }
             switch (currentMenuState)
             {
                 case MainMenuState.MAIN_MENU:

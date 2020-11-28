@@ -1,4 +1,5 @@
 ﻿using RogueSharp;
+using sharpRoguelike.Core.Data.Items;
 using sharpRoguelike.Core.Data.Monsters;
 using sharpRoguelike.Core.Items;
 using sharpRoguelike.Core.Monsters;
@@ -184,10 +185,29 @@ namespace sharpRoguelike.Core
                         Point randomRoomLocation = new Point(0, 0);
                         if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
                         {
-                            var potion = HealthPotion.Create();
-                            potion.x = randomRoomLocation.X;
-                            potion.y = randomRoomLocation.Y;
-                            map.AddItem(potion);
+                            int roll = Game.Random.Next(0, 100);
+                            if (roll < 25)
+                            {
+                                var potion = HealthPotion.Create();
+                                potion.x = randomRoomLocation.X;
+                                potion.y = randomRoomLocation.Y;
+                                map.AddItem(potion);
+                            }
+                            else if (roll < 75)
+                            {
+                                var potion = WaterPotion.Create();
+                                potion.x = randomRoomLocation.X;
+                                potion.y = randomRoomLocation.Y;
+                                map.AddItem(potion);
+                            }
+                            else
+                            {
+                                var potion = SlimePotion.Create();
+                                potion.x = randomRoomLocation.X;
+                                potion.y = randomRoomLocation.Y;
+                                map.AddItem(potion);
+
+                            }
                         }
                     }
                 }

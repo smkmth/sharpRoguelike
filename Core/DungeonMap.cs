@@ -9,6 +9,12 @@ using sharpRoguelike.Core.Items;
 
 namespace sharpRoguelike.Core
 {
+    public enum SurfaceKerning
+    {
+        TopLeft,
+        CenterAligned
+    }
+
     //the main - API - thing in the project - derives from map, which 
     //seems to just be a collection of cells and some ways to access those cells
     //dungon map contains multiple lists of entity 'types' for ease of access more 
@@ -352,34 +358,69 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void CreateSurface(int x, int y, int range , Entity liquid)
+        public void CreateSurface(int x, int y, int range , Entity liquid, SurfaceKerning kerning = SurfaceKerning.CenterAligned )
         {
-            for (int dx = x; dx < x+ range; dx++)
+
+            switch (kerning)
             {
-                for (int dy =y; dy < y + range; dy++)
-                {
-                    if (IsWalkable(dx, dy))
+                case SurfaceKerning.TopLeft:
+                    for (int dx = x; dx < x + range; dx++)
                     {
-                        Entity oldSurf = GetSurfaceAt(dx, dy);
-                        
-                        if (oldSurf != null)
+                        for (int dy = y; dy < y + range; dy++)
                         {
-                            RemoveSurface(oldSurf);
+                            if (IsWalkable(dx, dy))
+                            {
+                                Entity oldSurf = GetSurfaceAt(dx, dy);
+
+                                if (oldSurf != null)
+                                {
+                                    RemoveSurface(oldSurf);
+                                }
+
+                                Entity liquidinst = new Entity();
+                                liquidinst.name = liquid.name;
+                                liquidinst.color = liquid.color;
+                                liquidinst.symbol = liquid.symbol;
+                                liquidinst.surface = liquid.surface;
+                                liquidinst.x = dx;
+                                liquidinst.y = dy;
+                                Surfaces.Add(liquidinst);
+                                Entities.Add(liquidinst);
+                            }
+
                         }
-
-                        Entity liquidinst = new Entity();
-                        liquidinst.name = liquid.name;
-                        liquidinst.color = liquid.color;
-                        liquidinst.symbol = liquid.symbol;
-                        liquidinst.surface = liquid.surface;
-                        liquidinst.x = dx;
-                        liquidinst.y = dy;
-                        Surfaces.Add(liquidinst);
-                        Entities.Add(liquidinst);
                     }
+                    break;
+                case SurfaceKerning.CenterAligned:
+                    for (int dx = x - ( range / 2); dx < x + (range /2 ); dx++)
+                    {
+                        for (int dy = y - (range / 2); dy < y + (range /2); dy++)
+                        {
+                            if (IsWalkable(dx, dy))
+                            {
+                                Entity oldSurf = GetSurfaceAt(dx, dy);
 
-                }
+                                if (oldSurf != null)
+                                {
+                                    RemoveSurface(oldSurf);
+                                }
+
+                                Entity liquidinst = new Entity();
+                                liquidinst.name = liquid.name;
+                                liquidinst.color = liquid.color;
+                                liquidinst.symbol = liquid.symbol;
+                                liquidinst.surface = liquid.surface;
+                                liquidinst.x = dx;
+                                liquidinst.y = dy;
+                                Surfaces.Add(liquidinst);
+                                Entities.Add(liquidinst);
+                            }
+
+                        }
+                    }
+                    break;
             }
+            
         }
 
         public Entity GetSurfaceAt(int x, int y)

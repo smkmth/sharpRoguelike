@@ -1,16 +1,15 @@
-﻿using sharpRoguelike.Core.Components.StatusEffects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace sharpRoguelike.Core.Components.Surfaces
 {
     [Serializable]
-    class SlimeSurface : Surface
+    class WaterSurface : Surface
     {
         public override bool WalkOverSurface(Entity entity)
         {
-            return entity.AddStatusEffect(new Slimed(entity, 5, StatusEffectsComp.Slimed));
+            return true;
 
         }
     }

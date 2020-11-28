@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Systems;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -122,8 +123,12 @@ namespace sharpRoguelike.Core.Components
                 return _health;
             }
             set
-            {
+            { 
                 _health = value;
+                if (_health <= 0)
+                {
+                    CommandSystem.ResolveDeath(owner);
+                }
             }
         }
 

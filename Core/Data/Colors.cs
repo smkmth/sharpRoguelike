@@ -86,8 +86,9 @@ namespace sharpRoguelike.Core
         public static RLColor Door = Swatch.ComplimentLighter;
         public static RLColor DoorBackgroundFov = Swatch.ComplimentDarker;
         public static RLColor DoorFov = Swatch.ComplimentLightest;
+        public static RLColor ShallowWater = Swatch.DbWater;
         //weapons 
-        public static RLColor LowTierWeapon = RLColor.White;
+        public static RLColor LowTeirItem = RLColor.White;
 
         //monsters
         public static RLColor KoboldColor = Swatch.DbBrightWood;
