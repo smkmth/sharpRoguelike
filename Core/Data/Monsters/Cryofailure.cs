@@ -7,19 +7,20 @@ using System.Text;
 namespace sharpRoguelike.Core.Monsters
 {
     [Serializable]
-    public class Kobold : Entity
+    public class Cryofailure : Entity
     {
-        public static Kobold Create(int level)
+        public static Cryofailure Create(int level)
         {
 
-            Kobold kobold = new Kobold
+            Cryofailure cryoFailure = new Cryofailure
             {
-                name = "Kobold",
+                name = "Cryofailure",
                 color = Colors.KoboldColor,
-                symbol = 'k'
+                symbol = 'k',
+                description = "a slippery accident of science born from a pod"
             };
 
-            Attacker attacker = new Attacker(kobold);
+            Attacker attacker = new Attacker(cryoFailure);
             attacker.Attack = Dice.Roll("1D3") + level / 3;
             attacker.AttackChance = Dice.Roll("25D3");
             attacker.Defense = Dice.Roll("1D3") + level / 3;
@@ -29,25 +30,26 @@ namespace sharpRoguelike.Core.Monsters
             attacker.Health = health;
             attacker.MaxHealth = health;
 
-            kobold.attacker = attacker;
+            cryoFailure.attacker = attacker;
 
-            Actor actor = new Actor(kobold);
+            Actor actor = new Actor(cryoFailure);
             actor.Awareness = 10;
             actor.Speed = 9;
 
-            kobold.actor = actor;
+            cryoFailure.actor = actor;
 
             Entity corpse = new Entity()
             {
-                name = "Kolbold Corpse",
+                name = "Cryofailure Corpse",
                 color = Colors.Corpse,
                 symbol = '%'
             };
-            kobold.corpse = corpse;
 
-            kobold.ai = new AI();
-            kobold.ai.owner = kobold;
-            return kobold;
+            cryoFailure.corpse = corpse;
+
+            cryoFailure.ai = new AI();
+            cryoFailure.ai.owner = cryoFailure;
+            return cryoFailure;
 
         }
 

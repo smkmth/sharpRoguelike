@@ -150,7 +150,7 @@ namespace sharpRoguelike.Core
                         Point randomRoomLocation = new Point(0, 0);
                         if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
                         {
-                            var monster = Kobold.Create(1);
+                            var monster = Cryofailure.Create(1);
                             monster.x = randomRoomLocation.X;
                             monster.y = randomRoomLocation.Y;
                             map.AddMonster(monster);

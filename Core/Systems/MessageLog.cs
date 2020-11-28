@@ -43,7 +43,7 @@ namespace sharpRoguelike.Core.Systems
                 yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
         }
 
-        public void Add(string message ,RLColor color )
+        public void Add(string message, RLColor color )
         {
             var brokenStrings = ChunksUpto(message, screenWidth);
      

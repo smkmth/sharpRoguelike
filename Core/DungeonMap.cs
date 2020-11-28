@@ -338,15 +338,15 @@ namespace sharpRoguelike.Core
 
         }
 
-        public List<string> InterigateEntityAtLocation(int x, int y) 
+        public List<Entity> InterigateEntityAtLocation(int x, int y) 
         {
             var results =  Entities.Where(i => i.x == x && i.y == y );
-            List<string> names = new List<string>();
+            List<Entity> names = new List<Entity>();
             foreach(Entity entity in results)
             {
                 if (IsInFov(entity.x, entity.y))
                 {
-                    names.Add(entity.name);
+                    names.Add(entity);
                 }
             }
             return names;

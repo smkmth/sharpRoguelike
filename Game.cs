@@ -39,6 +39,7 @@ namespace sharpRoguelike
         private static readonly int statHeight = 11;
         private static RLConsole statConsole;
 
+
         private static readonly int mapWidth = screenWidth - messageWidth;
         private static readonly int mapHeight = screenHeight - (statHeight + lookHeight);
         private static RLConsole mapConsole;
@@ -377,19 +378,26 @@ namespace sharpRoguelike
             //tell us what entities are under the mouse pointer
             if (mx > 0 && my > 0)
             {
-                List<string> names = DungeonMap.InterigateEntityAtLocation(mx, my);
-                if (names.Count > 0)
+                List<Entity> entities = DungeonMap.InterigateEntityAtLocation(mx, my);
+                if (entities.Count > 0)
                 {
                     lookConsole.Clear();
-                    for (int i = 0; i < names.Count; i++)
+                    for (int i = 0; i < entities.Count; i++)
                     {
-                        lookConsole.Print(2, i, names[i], RLColor.White);
+                        string nametoprint = entities[i].name;
+                        lookConsole.Print(2, i, entities[i].name, RLColor.White);
+                        if (!string.IsNullOrEmpty(entities[i].description))
+                        {
+                            lookConsole.Print(nametoprint.Length + 2, i, ": " + entities[i].description, RLColor.White);
+                        }
+        
                     }
                 }
                 else
                 {
                     lookConsole.Clear();
                 }
+
             }
         }
 
