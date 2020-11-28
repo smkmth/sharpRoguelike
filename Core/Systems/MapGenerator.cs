@@ -1,4 +1,5 @@
 ﻿using RogueSharp;
+using sharpRoguelike.Core.Data.Monsters;
 using sharpRoguelike.Core.Items;
 using sharpRoguelike.Core.Monsters;
 using System;
@@ -150,10 +151,21 @@ namespace sharpRoguelike.Core
                         Point randomRoomLocation = new Point(0, 0);
                         if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
                         {
-                            var monster = Cryofailure.Create(1);
-                            monster.x = randomRoomLocation.X;
-                            monster.y = randomRoomLocation.Y;
-                            map.AddMonster(monster);
+                            int monsterRoll = Game.Random.Next(0, 100);
+                            if (monsterRoll < 70)
+                            {
+                                var monster = Cryofailure.Create(1);
+                                monster.x = randomRoomLocation.X;
+                                monster.y = randomRoomLocation.Y;
+                                map.AddMonster(monster);
+                            }
+                            else
+                            {
+                                var monster = Slimehulk.Create(1);
+                                monster.x = randomRoomLocation.X;
+                                monster.y = randomRoomLocation.Y;
+                                map.AddMonster(monster);
+                            }
                         }
                     }
                 }

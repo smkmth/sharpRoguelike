@@ -28,9 +28,9 @@ namespace sharpRoguelike.Core
 
      
         private int _awareness;
-
-
         private int _speed;
+
+        public int speedModifier;
 
       
 
@@ -53,7 +53,7 @@ namespace sharpRoguelike.Core
         {
             get
             {
-                return _speed;
+                return _speed + speedModifier;
             }
             set
             {

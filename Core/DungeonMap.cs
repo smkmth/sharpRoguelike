@@ -172,16 +172,17 @@ namespace sharpRoguelike.Core
         }
 
 
-        public bool SetActorPosition(Entity actor, int x, int y)
+        public bool SetActorPosition(Entity entity, int x, int y)
         {
             if (GetCell(x, y).IsWalkable)
             {
-                SetIsWalkable(actor.x, actor.y, true);
-                actor.x = x;
-                actor.y = y;
+                SetIsWalkable(entity.x, entity.y, true);
+                entity.x = x;
+                entity.y = y;
+                entity.OnMove(entity.x, entity.y, x, y);
 
-                SetIsWalkable(actor.x, actor.y, false);
-                if (actor.player != null)
+                SetIsWalkable(entity.x, entity.y, false);
+                if (entity.player != null)
                 {
                     UpdatePlayerFOV();
                 }
@@ -189,13 +190,13 @@ namespace sharpRoguelike.Core
                 Entity surface = GetSurfaceAt(x, y);
                 if (surface != null && surface.surface != null)
                 {
-                    if (surface.surface.WalkOverSurface(actor))
+                    if (surface.surface.WalkOverSurface(entity))
                     {
                         RemoveSurface(surface);
                     }
                 }
 
-                OpenDoor(actor, x, y);
+                OpenDoor(entity, x, y);
                 UpdatePlayerFOV();
 
                 return true;

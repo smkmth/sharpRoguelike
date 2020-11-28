@@ -91,6 +91,7 @@ namespace sharpRoguelike.Core
 
         //monsters
         public static RLColor KoboldColor = Swatch.DbBrightWood;
+        public static RLColor SlimehulkColor = Swatch.DbSun;
 
         //messages
         public static RLColor HelpMessage = new RLColor(254, 203, 0);

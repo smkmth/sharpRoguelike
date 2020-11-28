@@ -18,6 +18,7 @@ namespace sharpRoguelike.Core.Systems
             con.Print(1, 3, $"Health:  {player.attacker.Health}/{player.attacker.MaxHealth}", Colors.Text);
             con.Print(1, 5, $"Attack:  {player.attacker.Attack} ({player.attacker.AttackChance}%)", Colors.Text);
             con.Print(1, 7, $"Defense: {player.attacker.Defense} ({player.attacker.DefenseChance}%)", Colors.Text);
+            con.Print(1, 9, $"Speed: {player.actor.Speed}", Colors.Text);
 
         }
 

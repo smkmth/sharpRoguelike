@@ -28,6 +28,7 @@ namespace sharpRoguelike.Core.Systems
             if (scheduleable.owner.player != null)
             {
                 IsPlayerTurn = true;
+                scheduleable.owner.ApplyStatusEffects();
                 Game.SchedulingSytem.Add(Game.Player.actor);
 
             }
@@ -37,6 +38,7 @@ namespace sharpRoguelike.Core.Systems
                 if (monster != null)
                 {
                     monster.ai.PerformAction(this);
+                    monster.ApplyStatusEffects();
                     Game.SchedulingSytem.Add(monster.actor);
                 }
                 HandleTurnOrder();

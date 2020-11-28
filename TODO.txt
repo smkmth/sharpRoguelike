@@ -1,12 +1,13 @@
 TODO list for roguelike game :
 
-
+-status effects
 -make more / harder enemeies as game goes on (progression)
+-enemeies have inventories - and you can search enemeies
 -level up player (progression)
 -more variety in level generation - at the moment its just boxes 
 -ranged combat both for the enemeies and player 
+-add traps
 -make player able to migrate by giving another entity .player
-
 
 boring things 
 -remove unnessosary interfaces - maybee?
