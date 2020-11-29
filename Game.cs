@@ -466,7 +466,7 @@ namespace sharpRoguelike
                 Equipment rangedWeapon = Player.GetEquippedRangedWeapon();
                 if (rangedWeapon != null && rangedWeapon.ranged != null)
                 {
-                    string gunString = "Aiming with " + rangedWeapon.ownerItem.name + " you have " + rangedWeapon.ranged.ammo + " shots ";
+                    string gunString = "Aiming with a " + rangedWeapon.ownerItem.name + " you have " + rangedWeapon.ranged.ammo + " shots ";
                     lookConsole.Print(lookConsole.Width - gunString.Length, 2, gunString, RLColor.White);
                 }
                 DrawMainGame();

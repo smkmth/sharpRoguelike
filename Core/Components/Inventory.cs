@@ -1,4 +1,7 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Components;
+using sharpRoguelike.Core.Data.Items;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,6 +27,7 @@ namespace sharpRoguelike.Core
 
         public bool AddItem(Entity item, bool silent = false)
         {
+       
             if (storedItems.Count + 1 >= maxCapacity)
             {
                 if (!silent)
@@ -37,6 +41,18 @@ namespace sharpRoguelike.Core
                 if (!silent)
                 {
                     Game.MessageLog.Add($"Picked up {item.name}.", Colors.NormalMessage);
+                }
+                if (item.stackable)
+                {
+                    foreach (Entity check in storedItems)
+                    {
+                        if (check.GetType() == item.GetType())
+                        {
+
+                        }
+
+                    }
+
                 }
                 storedItems.Add(item);
                 return true;
@@ -57,6 +73,24 @@ namespace sharpRoguelike.Core
             storedItems.Remove(item);
 
         }
+
+        public int LoadAmmoOfType(AmmoType type)
+        {
+            List<Entity> bullets = new List<Entity>();
+            foreach(Entity item in storedItems)
+            {
+                if (item is Bullet)
+                {
+                    bullets.Add(item);
+                }
+            }
+            foreach(Entity removeItem in bullets)
+            {
+                storedItems.Remove(removeItem);
+            }
+            return storedItems.Count;
+        }
+
 
     }
 }

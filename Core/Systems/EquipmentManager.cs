@@ -19,7 +19,11 @@ namespace sharpRoguelike.Core.Systems
                 {
                     if (slot.equipType == item.equipment.slotType)
                     {
+                        
                         slot.attachedEquipment = item.equipment;
+                        item.equipment.ownerHolder = target;
+                 
+                      
                     }
                 }
             }

@@ -29,12 +29,14 @@ namespace sharpRoguelike.Core.Components.Usables
                         {
                             if (slot.attachedEquipment == owner.equipment)
                             {
+                                slot.attachedEquipment.ownerHolder = null;
                                 slot.attachedEquipment = null;
                                 return false;
                             }
                             else
                             {
                                 slot.attachedEquipment = owner.equipment;
+                                slot.attachedEquipment.ownerHolder = user;
                                 return true;
                             }
                             return true;

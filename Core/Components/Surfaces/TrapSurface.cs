@@ -12,6 +12,7 @@ namespace sharpRoguelike.Core.Components.Surfaces
         public TrapSurface(Entity _setter)
         {
             setter = _setter;
+            surfaceResistance = 50;
         }
 
         public override bool WalkOverSurface(Entity entity)

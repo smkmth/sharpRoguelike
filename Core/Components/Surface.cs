@@ -11,6 +11,8 @@ namespace sharpRoguelike.Core.Components
     public class Surface
     {
         public Entity owner;
+        public int surfaceResistance;
+
         public virtual bool WalkOverSurface(Entity entity)
         {
             return false;

@@ -7,6 +7,10 @@ namespace sharpRoguelike.Core.Components.Surfaces
     [Serializable]
     public class HealingSurface : Surface
     {
+        public HealingSurface()
+        {
+            surfaceResistance = 50;
+        }
 
         public override bool WalkOverSurface(Entity entity)
         {

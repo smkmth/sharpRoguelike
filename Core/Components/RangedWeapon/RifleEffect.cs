@@ -7,6 +7,7 @@ namespace sharpRoguelike.Core.Components
     [Serializable]
     class RifleEffect : RangedWeapon
     {
+
         public RifleEffect(Equipment _owner): base (_owner)
         {
 
@@ -14,18 +15,28 @@ namespace sharpRoguelike.Core.Components
 
         public override void TargetCallback(int x, int y)
         {
-            var entities = Game.DungeonMap.GetAllEntitiesAt(x, y);
+            if (ammo <= 0)
+            {
+                if (owner.ownerHolder != null)
+                {
+                    Load();
+                    return;
+                }
+            }
 
-            foreach(Entity entity in entities)
+            var entities = Game.DungeonMap.GetAllEntitiesAt(x, y);
+            foreach (Entity entity in entities)
             {
                 if (Game.DungeonMap.IsInFov(x, y))
                 {
                     if (entity.attacker != null)
                     {
                         entity.attacker.Health -= damage;
+                        ammo--;
                         Game.MessageLog.Add($"The shot rings out loud and true - striking the target for {damage} damage", Colors.CombatMessage);
-
+                        return;
                     }
+
                 }
             }
             Game.MessageLog.Add($"Nothing is there to hit!", Colors.HelpMessage);
@@ -37,5 +48,22 @@ namespace sharpRoguelike.Core.Components
         {
             Game.CurrentGameMode = GameMode.PLAYING;
         }
+
+        public override void Load()
+        {
+            if (owner.ownerHolder != null)
+            {
+                ammo = owner.ownerHolder.inventory.LoadAmmoOfType(AmmoType.Bullets);
+                if (ammo > 0)
+                {
+                    Game.MessageLog.Add("Loading ammo into rifle...", Colors.NormalMessage);
+                }
+                else
+                {
+                    Game.MessageLog.Add("Out of ammo!", Colors.NormalMessage);
+                }
+            }
+        }
+
     }
 }

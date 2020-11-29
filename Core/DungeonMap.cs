@@ -378,7 +378,19 @@ namespace sharpRoguelike.Core
 
                                 if (oldSurf != null)
                                 {
-                                    RemoveSurface(oldSurf);
+                                    if (oldSurf.surface != null)
+                                    {
+
+                                        if (entity.surface.surfaceResistance < oldSurf.surface.surfaceResistance)
+                                        {
+                                            oldSurf.surface.surfaceResistance -= entity.surface.surfaceResistance;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            RemoveSurface(oldSurf);
+                                        }
+                                    }
                                 }
 
                                 Entity liquidinst = new Entity();
@@ -406,9 +418,20 @@ namespace sharpRoguelike.Core
 
                                 if (oldSurf != null)
                                 {
-                                    RemoveSurface(oldSurf);
-                                }
+                                    if (oldSurf.surface != null)
+                                    {
 
+                                        if (entity.surface.surfaceResistance < oldSurf.surface.surfaceResistance)
+                                        {
+                                            oldSurf.surface.surfaceResistance -= entity.surface.surfaceResistance;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            RemoveSurface(oldSurf);
+                                        }
+                                    }
+                                }
                                 Entity liquidinst = new Entity();
                                 liquidinst.name = entity.name;
                                 liquidinst.color = entity.color;

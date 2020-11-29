@@ -52,9 +52,12 @@ namespace sharpRoguelike.Core.Components
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
-            owner.inventory.AddItem(BearTrap.Create());
-            owner.inventory.AddItem(BearTrap.Create());
-            owner.inventory.AddItem(BearTrap.Create());
+            owner.inventory.AddItem(Bullet.Create());
+            owner.inventory.AddItem(Bullet.Create());
+            owner.inventory.AddItem(Bullet.Create());
+            owner.inventory.AddItem(Bullet.Create());
+            owner.inventory.AddItem(Bullet.Create());
+            owner.inventory.AddItem(Bullet.Create());
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));

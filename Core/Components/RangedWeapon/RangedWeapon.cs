@@ -4,6 +4,11 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components
 {
+    public enum AmmoType
+    {
+        Bullets
+    }
+
     [Serializable]
     public class RangedWeapon 
     {
@@ -24,6 +29,12 @@ namespace sharpRoguelike.Core.Components
 
         public virtual void TargetCancelledCallback(bool canceled)
         {
+
+        }
+
+        public virtual void Load()
+        {
+            
 
         }
 

@@ -21,8 +21,8 @@ namespace sharpRoguelike.Core.Components
     [Serializable]
     public class Equipment
     {
-        public Entity ownerItem;    
-
+        public Entity ownerItem;
+        public Entity ownerHolder;
         public int attackModifier;
         public int attackChanceModifier;
         public int defenceModfier;

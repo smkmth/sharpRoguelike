@@ -8,6 +8,10 @@ namespace sharpRoguelike.Core.Components.Surfaces
     [Serializable]
     class SlimeSurface : Surface
     {
+        public SlimeSurface()
+        {
+            surfaceResistance = 60;
+        }
         public override bool WalkOverSurface(Entity entity)
         {
             return entity.AddStatusEffect(new Slimed(entity, 5, StatusEffectsComp.Slimed));
