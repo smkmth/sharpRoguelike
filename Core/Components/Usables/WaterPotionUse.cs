@@ -1,5 +1,4 @@
-﻿using sharpRoguelike.Core.Components.StatusEffects;
-using sharpRoguelike.Core.Components.Surfaces;
+﻿using sharpRoguelike.Core.Components.Surfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,17 +6,14 @@ using System.Text;
 namespace sharpRoguelike.Core.Components.Usables
 {
     [Serializable]
-    class SlimePotionEffect : Potion
+    class WaterPotionUse : PotionUse
     {
-
-
         public override bool DrinkEffect(Entity user, Entity target)
         {
-            target.attacker.Health -= 20;
-            Game.MessageLog.Add("You swig down the slime potion, it tastes foul - and you feel sick", Colors.NormalMessage);
 
-            target.AddStatusEffect(new Slimed(target, 5, StatusEffectsComp.Slimed));
-            return true;
+            Game.MessageLog.Add("You swig down the water potion, its refreshing.", Colors.NormalMessage);
+            user.RemoveStatusEffect(StatusEffectsComp.Slimed);
+            return base.DrinkEffect(user, target);
         }
 
         public override void ResolveThrow(int x, int y)
@@ -25,13 +21,11 @@ namespace sharpRoguelike.Core.Components.Usables
             Game.MessageLog.Add("The potion bottle smashes on the ground - spilling yellow slime everywhere!", Colors.NormalMessage);
 
             Entity liquid = new Entity();
-            liquid.name = "Slime";
-            liquid.color = Colors.SlimehulkColor;
+            liquid.name = "Water";
+            liquid.color = Colors.ShallowWater;
             liquid.symbol = '~';
-            liquid.surface = new SlimeSurface();
+            liquid.surface = new WaterSurface();
             Game.DungeonMap.CreateSurface(x, y, 4, liquid);
         }
-
-
     }
 }

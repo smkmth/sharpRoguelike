@@ -362,7 +362,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void CreateSurface(int x, int y, int range , Entity liquid, SurfaceKerning kerning = SurfaceKerning.CenterAligned )
+        public void CreateSurface(int x, int y, int range , Entity entity, SurfaceKerning kerning = SurfaceKerning.CenterAligned )
         {
 
             switch (kerning)
@@ -382,10 +382,10 @@ namespace sharpRoguelike.Core
                                 }
 
                                 Entity liquidinst = new Entity();
-                                liquidinst.name = liquid.name;
-                                liquidinst.color = liquid.color;
-                                liquidinst.symbol = liquid.symbol;
-                                liquidinst.surface = liquid.surface;
+                                liquidinst.name = entity.name;
+                                liquidinst.color = entity.color;
+                                liquidinst.symbol = entity.symbol;
+                                liquidinst.surface = entity.surface;
                                 liquidinst.x = dx;
                                 liquidinst.y = dy;
                                 Surfaces.Add(liquidinst);
@@ -410,10 +410,10 @@ namespace sharpRoguelike.Core
                                 }
 
                                 Entity liquidinst = new Entity();
-                                liquidinst.name = liquid.name;
-                                liquidinst.color = liquid.color;
-                                liquidinst.symbol = liquid.symbol;
-                                liquidinst.surface = liquid.surface;
+                                liquidinst.name = entity.name;
+                                liquidinst.color = entity.color;
+                                liquidinst.symbol = entity.symbol;
+                                liquidinst.surface = entity.surface;
                                 liquidinst.x = dx;
                                 liquidinst.y = dy;
                                 Surfaces.Add(liquidinst);

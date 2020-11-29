@@ -5,9 +5,9 @@ using System.Text;
 namespace sharpRoguelike.Core.Components.Usables
 {
     [Serializable]
-    public class Equipable : Useable
+    public class EquipmentUse : Useable
     {
-        public Equipable()
+        public EquipmentUse()
         {
             usageChars = new List<char>();
             usageChars.Add('A');

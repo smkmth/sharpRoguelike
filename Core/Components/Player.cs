@@ -52,7 +52,9 @@ namespace sharpRoguelike.Core.Components
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
-            owner.inventory.AddItem(Rifle.Create());
+            owner.inventory.AddItem(BearTrap.Create());
+            owner.inventory.AddItem(BearTrap.Create());
+            owner.inventory.AddItem(BearTrap.Create());
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));
@@ -61,8 +63,8 @@ namespace sharpRoguelike.Core.Components
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RANGED_WEAPON));
-   
 
+            EquipmentManager.EquipItem(owner, Rifle.Create());
             EquipmentManager.EquipItem(owner, Knife.Create());
         }
     }

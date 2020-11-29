@@ -21,7 +21,7 @@ namespace sharpRoguelike.Core.Items
             dagger.equipment = new Equipment(dagger, EquipSlotType.WEAPON);
             dagger.equipment.attackModifier = 2;
 
-            dagger.effect = new Equipable();
+            dagger.effect = new EquipmentUse();
             dagger.effect.owner = dagger;
 
             

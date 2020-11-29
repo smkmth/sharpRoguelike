@@ -21,7 +21,7 @@ namespace sharpRoguelike.Core.Data.Items
             tornRags.equipment = new Equipment(tornRags, EquipSlotType.CHEST);
             tornRags.equipment.defenceModfier = 1;
 
-            tornRags.effect = new Equipable();
+            tornRags.effect = new EquipmentUse();
             tornRags.effect.owner = tornRags;
             return tornRags;
 

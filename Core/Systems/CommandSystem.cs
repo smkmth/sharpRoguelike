@@ -35,7 +35,7 @@ namespace sharpRoguelike.Core.Systems
             else
             {
                 Entity monster = scheduleable.owner;
-                if (monster != null)
+                if (monster.attacker != null)
                 {
                     monster.ai.PerformAction(this);
                     monster.ApplyStatusEffects();

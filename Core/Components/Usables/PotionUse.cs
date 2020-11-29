@@ -5,12 +5,12 @@ using System.Text;
 namespace sharpRoguelike.Core.Components.Usables
 {
     [Serializable]
-    class Potion : Useable
+    class PotionUse : Useable
     {
         public string drinkDescriptionMaxHealth;
         public string drinkDescription;
 
-        public Potion()
+        public PotionUse()
         {
             usageChars = new List<char>();
             usageChars.Add('A');

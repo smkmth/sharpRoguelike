@@ -7,7 +7,7 @@ using System.Text;
 namespace sharpRoguelike.Core.Components
 {
     [Serializable]
-    class HealthPotionEffect : Potion
+    class HealPotionUse : PotionUse
     {
 
         public override bool DrinkEffect(Entity user, Entity target)

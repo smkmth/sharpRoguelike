@@ -87,6 +87,7 @@ namespace sharpRoguelike.Core
         public static RLColor DoorBackgroundFov = Swatch.ComplimentDarker;
         public static RLColor DoorFov = Swatch.ComplimentLightest;
         public static RLColor ShallowWater = Swatch.DbWater;
+        public static RLColor BearTrap = Swatch.DbWater;
         //weapons 
         public static RLColor LowTeirItem = RLColor.White;
         public static RLColor MidTierItem = RLColor.Blue;

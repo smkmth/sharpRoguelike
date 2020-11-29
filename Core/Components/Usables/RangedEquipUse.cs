@@ -4,9 +4,9 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components.Usables
 {
-    class RangedEquipable : Equipable
+    class RangedEquipUse : EquipmentUse
     {
-        public RangedEquipable()
+        public RangedEquipUse()
         {
             usageChars = new List<char>();
             usageChars.Add('B');

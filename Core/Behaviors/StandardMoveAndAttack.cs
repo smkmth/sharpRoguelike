@@ -63,6 +63,7 @@ namespace sharpRoguelike.Core.Behaviors
                     }
                     try
                     {
+                       
                         commandSystem.MoveMonster(monster, path.StepForward());
                     }
                     catch(NoMoreStepsException)
@@ -71,10 +72,18 @@ namespace sharpRoguelike.Core.Behaviors
 
                     }
                 }
-                monster.ai.TurnsAlerted++;
-                if(monster.ai.TurnsAlerted > 15)
+                if (monster.attacker != null)
                 {
-                    monster.ai.TurnsAlerted = null;
+
+                    monster.ai.TurnsAlerted++;
+                    if(monster.ai.TurnsAlerted > 15)
+                    {
+                        monster.ai.TurnsAlerted = null;
+                    }
+                }
+                else
+                {
+                    return true;
                 }
             }
             return true;

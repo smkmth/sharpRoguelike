@@ -42,11 +42,6 @@ namespace sharpRoguelike.Core.Systems
             formatter.Serialize(stream, Game.DungeonMap.Items);
             formatter.Serialize(stream, Game.DungeonMap.Surfaces);
             formatter.Serialize(stream, Game.DungeonMap.StairsDown);
-
-
-            Game.Player.color = Colors.Player;
-            Game.Player.symbol = '@';
-            Game.Player.name = "Rogue";
             stream.Close();
 
         }
