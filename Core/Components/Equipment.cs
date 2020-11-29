@@ -10,7 +10,8 @@ namespace sharpRoguelike.Core.Components
         WEAPON,
         CHEST,
         LEGS,
-        RING
+        RING,
+        RANGED_WEAPON
     }
     //equipment expresses that its owner item is a piece of equipment- 
     //i am useing ownerItem here to EMPHASISE that an equipments 'owner'
@@ -30,6 +31,8 @@ namespace sharpRoguelike.Core.Components
 
         public string effectString;
         public EquipSlotType slotType;
+
+        public RangedWeapon ranged = null;
 
         public Equipment(Entity _owner, EquipSlotType _slotType)
         {

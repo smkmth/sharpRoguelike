@@ -1,4 +1,5 @@
 ﻿using sharpRoguelike.Core.Data.Items;
+using sharpRoguelike.Core.Data.Items.Weapons;
 using sharpRoguelike.Core.Items;
 using sharpRoguelike.Core.Systems;
 using System;
@@ -51,6 +52,7 @@ namespace sharpRoguelike.Core.Components
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
+            owner.inventory.AddItem(Rifle.Create());
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));
@@ -58,6 +60,7 @@ namespace sharpRoguelike.Core.Components
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.LEGS));
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
+            owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RANGED_WEAPON));
    
 
             EquipmentManager.EquipItem(owner, Knife.Create());

@@ -51,7 +51,7 @@ namespace sharpRoguelike.Core.Monsters
 
             cryoFailure.corpse.inventory = new Inventory(cryoFailure);
 
-            cryoFailure.corpse.inventory.AddItem(MedicalRags.Create(),true);
+            cryoFailure.corpse.inventory.AddItem(TornRags.Create(),true);
 
             cryoFailure.ai = new AI();
             cryoFailure.ai.owner = cryoFailure;

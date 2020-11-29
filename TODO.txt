@@ -6,8 +6,10 @@ TODO list for roguelike game :
 -level up player (progression)
 -more variety in level generation - at the moment its just boxes [X] (still boxes but some boxes overlap)
 -ranged combat both for the enemeies and player 
+-character screen
 -add traps
 -add vault.
+-one way/ hidden doors?
 -make player able to migrate by giving another entity .player
 
 boring things 

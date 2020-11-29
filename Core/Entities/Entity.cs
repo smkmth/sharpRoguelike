@@ -186,6 +186,24 @@ namespace sharpRoguelike.Core
             return false;
         }
 
+        public Equipment GetEquippedRangedWeapon()
+        {
+            Equipment rangedWeapon = null;
+            foreach(EquipmentSlot slot in equipmentSlots)
+            {
+                if (slot.equipType == EquipSlotType.RANGED_WEAPON)
+                {
+                    if (slot.attachedEquipment != null)
+                    {
+                        rangedWeapon = slot.attachedEquipment;
+                    }
+                }
+            }
+
+            return rangedWeapon;
+
+        }
+
 
     }
 }

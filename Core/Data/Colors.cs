@@ -89,6 +89,7 @@ namespace sharpRoguelike.Core
         public static RLColor ShallowWater = Swatch.DbWater;
         //weapons 
         public static RLColor LowTeirItem = RLColor.White;
+        public static RLColor MidTierItem = RLColor.Blue;
 
         //monsters
         public static RLColor KoboldColor = Swatch.DbBrightWood;
@@ -100,9 +101,6 @@ namespace sharpRoguelike.Core
         public static RLColor CombatMessage = Swatch.DbBlood;
         public static RLColor NormalMessage = new RLColor(239,234,224);
         public static RLColor HealMessage = Swatch.DbGrass;
-
-
-
 
     }
 }

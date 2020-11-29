@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RLNET;
 using RogueSharp.Random;
 using sharpRoguelike.Core;
+using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Menus;
 using sharpRoguelike.Core.Systems;
 
@@ -59,8 +60,6 @@ namespace sharpRoguelike
         public static SchedulingSystem SchedulingSytem { get; private set; }
         public static RandomWrapper Random { get; set; }
 
-
-
         public static bool fullScreen = false;
         public static bool didPlayerAct;
         public static bool shouldUpdateDraw =true;
@@ -68,7 +67,7 @@ namespace sharpRoguelike
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
         public static int seed;
-        public static float scaleFactor = 1.4f;
+        public static float scaleFactor = 1f;
 
         public static bool DebugCheats = true;
         public static bool wallhack = false;
@@ -273,6 +272,18 @@ namespace sharpRoguelike
 
                             }
                         }
+                        else if (keyPress.Key == RLKey.F)
+                        {
+                            Equipment rangedWeapon = Player.GetEquippedRangedWeapon();
+                            if (rangedWeapon != null && rangedWeapon.ranged != null)
+                            {
+                                MessageLog.Add(rangedWeapon.ranged.targetString, Colors.HelpMessage);
+                                targetCallback = rangedWeapon.ranged.TargetCallback;
+                                targetCancelCallback = rangedWeapon.ranged.TargetCancelledCallback;
+                                CurrentGameMode = GameMode.TARGETING;
+                                
+                            }
+                        }
                         else if (keyPress.Key == RLKey.Period)
                         {
                             if (DungeonMap.CanMoveDownToNextLevel())
@@ -381,6 +392,8 @@ namespace sharpRoguelike
                         CurrentGameMode = GameMode.PLAYING;
                         targetCallback = null;
                         targetCancelCallback = null;
+                        CommandSystem.EndPlayerTurn();
+
                     }
                 }
             }
