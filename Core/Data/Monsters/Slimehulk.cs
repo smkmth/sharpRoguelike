@@ -44,11 +44,13 @@ namespace sharpRoguelike.Core.Data.Monsters
             Entity corpse = new Entity()
             {
                 name = "slimehulk Corpse",
-                color = Colors.Corpse,
+                color = Colors.SlimehulkColor,
                 symbol = '%'
             };
 
             slimeHulk.corpse = corpse;
+            slimeHulk.corpse.inventory = new Inventory(slimeHulk);
+
 
             slimeHulk.ai = new AI();
             slimeHulk.ai.owner = slimeHulk;

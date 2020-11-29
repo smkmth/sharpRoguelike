@@ -1,4 +1,5 @@
 ﻿using RogueSharp;
+using RogueSharp.MapCreation;
 using sharpRoguelike.Core.Data.Items;
 using sharpRoguelike.Core.Data.Monsters;
 using sharpRoguelike.Core.Items;
@@ -12,7 +13,7 @@ namespace sharpRoguelike.Core
 {
     //responsible for placing all the entities and creating the rooms - builds 
     //a 'map' and returns in the CreateMap function
-    public class MapGenerator
+    public class RandomRoomsMapGenerator
     {
         private readonly int width;
         private readonly int height;
@@ -21,9 +22,9 @@ namespace sharpRoguelike.Core
         private readonly int roomsMaxSize;
         private readonly int mapLevel;
 
-        private readonly DungeonMap map;
+        private DungeonMap map;
 
-        public MapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize, int _mapLevel)
+        public RandomRoomsMapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize, int _mapLevel)
         {
             width = _width;
             height = _height;
@@ -35,11 +36,106 @@ namespace sharpRoguelike.Core
 
         }
 
+        public void MakeCaverns()
+        {
+            // By initilizing column in the outter loop, its only created ONCE
+            for (int column = 0, row = 0; row <= height - 1; row++)
+            {
+                for (column = 0; column <= width - 1; column++)
+                {
+                    bool walllogic = PlaceWallLogic(column, row);
+                    map.SetIsWalkable(row, column, walllogic);
+                }
+            }
+        }
+
+        public bool PlaceWallLogic(int x, int y)
+        {
+            int numWalls = GetAdjacentWalls(x, y, 1, 1);
+
+
+            if (map.GetCell(x, y).IsWalkable)
+            {
+                if (numWalls >= 4)
+                {
+                    return true;
+                }
+                if (numWalls < 2)
+                {
+                    return false;
+                }
+
+            }
+            else
+            {
+                if (numWalls >= 5)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public int GetAdjacentWalls(int x, int y, int scopeX, int scopeY)
+        {
+            int startX = x - scopeX;
+            int startY = y - scopeY;
+            int endX = x + scopeX;
+            int endY = y + scopeY;
+
+            int iX = startX;
+            int iY = startY;
+
+            int wallCounter = 0;
+
+            for (iY = startY; iY <= endY; iY++)
+            {
+                for (iX = startX; iX <= endX; iX++)
+                {
+                    if (!(iX == x && iY == y))
+                    {
+                        if (IsWall(iX, iY))
+                        {
+                            wallCounter += 1;
+                        }
+                    }
+                }
+            }
+            return wallCounter;
+        }
+        bool IsWall(int x, int y)
+        {
+            // Consider out-of-bound a wall
+            if (IsOutOfBounds(x, y))
+            {
+                return true;
+            }
+
+            ICell cell = map.GetCell(x, y);
+
+            return cell.IsWalkable;
+
+        }
+
+        bool IsOutOfBounds(int x, int y)
+        {
+            if (x < 0 || y < 0)
+            {
+                return true;
+            }
+            else if (x > width - 1 || y > height - 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
         public DungeonMap CreateMap(bool addEntities)
         {
             map.Initialize(width, height);
-           
-
+          
+            
             for (int r = maxRooms; r > 0; r--)
             {
                 int roomWidth = Game.Random.Next(roomsMinSize, roomsMaxSize);
@@ -58,7 +154,7 @@ namespace sharpRoguelike.Core
                 }
             }
 
-        
+
 
             for (int r=1; r < map.Rooms.Count; r++)
             {
@@ -83,12 +179,14 @@ namespace sharpRoguelike.Core
             foreach (Rectangle room in map.Rooms)
             {
                 CreateRoom(room);
+
                 if (addEntities)
                 {
                     CreateDoors(room);
                 }
 
             }
+
             if (addEntities)
             {
 
@@ -97,6 +195,7 @@ namespace sharpRoguelike.Core
                 PlaceMonsters();
                 PlaceItems();
             }
+            
             return map;
         }
 
@@ -110,6 +209,7 @@ namespace sharpRoguelike.Core
                 }
             }
         }
+        
         private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)

@@ -52,7 +52,7 @@ namespace sharpRoguelike.Core
 
         new public ICell GetCell(int x, int y)
         {
-            if (x > Width || y > Height)
+            if (x >= Width || y >= Height)
             {
                 return null;
 
@@ -214,7 +214,11 @@ namespace sharpRoguelike.Core
 
         public void SetIsWalkable(int x, int y, bool walkable)
         {
-            SetCellProperties(x, y, GetCell(x,y).IsTransparent, walkable, GetCell(x,y).IsExplored);
+            if (GetCell(x,y) != null)
+            {
+
+                SetCellProperties(x, y, GetCell(x,y).IsTransparent, walkable, GetCell(x,y).IsExplored);
+            }
 
         }
 

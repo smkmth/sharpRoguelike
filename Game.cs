@@ -149,7 +149,7 @@ namespace sharpRoguelike
 
             Random = new RandomWrapper(new DotNetRandom(seed));
             //gen map
-            MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
+            RandomRoomsMapGenerator mapGenerator = new RandomRoomsMapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
             DungeonMap = mapGenerator.CreateMap(true);
             Player.player.ResetPlayer();
 
@@ -277,7 +277,7 @@ namespace sharpRoguelike
                         {
                             if (DungeonMap.CanMoveDownToNextLevel())
                             {
-                                MapGenerator mapGenerator = new MapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
+                                RandomRoomsMapGenerator mapGenerator = new RandomRoomsMapGenerator(mapWidth, mapHeight, 20, 7, 13, ++mapLevel);
                                 DungeonMap = mapGenerator.CreateMap(true);
                                 MessageLog = new MessageLog(messageWidth);
                                 CommandSystem = new CommandSystem();
