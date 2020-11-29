@@ -5,9 +5,10 @@ TODO list for roguelike game :
 -enemeies have inventories - and you can search enemeies [X]
 -level up player (progression)
 -more variety in level generation - at the moment its just boxes [X] (still boxes but some boxes overlap)
--ranged combat both for the enemeies and player 
+-ranged combat for player [x]
+-ranged combat for enemey 
 -character screen
--add traps
+-add traps [X]
 -add vault.
 -one way/ hidden doors?
 -make player able to migrate by giving another entity .player

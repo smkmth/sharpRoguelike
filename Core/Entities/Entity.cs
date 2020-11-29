@@ -54,6 +54,7 @@ namespace sharpRoguelike.Core
         public string description { get; set; }
 
         public bool stackable = false;
+        public int stackcount =0;
 
         public Inventory inventory = null;              //does this entity have an inventory
         public Attacker attacker = null;                //does this entity attack

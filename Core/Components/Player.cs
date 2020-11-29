@@ -47,17 +47,22 @@ namespace sharpRoguelike.Core.Components
             owner.actor.Awareness = 15;
             owner.actor.Speed = 10;
             owner.inventory = new Inventory(owner);
+
             owner.inventory.AddItem(HealthPotion.Create());
+
             owner.inventory.AddItem(SlimePotion.Create());
+
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
-            owner.inventory.AddItem(Bullet.Create());
-            owner.inventory.AddItem(Bullet.Create());
-            owner.inventory.AddItem(Bullet.Create());
-            owner.inventory.AddItem(Bullet.Create());
-            owner.inventory.AddItem(Bullet.Create());
-            owner.inventory.AddItem(Bullet.Create());
+
+            owner.inventory.AddItem(BulletStack.Create());
+            owner.inventory.AddItem(BulletStack.Create());
+            owner.inventory.AddItem(BulletStack.Create());
+
+            owner.inventory.AddItem(BearTrap.Create());
+            owner.inventory.AddItem(BearTrap.Create());
+            owner.inventory.AddItem(BearTrap.Create());
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));

@@ -7,10 +7,11 @@ namespace sharpRoguelike.Core.Components
     [Serializable]
     class RifleEffect : RangedWeapon
     {
+        public int clip;
 
-        public RifleEffect(Equipment _owner): base (_owner)
+        public RifleEffect(Equipment _owner, int _clip): base (_owner)
         {
-
+            clip = _clip;
         }
 
         public override void TargetCallback(int x, int y)
@@ -53,7 +54,7 @@ namespace sharpRoguelike.Core.Components
         {
             if (owner.ownerHolder != null)
             {
-                ammo = owner.ownerHolder.inventory.LoadAmmoOfType(AmmoType.Bullets);
+                ammo = owner.ownerHolder.inventory.LoadAmmoOfType(AmmoType.Bullets,clip);
                 if (ammo > 0)
                 {
                     Game.MessageLog.Add("Loading ammo into rifle...", Colors.NormalMessage);

@@ -8,6 +8,7 @@ using System.Text;
 namespace sharpRoguelike.Core
 {
 
+
     //an inventory is a space to put items - inventories are quired by inventory menus, and
     //they can hold any kind of entity. This is kind of flexible because it means anything can
     //potentially be picked up by anything with an inventory.
@@ -48,8 +49,10 @@ namespace sharpRoguelike.Core
                     {
                         if (check.GetType() == item.GetType())
                         {
-
+                            check.stackcount += item.stackcount;
+                            return true;
                         }
+                        
 
                     }
 
@@ -74,21 +77,36 @@ namespace sharpRoguelike.Core
 
         }
 
-        public int LoadAmmoOfType(AmmoType type)
+        public int LoadAmmoOfType(AmmoType type, int clip)
         {
-            List<Entity> bullets = new List<Entity>();
+            BulletStack bullets = new BulletStack();
             foreach(Entity item in storedItems)
             {
-                if (item is Bullet)
+                if (item is BulletStack)
                 {
-                    bullets.Add(item);
+                    bullets = item as BulletStack;
                 }
             }
-            foreach(Entity removeItem in bullets)
+
+            if ( (bullets.stackcount - clip) >= 0)
             {
-                storedItems.Remove(removeItem);
+                bullets.stackcount -= clip;
+                if (bullets.stackcount == 0)
+                {
+                    storedItems.Remove(bullets);
+                }
+                return clip;
             }
-            return storedItems.Count;
+            else
+            {
+                bullets.stackcount -= clip;
+                clip += bullets.stackcount;
+                storedItems.Remove(bullets);
+                return clip;
+            }
+
+            return 0;
+            
         }
 
 

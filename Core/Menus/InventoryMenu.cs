@@ -91,7 +91,11 @@ namespace sharpRoguelike.Core.Menus
                 {
                     color = RLColor.Yellow;
                 }
-                con.Print(2, i + offset, "(" + Convert.ToChar(i + 97).ToString() + ") " +  inv.storedItems[i].name, color);
+                string stackcount = "";
+                if (inv.storedItems[i].stackable) {
+                    stackcount = $" ({inv.storedItems[i].stackcount})";
+                }
+                con.Print(2, i + offset, "(" + Convert.ToChar(i + 97).ToString() + ") " +  inv.storedItems[i].name + stackcount, color);
                 itemOffset++;
             }
             int equipmentOffset = offset;
