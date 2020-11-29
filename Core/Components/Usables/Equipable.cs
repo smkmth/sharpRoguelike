@@ -44,7 +44,7 @@ namespace sharpRoguelike.Core.Components.Usables
                 
             }
 
-            return false;
+            return true;
         }
     }
 }

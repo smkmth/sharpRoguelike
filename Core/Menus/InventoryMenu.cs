@@ -188,7 +188,25 @@ namespace sharpRoguelike.Core.Menus
                     con.Print(width - equipmentDescription.Length, index, equipmentDescription, RLColor.White);
                     index += 2;
                 }
+                else
+                {
+                    int itemIndex = 0;
+                    //we dont have somthing in that slot - offer stuff?
+                    for (int i = 0; i < inv.storedItems.Count; i++)
+                    {
+                        if (inv.storedItems[i].equipment != null)
+                        {
+                            if (inv.storedItems[i].equipment.slotType == currentlySelectedSlot.equipType)
+                            {
+                                string itemSuggestion = "(" + Convert.ToChar(i + 97).ToString() + ") " + inv.storedItems[i].name;
+                                con.Print(width - itemSuggestion.Length, index, itemSuggestion, RLColor.White);
+                                itemIndex++;
+                                index += 2;
+                            }
+                        }
 
+                    }
+                }
                 string goBack = "(backspace) go back to inventory selection ";
                 con.Print(width - goBack.Length, index, goBack, RLColor.White);
                 index += 2;
@@ -325,7 +343,27 @@ namespace sharpRoguelike.Core.Menus
                         }
                         return;
                     }
-             
+                    else
+                    {
+                        int itemindex = Convert.ToInt32(useSelection - 65);
+
+                        if (itemindex >= 0 && itemindex < inv.storedItems.Count)
+                        {
+                            if (inv.storedItems[itemindex].equipment != null && inv.storedItems[itemindex].equipment.slotType == currentlySelectedSlot.equipType)
+                            {
+                               if ( inv.storedItems[itemindex].effect.Use('A', inv.owner, inv.owner))
+                                {
+                                    inv.ConsumeItem(inv.storedItems[itemindex]);
+                                    currentInventoryState = InventoryState.INVENTORY;
+                                    currentlySelectedSlot = null;
+                                    return;
+                                }
+                            }
+                            return;
+                        }
+
+                    }
+
                 }
 
             }

@@ -382,10 +382,12 @@ namespace sharpRoguelike
             int mx = rootConsole.Mouse.X;
             int my = rootConsole.Mouse.Y - lookHeight;          //mouse is messured from top left of screen so the look console offsets this value 
 
-            if (rootConsole.Mouse.GetLeftClick())
+
+            if (CurrentGameMode == GameMode.TARGETING) 
             {
-                if (CurrentGameMode == GameMode.TARGETING)
+                if (rootConsole.Mouse.GetLeftClick())
                 {
+               
                     if (DungeonMap.IsInFov(mx, my))
                     {
                         targetCallback.Invoke(mx, my);
@@ -395,19 +397,18 @@ namespace sharpRoguelike
                         CommandSystem.EndPlayerTurn();
 
                     }
+                
                 }
-            }
-            if (rootConsole.Mouse.GetRightClick())
-            {
-                if (CurrentGameMode == GameMode.TARGETING)
+                if (rootConsole.Mouse.GetRightClick())
                 {
-                    targetCancelCallback.Invoke(true);
-                    CurrentGameMode = GameMode.PLAYING;
-                    targetCallback = null;
-                    targetCancelCallback = null;
+                
+                        targetCancelCallback.Invoke(true);
+                        CurrentGameMode = GameMode.PLAYING;
+                        targetCallback = null;
+                        targetCancelCallback = null;
+                
                 }
             }
-
             //tell us what entities are under the mouse pointer
             if (mx > 0 && my > 0)
             {
@@ -440,6 +441,9 @@ namespace sharpRoguelike
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
 
+       
+
+
             if (CurrentGameMode == GameMode.MAINMENU)
             {
                 DrawMainMenu();
@@ -455,8 +459,16 @@ namespace sharpRoguelike
 
             }
 
+
             if (CurrentGameMode == GameMode.TARGETING)
             {
+                //weird placement - but yeah sort this out later
+                Equipment rangedWeapon = Player.GetEquippedRangedWeapon();
+                if (rangedWeapon != null && rangedWeapon.ranged != null)
+                {
+                    string gunString = "Aiming with " + rangedWeapon.ownerItem.name + " you have " + rangedWeapon.ranged.ammo + " shots ";
+                    lookConsole.Print(lookConsole.Width - gunString.Length, 2, gunString, RLColor.White);
+                }
                 DrawMainGame();
                 return;
 
