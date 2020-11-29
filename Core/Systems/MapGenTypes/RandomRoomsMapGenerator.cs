@@ -62,29 +62,45 @@ namespace sharpRoguelike.Core
 
         
 
-            for (int r=1; r < map.Rooms.Count; r++)
+            for (int r=0; r < map.Rooms.Count; r++)
             {
-                int previousRoomCenterX = map.Rooms[r - 1].Center.X;
-                int previousRoomCenterY = map.Rooms[r - 1].Center.Y;
-                int currentRoomCenterX =  map.Rooms[r].Center.X;
-                int currentRoomCenterY =  map.Rooms[r].Center.Y;
 
-                if (Game.Random.Next(1, 2) == 1)
+                CreateRoom(map.Rooms[r]);
+            
+                if (r > 0)
                 {
-                    CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
-                    CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
-                }
-                else
-                {
-                    CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
-                    CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
-                }
+                    int previousRoomCenterX = map.Rooms[r - 1].Center.X;
+                    int previousRoomCenterY = map.Rooms[r - 1].Center.Y;
+                    int currentRoomCenterX =  map.Rooms[r].Center.X;
+                    int currentRoomCenterY =  map.Rooms[r].Center.Y;
 
+                    if (Game.Random.Next(1, 2) == 1)
+                    {
+                        CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
+                        CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
+                    }
+                    else
+                    {
+                        CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
+                        CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
+                    }
+
+                }
+            }
+
+
+            //redo borders
+            foreach(ICell cell in map.GetCellsInColumns( width -1))
+            {
+                map.SetCellProperties(cell.X, cell.Y, false, false);
+            }
+            foreach (ICell cell in map.GetCellsInRows( height -1))
+            {
+                map.SetCellProperties(cell.X, cell.Y, false, false);
             }
 
             foreach (Rectangle room in map.Rooms)
             {
-                CreateRoom(room);
                 if (addEntities)
                 {
                     CreateDoors(room);
@@ -113,7 +129,63 @@ namespace sharpRoguelike.Core
                     map.SetCellProperties(x, y, true, true, false);
                 }
             }
+
+
+            bool secondRect = true;
+
+            if (secondRect)
+            {
+                ApplySecondRect(room);
+            }
+
+          
         }
+
+     
+     
+        public void ApplySecondRect(Rectangle room)
+        {
+            int roomWidth = Game.Random.Next(2, room.Width);
+            int roomHeight = Game.Random.Next(2, room.Height);
+            int roomXPosition = Game.Random.Next(room.Left, room.Right);
+            int roomYPosition = Game.Random.Next(room.Top, room.Bottom);
+            if (roomXPosition + roomWidth >= width)
+            {
+                int toLose = (roomXPosition + roomWidth) - width;
+                if ((roomXPosition - toLose) > room.Left)
+                {
+                    roomXPosition -= toLose;
+                }
+                else
+                {
+                    roomWidth -= toLose;
+                }
+            }
+
+            if (roomYPosition + roomHeight >= height)
+            {
+                int toLose = (roomYPosition + roomHeight) - height;
+                if ((roomYPosition - toLose) > room.Bottom)
+                {
+                    roomXPosition -= toLose;
+                }
+                else
+                {
+                    roomHeight -= toLose;
+                }
+            }
+
+            for (int x = roomXPosition; x < roomXPosition + roomWidth; x++)
+            {
+                for (int y = roomYPosition; y < roomYPosition + roomHeight; y++)
+                {
+                    map.SetCellProperties(x, y, true, true, false);
+                }
+            }
+        } 
+      
+
+
         private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
@@ -159,14 +231,14 @@ namespace sharpRoguelike.Core
                             int monsterRoll = Game.Random.Next(0, 100);
                             if (monsterRoll < 70)
                             {
-                                var monster = Cryofailure.Create(1);
+                                var monster = Cryofailure.Create(mapLevel);
                                 monster.x = randomRoomLocation.X;
                                 monster.y = randomRoomLocation.Y;
                                 map.AddMonster(monster);
                             }
                             else
                             {
-                                var monster = Slimehulk.Create(1);
+                                var monster = Slimehulk.Create(mapLevel);
                                 monster.x = randomRoomLocation.X;
                                 monster.y = randomRoomLocation.Y;
                                 map.AddMonster(monster);

@@ -25,6 +25,10 @@ namespace sharpRoguelike.Core.Components
 
         public void ResetPlayer()
         {
+            if (owner.statusEffects != null)
+            { 
+                owner.statusEffects.Clear();
+            }
 
             owner.color = Colors.Player;
             owner.symbol = '@';
@@ -54,8 +58,9 @@ namespace sharpRoguelike.Core.Components
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.LEGS));
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.RING));
+   
 
-            EquipmentManager.EquipItem(owner, Dagger.Create());
+            EquipmentManager.EquipItem(owner, Knife.Create());
         }
     }
 }

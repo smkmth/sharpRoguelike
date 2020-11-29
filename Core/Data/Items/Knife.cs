@@ -7,19 +7,19 @@ using System.Text;
 namespace sharpRoguelike.Core.Items
 {
     [Serializable]
-    class Dagger : Entity
+    class Knife : Entity
     {
-        public static Dagger Create()
+        public static Knife Create()
         {
-            Dagger dagger = new Dagger
+            Knife dagger = new Knife
             {
                 symbol = '/',
                 color = Colors.LowTeirItem,
-                name = "Dagger",
-                description = "A crude dagger - adds 2 to attack"
+                name = "Knife",
+                description = "A combat knife - adds 2 to attack"
             };
             dagger.equipment = new Equipment(dagger, EquipSlotType.WEAPON);
-            dagger.equipment.attackModifier = 100;
+            dagger.equipment.attackModifier = 2;
 
             dagger.effect = new Equipable();
             dagger.effect.owner = dagger;

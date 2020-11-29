@@ -7,6 +7,7 @@ namespace sharpRoguelike.Core.Components.StatusEffects
     [Serializable]
     class Slimed : StatusEffect
     {
+        
         public Slimed(Entity _owner, int _counter, StatusEffectsComp _comp) :base (_owner, _counter, _comp)
         {
             statusEffectAppliedName = "slimed";
@@ -36,6 +37,13 @@ namespace sharpRoguelike.Core.Components.StatusEffects
         public override void RemoveEffect()
         {
             base.RemoveEffect();
+            
+        }
+
+        
+        public override void ResolveEffect()
+        {
+            base.ResolveEffect();
             if (owner.actor != null)
             {
                 owner.actor.speedModifier -= 15;

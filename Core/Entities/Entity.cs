@@ -122,7 +122,21 @@ namespace sharpRoguelike.Core
 
             }
         }
+        public void RemoveAllStatusEffects()
+        {
 
+            if (statusEffects != null)
+            {
+
+                foreach (StatusEffect currentEffect in statusEffects)
+                {
+                    currentEffect.ResolveEffect();
+
+                }
+                statusEffects.Clear();
+            }
+           
+        }
         public void RemoveStatusEffect(StatusEffectsComp effect)
         {
             if (statusEffects != null)
@@ -133,6 +147,7 @@ namespace sharpRoguelike.Core
                 {
                     if (effect == currentEffect.comp)
                     {
+                        currentEffect.ResolveEffect();
                         targetEffect = currentEffect;
                     }
 
