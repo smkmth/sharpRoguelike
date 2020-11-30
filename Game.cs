@@ -73,7 +73,10 @@ namespace sharpRoguelike
         public static bool wallhack = false;
         public static bool seeallwalls = false;
         public static bool seeallentities = false;
-
+        public static bool useWaveFunctionCollapse = false;
+        public static WaveFunctionCollapseMap collapse;
+        public static bool finish;
+            
         static void Main(string[] args)
         {
             //get font file from folder dir
@@ -99,9 +102,14 @@ namespace sharpRoguelike
             mainMenu = new MainMenu();
             statDisplay = new StatDisplay();
 
+
+
             //set up main menu
             mainMenu.OnFirstEnter();
 
+
+
+           
             //attach all the hooks to the console update and render
             rootConsole.Render += OnRootConsoleRender;
             rootConsole.Update += OnRootConsoleUpdate;
@@ -127,6 +135,7 @@ namespace sharpRoguelike
 
         public static void HandleMainMenu()
         {
+       
             shouldUpdateDraw = true;
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
             if (keyPress != null)
@@ -147,9 +156,21 @@ namespace sharpRoguelike
             }
 
             Random = new RandomWrapper(new DotNetRandom(seed));
+
             //gen map
-            RandomRoomsMapGenerator mapGenerator = new RandomRoomsMapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
-            DungeonMap = mapGenerator.CreateMap(true);
+            if (useWaveFunctionCollapse)
+            {
+
+                collapse = new WaveFunctionCollapseMap("Qud", 3, mapWidth, mapHeight, true, true, 8, 0);
+                DungeonMap = collapse.Run(seed);
+            }
+            else
+            {
+                RandomRoomsMapGenerator mapGenerator = new RandomRoomsMapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
+                DungeonMap = mapGenerator.CreateMap(true);
+
+            }
+
             Player.player.ResetPlayer();
 
             //start messages

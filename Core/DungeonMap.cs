@@ -105,7 +105,7 @@ namespace sharpRoguelike.Core
 
             //stairs always at the v top 
             StairsUp?.Draw(mapConsole, this);
-            StairsDown.Draw(mapConsole, this);
+            StairsDown?.Draw(mapConsole, this);
 
         }
 

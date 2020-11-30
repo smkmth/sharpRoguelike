@@ -8,6 +8,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Behaviors
 {
+    [Serializable]
     class StandardMoveAndAttack : IBehavior
     {
         int longPathWait = 0;
