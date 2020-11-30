@@ -1,6 +1,7 @@
 ﻿using RogueSharp.DiceNotation;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Data.Items;
+using sharpRoguelike.Core.Systems;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,7 +52,14 @@ namespace sharpRoguelike.Core.Monsters
 
             cryoFailure.corpse.inventory = new Inventory(cryoFailure);
 
-            cryoFailure.corpse.inventory.AddItem(TornRags.Create(),true);
+            cryoFailure.equipmentSlots = new List<EquipmentSlot>();
+            cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.CHEST));
+            cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.WEAPON));
+            cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.LEGS));
+            cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.RING));
+            cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.RING));
+            cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.RANGED_WEAPON));
+            EquipmentManager.EquipItem(cryoFailure, TornRags.Create());
 
             cryoFailure.ai = new AI();
             cryoFailure.ai.owner = cryoFailure;

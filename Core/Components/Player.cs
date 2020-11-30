@@ -56,9 +56,7 @@ namespace sharpRoguelike.Core.Components
             owner.inventory.AddItem(WaterPotion.Create());
             owner.inventory.AddItem(WaterPotion.Create());
 
-            owner.inventory.AddItem(BulletStack.Create());
-            owner.inventory.AddItem(BulletStack.Create());
-            owner.inventory.AddItem(BulletStack.Create());
+            owner.inventory.AddItem(BulletStack.Create(30));
 
             owner.inventory.AddItem(BearTrap.Create());
             owner.inventory.AddItem(BearTrap.Create());

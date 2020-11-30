@@ -50,7 +50,7 @@ namespace sharpRoguelike.Core.Components
             Game.CurrentGameMode = GameMode.PLAYING;
         }
 
-        public override void Load()
+        public override bool Load()
         {
             if (owner.ownerHolder != null)
             {
@@ -58,12 +58,15 @@ namespace sharpRoguelike.Core.Components
                 if (ammo > 0)
                 {
                     Game.MessageLog.Add("Loading ammo into rifle...", Colors.NormalMessage);
+                    return true;
                 }
                 else
                 {
                     Game.MessageLog.Add("Out of ammo!", Colors.NormalMessage);
+                    return false;
                 }
             }
+            return false;
         }
 
     }

@@ -30,5 +30,34 @@ namespace sharpRoguelike.Core.Systems
 
         }
 
+        public static void TransferEquipmentToInv(Entity target, Inventory targetInv)
+        {
+            if (target.equipmentSlots != null && targetInv != null)
+            {
+                foreach (EquipmentSlot slot in target.equipmentSlots)
+                {
+                    if (slot.attachedEquipment != null)
+                    {
+                        targetInv.AddItem(slot.attachedEquipment.ownerItem,true);
+                    }
+
+                }
+                target.equipmentSlots.Clear();
+            }
+            else
+            {
+                Console.WriteLine("somthing went wrong transfering inventories ");
+                if (target.equipmentSlots == null)
+                {
+                    Console.WriteLine("equipment slots were null");
+
+                }
+                if (targetInv == null)
+                {
+                    Console.WriteLine("target inv was null");
+                }
+            }
+        }
+
     }
 }

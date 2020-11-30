@@ -32,9 +32,9 @@ namespace sharpRoguelike.Core.Components
 
         }
 
-        public virtual void Load()
+        public virtual bool Load()
         {
-            
+            return false;
 
         }
 

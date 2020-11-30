@@ -239,6 +239,7 @@ namespace sharpRoguelike.Core.Systems
                 defender.corpse.y = defender.y;
                 defender.attacker = null;
                 defender.ai = null;
+                EquipmentManager.TransferEquipmentToInv(defender, defender.corpse.inventory);
                 Game.DungeonMap.AddItem(defender.corpse);
                 Game.MessageLog.Add($" {defender.name} died !", Colors.CombatMessage);
             }

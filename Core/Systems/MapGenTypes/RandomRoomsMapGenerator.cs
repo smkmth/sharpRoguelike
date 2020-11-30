@@ -262,12 +262,19 @@ namespace sharpRoguelike.Core
                         if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
                         {
                             int roll = Game.Random.Next(0, 100);
-                            if (roll < 25)
+                            if (roll < 10)
                             {
                                 var potion = HealthPotion.Create();
                                 potion.x = randomRoomLocation.X;
                                 potion.y = randomRoomLocation.Y;
                                 map.AddItem(potion);
+                            }
+                            else if (roll < 50)
+                            {
+                                var chest = Chest.Create();
+                                chest.x = randomRoomLocation.X;
+                                chest.y = randomRoomLocation.Y;
+                                map.AddItem(chest);
                             }
                             else if (roll < 75)
                             {

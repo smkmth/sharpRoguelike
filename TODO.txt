@@ -12,6 +12,7 @@ TODO list for roguelike game :
 -add vault.
 -one way/ hidden doors?
 -make player able to migrate by giving another entity .player
+-liquid spills should get stopped by doors
 
 boring things 
 -remove unnessosary interfaces - maybee?

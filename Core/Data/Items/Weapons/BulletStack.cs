@@ -7,7 +7,7 @@ namespace sharpRoguelike.Core.Data.Items
     [Serializable]
     class BulletStack : Entity
     {
-        public static BulletStack Create()
+        public static BulletStack Create(int count)
         {
             BulletStack bulletstack = new BulletStack
             {
@@ -17,7 +17,7 @@ namespace sharpRoguelike.Core.Data.Items
                 description = "ammo for rifles"
             };
             bulletstack.stackable = true;
-            bulletstack.stackcount = 10;
+            bulletstack.stackcount = count;
             return bulletstack;
 
         }

@@ -4,10 +4,13 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Components.Usables
 {
+    [Serializable]
     class RangedEquipUse : EquipmentUse
     {
-        public RangedEquipUse()
+        RifleEffect rEffect;
+        public RangedEquipUse(RifleEffect _rEffect)
         {
+            rEffect = _rEffect;
             usageChars = new List<char>();
             usageChars.Add('B');
             displayChars = new List<char>();
@@ -21,9 +24,11 @@ namespace sharpRoguelike.Core.Components.Usables
         {
             if (usageChar == 'B')
             {
-                
+                rEffect.Load();
+                return true;
             }
-            return base.Use(usageChar, user, target);
+            return true;
+
         }
     }
 }

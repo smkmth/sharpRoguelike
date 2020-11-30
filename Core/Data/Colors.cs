@@ -91,10 +91,11 @@ namespace sharpRoguelike.Core
         //weapons 
         public static RLColor LowTeirItem = RLColor.White;
         public static RLColor MidTierItem = RLColor.Blue;
+        public static RLColor HighTierItem = Swatch.DbSun;
 
         //monsters
         public static RLColor KoboldColor = Swatch.DbBrightWood;
-        public static RLColor SlimehulkColor = Swatch.DbSun;
+        public static RLColor SlimehulkColor = Swatch.DbGrass;
 
         //messages
         public static RLColor HelpMessage = new RLColor(254, 203, 0);
