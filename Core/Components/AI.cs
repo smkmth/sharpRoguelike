@@ -22,7 +22,7 @@ namespace sharpRoguelike.Core
         public int longPathWait =20;
         public int cooldown = 150;
         public List<IBehavior> behaviorStack;
-        public Path currentPath;
+        [NonSerialized] public Path currentPath;
         public void AlertAI()
         {
             TurnsAlerted = 1;

@@ -29,7 +29,19 @@ namespace sharpRoguelike.Core.Systems
 
             return new Point(xtot, ytot);
         }
-
+       
+        public int GetExtremeLeft()
+        {
+            Point bestfit = points[0];
+            foreach (Point point in points)
+            {
+                if (point.X < bestfit.X)
+                {
+                    bestfit = point;
+                }
+            }
+            return bestfit.X;
+        }
         public Point GetRandomPointInRoom()
         {
             return points[Game.Random.Next(0, points.Count-1)];
@@ -100,8 +112,8 @@ namespace sharpRoguelike.Core.Systems
 
             rooms = GetRooms(cells);
            
-
-            List<Room> sortedRooms = rooms.OrderByDescending(o => o.points.Count).ToList();
+            
+            List<Room> sortedRooms = rooms.OrderByDescending(o => o.GetExtremeLeft()).ToList();
 
             for (int r = 0; r < sortedRooms.Count; r++)
             {

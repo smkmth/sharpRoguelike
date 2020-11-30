@@ -132,7 +132,8 @@ namespace sharpRoguelike
                 Stopwatch sw = Stopwatch.StartNew();
 
                 HandleGame();
-                if (sw.ElapsedMilliseconds > 0)
+
+                if (sw.ElapsedMilliseconds > 16)
                 { 
                     Console.WriteLine($"time = {sw.ElapsedMilliseconds}");
                 }
