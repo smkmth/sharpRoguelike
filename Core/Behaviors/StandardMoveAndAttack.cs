@@ -43,13 +43,24 @@ namespace sharpRoguelike.Core.Behaviors
                 }
                 else
                 {
-                    Console.WriteLine($"{monster.name} lost player - heading to last location");
-                    if (PathToSpot(monster, commandSystem, monster.ai.lastSeenPlayerX, monster.ai.lastSeenPlayerY))
+                    if (monster.ai.currentPath == null)
                     {
-                        Console.WriteLine($"{monster.name} reached last location");
-                        return false;
 
+                        monster.ai.currentPath = StaticPathToSpot(monster, commandSystem, monster.ai.lastSeenPlayerX, monster.ai.lastSeenPlayerY);
+                        if (monster.ai.currentPath == null)
+                        {
+                            Console.WriteLine($"{monster.name} {monster.x} {monster.y} couldnt find a path to {monster.ai.lastSeenPlayerX} {monster.ai.lastSeenPlayerY}");
+                        }
+                        return true;
                     }
+                   
+                    if (MoveAlongPath(monster, commandSystem, monster.ai.currentPath))
+                    {
+                        monster.ai.currentPath = null;
+                        
+                    }
+                    
+                   
 
                 }
                 //after monster has moved - check monster still alive
@@ -58,7 +69,6 @@ namespace sharpRoguelike.Core.Behaviors
                     monster.ai.TurnsAlerted++;
                     if(monster.ai.TurnsAlerted > monster.ai.cooldown)
                     {
-                        Console.WriteLine($"{monster.name} lost player - forgetting about player");
                         monster.ai.TurnsAlerted = null;
                         return false;
                     }
@@ -69,6 +79,30 @@ namespace sharpRoguelike.Core.Behaviors
                 }
             }
             return false;
+        }
+
+        public static bool MoveAlongPath(Entity monster, CommandSystem commandSystem, Path path)
+        {
+            try
+            {
+                
+                commandSystem.MoveMonster(monster, path.StepForward());
+                if (path.Length > 0)
+                {
+                    return false;
+
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (NoMoreStepsException)
+            {
+                return true;
+
+
+            }
         }
 
         public static bool PathToSpot(Entity monster, CommandSystem commandSystem, int x, int y)
@@ -90,7 +124,8 @@ namespace sharpRoguelike.Core.Behaviors
             }
             catch (PathNotFoundException)
             {
-                Game.MessageLog.Add($"{monster.name} waits for a turn", Colors.NormalMessage);
+                return false;
+               // Game.MessageLog.Add($"{monster.name} waits for a turn", Colors.NormalMessage);
             }
             dungeonMap.SetIsWalkable(monster.x, monster.y, false);
             dungeonMap.SetIsWalkable(x, y, wasWalkable);
@@ -132,7 +167,31 @@ namespace sharpRoguelike.Core.Behaviors
             return false;
         }
 
+
+        public static Path StaticPathToSpot(Entity monster, CommandSystem commandSystem, int x, int y)
+        {
+            DungeonMap dungeonMap = Game.DungeonMap;
+            dungeonMap.SetIsWalkable(monster.x, monster.y, true);
+            dungeonMap.SetIsWalkable(x, y, true);
+            PathFinder pf = new PathFinder(dungeonMap);
+            Path path = null;
+            try
+            {
+                path = pf.ShortestPath(
+                    dungeonMap.GetCell(monster.x, monster.y),
+                    dungeonMap.GetCell(x, y));
+                return path;
+            }
+            catch (PathNotFoundException)
+            {
+                return null;
+                // Game.MessageLog.Add($"{monster.name} waits for a turn", Colors.NormalMessage);
+            }
+
+            return null;
+        }
+
     }
 
-  
+
 }

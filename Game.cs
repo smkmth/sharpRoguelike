@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using RLNET;
 using RogueSharp.Random;
 using sharpRoguelike.Core;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Menus;
 using sharpRoguelike.Core.Systems;
+
 
 namespace sharpRoguelike
 {
@@ -127,7 +129,13 @@ namespace sharpRoguelike
             }
             else
             {
+                Stopwatch sw = Stopwatch.StartNew();
+
                 HandleGame();
+                if (sw.ElapsedMilliseconds > 0)
+                { 
+                    Console.WriteLine($"time = {sw.ElapsedMilliseconds}");
+                }
             }
 
         }
@@ -162,7 +170,7 @@ namespace sharpRoguelike
 
                 WaveFunctionCollapseMap collapse = new WaveFunctionCollapseMap("Network", 3, mapWidth, mapHeight, true, true, 8, 0);
                 DungeonMap = collapse.Run(seed);
-                MapParser parse = new MapParser(DungeonMap, mapWidth, mapHeight);
+                MapParser parse = new MapParser(DungeonMap, mapWidth, mapHeight, mapLevel);
                 DungeonMap = parse.Pass();
 
             }
@@ -222,6 +230,8 @@ namespace sharpRoguelike
         //get keyboard input while in game
         public static void HandleGame()
         {
+
+          
             shouldUpdateDraw = false;
 
             bool didPlayerAct = false;
@@ -270,24 +280,24 @@ namespace sharpRoguelike
                                     didPlayerAct = true;
                                 }
                             }
-                           
+
                         }
                         else if (keyPress.Key == RLKey.S)
                         {
                             CurrentGameMode = GameMode.INVENTORY;
-                            List<Entity> checkThis = DungeonMap.GetAllEntitiesAt(Player.x,Player.y);
+                            List<Entity> checkThis = DungeonMap.GetAllEntitiesAt(Player.x, Player.y);
                             List<Inventory> inventories = new List<Inventory>();
-                            foreach(Entity entity in checkThis)
+                            foreach (Entity entity in checkThis)
                             {
-                                if(entity.player == null && entity.inventory != null)
+                                if (entity.player == null && entity.inventory != null)
                                 {
                                     inventories.Add(entity.inventory);
                                 }
                             }
                             if (inventories.Count == 1)
                             {
-                                playerInventory.OpenInventory(menuConsole, inventories[0],null,  true);
-                                
+                                playerInventory.OpenInventory(menuConsole, inventories[0], null, true);
+
                             }
                             else if (inventories.Count > 1)
                             {
@@ -304,7 +314,7 @@ namespace sharpRoguelike
                                 targetCallback = rangedWeapon.ranged.TargetCallback;
                                 targetCancelCallback = rangedWeapon.ranged.TargetCancelledCallback;
                                 CurrentGameMode = GameMode.TARGETING;
-                                
+
                             }
                         }
                         else if (keyPress.Key == RLKey.Period)
@@ -315,7 +325,7 @@ namespace sharpRoguelike
                                 DungeonMap = mapGenerator.CreateMap(true);
                                 MessageLog = new MessageLog(messageWidth);
                                 CommandSystem = new CommandSystem();
-                                MessageLog.Add($"Rogue travels down the stairs to level {mapLevel}",Colors.NormalMessage);
+                                MessageLog.Add($"Rogue travels down the stairs to level {mapLevel}", Colors.NormalMessage);
                                 rootConsole.Title = $"RougeSharp RLNet Tutorial - Level {mapLevel}";
                                 didPlayerAct = true;
 
@@ -327,7 +337,7 @@ namespace sharpRoguelike
                             CurrentGameMode = GameMode.INVENTORY;
                             playerInventory.OpenInventory(menuConsole, Player.inventory, Player.equipmentSlots);
                         }
-                        else if( keyPress.Key == RLKey.L)
+                        else if (keyPress.Key == RLKey.L)
                         {
                             saveLoad.LoadGame();
                         }
@@ -394,6 +404,7 @@ namespace sharpRoguelike
             }
             shouldUpdateDraw = true;                            //TODO figure out why this is being funny
 
+            
         }
 
         public static Action<int, int> targetCallback;          //subscibe to this when in targeting mode - invoke when you have selected the tile
@@ -464,7 +475,7 @@ namespace sharpRoguelike
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
 
-       
+
 
 
             if (CurrentGameMode == GameMode.MAINMENU)

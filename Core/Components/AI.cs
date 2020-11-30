@@ -1,4 +1,5 @@
 ﻿using RLNET;
+using RogueSharp;
 using sharpRoguelike.Core.Behaviors;
 using sharpRoguelike.Core.Interfaces;
 using sharpRoguelike.Core.Systems;
@@ -21,10 +22,12 @@ namespace sharpRoguelike.Core
         public int longPathWait =20;
         public int cooldown = 150;
         public List<IBehavior> behaviorStack;
+        public Path currentPath;
         public void AlertAI()
         {
             TurnsAlerted = 1;
-
+            lastSeenPlayerX = Game.Player.x;
+            lastSeenPlayerY = Game.Player.y;
         }
 
         public virtual void PerformAction(CommandSystem commandSystem)
