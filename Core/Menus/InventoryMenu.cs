@@ -133,14 +133,16 @@ namespace sharpRoguelike.Core.Menus
                 con.Print(width - itemname.Length, index, itemname, RLColor.White);
                 index+=2;
 
-                
-                if (currentlySelectedItem.effect != null)
+                if (!enemy_inventory)
                 {
-                    for (int i = 0; i< currentlySelectedItem.effect.usageChars.Count; i++ )
+                    if (currentlySelectedItem.effect != null)
                     {
-                        string useItem = $" ({currentlySelectedItem.effect.displayChars[i]}) {currentlySelectedItem.effect.usageNames[i] } ";
-                        con.Print(width - useItem.Length, index, useItem, RLColor.White);
-                        index += 2;
+                        for (int i = 0; i< currentlySelectedItem.effect.usageChars.Count; i++ )
+                        {
+                            string useItem = $" ({currentlySelectedItem.effect.displayChars[i]}) {currentlySelectedItem.effect.usageNames[i] } ";
+                            con.Print(width - useItem.Length, index, useItem, RLColor.White);
+                            index += 2;
+                        }
                     }
                 }
 

@@ -16,6 +16,12 @@ namespace sharpRoguelike.Core
         public Entity owner;
         public int? TurnsAlerted { get; set; }
 
+        public void AlertAI()
+        {
+            TurnsAlerted = 1;
+
+        }
+
         public virtual void PerformAction(CommandSystem commandSystem)
         {
             var behavior = new StandardMoveAndAttack();

@@ -510,6 +510,40 @@ namespace sharpRoguelike.Core
                 s_cells.Add(new SerialiseableCells(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, cell.IsExplored));
             }
         }
+
+        public int GetDistance(Entity entiyA, Entity entiyB)
+        {
+
+            double a = (double)(entiyA.x - entiyB.x);
+            double b = (double)(entiyA.y - entiyB.y);
+
+            return (int)(Math.Sqrt(a * a + b * b));
+
+        }
+
+        public int AlertAllInRange(int x, int y, int range)
+        {
+            int val = 0;
+
+            for (int dx = x - (range / 2); dx < x + (range / 2); dx++)
+            {
+                for (int dy = y - (range / 2); dy < y + (range / 2); dy++)
+                {
+                    var entities = GetAllEntitiesAt(dx, dy);
+                    foreach(Entity entity in entities)
+                    {
+                        if (entity.ai != null)
+                        {
+                            entity.ai.AlertAI();
+                            Console.WriteLine("alerted " + entity.name);
+                            val++;
+                        }
+                    }
+
+                }
+            }
+            return val;
+        }
     }
 
     //another serialisation class - exists so i can set all the tiles i have seen back to explored

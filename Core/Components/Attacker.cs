@@ -23,6 +23,30 @@ namespace sharpRoguelike.Core.Components
         private int _defenseChance;
         private int _maxHealth;
         private int _health;
+        private int _accuracy;
+
+        public int Accuracy
+        {
+            get
+            {
+                if (owner.equipmentSlots != null)       //can have equipment
+                {
+                    foreach (EquipmentSlot slot in owner.equipmentSlots)
+                    {
+                        if (slot.attachedEquipment != null)
+                        {
+                            return _attack + slot.attachedEquipment.accuracyModifier;
+                        }
+                    }
+                }
+                return _attack;
+            }
+            set
+            {
+                _attack = value;
+            }
+        }
+
 
         public int Attack
         {

@@ -18,7 +18,7 @@ namespace sharpRoguelike.Core.Data.Items
             };
 
             chest.inventory = new Inventory(chest);
-            chest.inventory.AddItem(BulletStack.Create(50));
+            chest.inventory.AddItem(GoldStack.Create(50));
 
 
             return chest;

@@ -314,11 +314,16 @@ namespace sharpRoguelike.Core
                 if (IsPotentialDoor(cell))
                 {
                     map.SetCellProperties(cell.X, cell.Y, false, true);
+                    bool doorOpen = false;
+                    if (Game.Random.Next(0, 100) > 75)
+                    {
+                        doorOpen = true;
+                    }
                     Door door = new Door
                     {
                         x = cell.X,
                         y = cell.Y,
-                        isOpen = false
+                        isOpen = doorOpen
 
                     };
                     map.Doors.Add(door);

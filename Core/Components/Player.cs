@@ -42,25 +42,26 @@ namespace sharpRoguelike.Core.Components
             owner.attacker.DefenseChance = 20;
             owner.attacker.Health = 100;
             owner.attacker.MaxHealth = 100;
+            owner.attacker.Accuracy = 70;
 
             owner.actor = new Actor(owner);
             owner.actor.Awareness = 15;
             owner.actor.Speed = 10;
             owner.inventory = new Inventory(owner);
 
-            owner.inventory.AddItem(HealthPotion.Create());
+            owner.inventory.AddItem(HealthPotion.Create(), true);
 
-            owner.inventory.AddItem(SlimePotion.Create());
+            owner.inventory.AddItem(SlimePotion.Create(),true);
 
-            owner.inventory.AddItem(WaterPotion.Create());
-            owner.inventory.AddItem(WaterPotion.Create());
-            owner.inventory.AddItem(WaterPotion.Create());
+            owner.inventory.AddItem(WaterPotion.Create(),true);
+            owner.inventory.AddItem(WaterPotion.Create(),true);
+            owner.inventory.AddItem(WaterPotion.Create(),true);
 
-            owner.inventory.AddItem(BulletStack.Create(30));
+            owner.inventory.AddItem(BulletStack.Create(30),true);
 
-            owner.inventory.AddItem(BearTrap.Create());
-            owner.inventory.AddItem(BearTrap.Create());
-            owner.inventory.AddItem(BearTrap.Create());
+            owner.inventory.AddItem(BearTrap.Create(),true);
+            owner.inventory.AddItem(BearTrap.Create(),true);
+            owner.inventory.AddItem(BearTrap.Create(),true);
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));

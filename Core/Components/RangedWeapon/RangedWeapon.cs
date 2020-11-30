@@ -14,8 +14,9 @@ namespace sharpRoguelike.Core.Components
     {
         public int ammo;
         public Equipment owner;
-        public int damage;
+        public string damage;
         public string targetString;
+        public int loudness;
 
         public RangedWeapon(Equipment _owner)
         {

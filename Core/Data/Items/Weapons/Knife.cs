@@ -11,22 +11,22 @@ namespace sharpRoguelike.Core.Items
     {
         public static Knife Create()
         {
-            Knife dagger = new Knife
+            Knife knife = new Knife
             {
                 symbol = '/',
                 color = Colors.LowTeirItem,
                 name = "Knife",
                 description = "A combat knife - adds 2 to attack"
             };
-            dagger.equipment = new Equipment(dagger, EquipSlotType.WEAPON);
-            dagger.equipment.attackModifier = 2;
+            knife.equipment = new Equipment(knife, EquipSlotType.WEAPON);
+            knife.equipment.attackModifier = 2;
 
-            dagger.effect = new EquipmentUse();
-            dagger.effect.owner = dagger;
+            knife.effect = new EquipmentUse();
+            knife.effect.owner = knife;
 
             
 
-            return dagger;
+            return knife;
 
         }
     }

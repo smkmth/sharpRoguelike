@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RogueSharp.DiceNotation;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace sharpRoguelike.Core.Components
     class RifleEffect : RangedWeapon
     {
         public int clip;
-
+        
         public RifleEffect(Equipment _owner, int _clip): base (_owner)
         {
             clip = _clip;
@@ -32,9 +33,57 @@ namespace sharpRoguelike.Core.Components
                 {
                     if (entity.attacker != null)
                     {
-                        entity.attacker.Health -= damage;
+                        int dist = Game.DungeonMap.GetDistance(owner.ownerHolder ,entity);
+                        int distMod = 0;
+                        if (dist < 4)
+                        {
+                            distMod += 20;
+                        }
+                        else if (dist < 7)
+                        {
+                            distMod += 10;
+                        }
+                        else if (dist < 10)
+                        {
+                            distMod = 0;
+                        }
+                        else
+                        {
+                            distMod = -10;
+                        }
+
+                        int roll = Dice.Roll("1D100");
+                        int checkVal = owner.ownerHolder.attacker.Accuracy + distMod;
+                        if (roll >= 100)
+                        {
+                            int damageval = Dice.Roll(damage) * 2;
+                            entity.attacker.Health -= damageval;
+                            Game.MessageLog.Add($"The shot crits! {damageval} damage!", Colors.CombatMessage);
+
+                        }
+                        else if (roll < checkVal)
+                        {
+                            int damageval = Dice.Roll(damage);
+                            entity.attacker.Health -= damageval;
+                            Game.MessageLog.Add($"The shot rings out loud and true - striking the target for {damageval} damage", Colors.CombatMessage);
+
+                        }
+                        else
+                        {
+                            Game.MessageLog.Add($"You clean miss the shot", Colors.CombatMessage);
+
+                        }
                         ammo--;
-                        Game.MessageLog.Add($"The shot rings out loud and true - striking the target for {damage} damage", Colors.CombatMessage);
+                        if (entity.ai != null)
+                        {
+                            entity.ai.AlertAI();
+                        }
+                        int numalerted = Game.DungeonMap.AlertAllInRange(owner.ownerHolder.x, owner.ownerHolder.y, loudness);
+                        if (numalerted > 0)
+                        {
+                            Game.MessageLog.Add($"As the ringing of the shot dies down - you hear noises all around you", Colors.CombatMessage);
+                        }
+
                         return;
                     }
 

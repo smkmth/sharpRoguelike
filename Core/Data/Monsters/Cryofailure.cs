@@ -1,6 +1,7 @@
 ﻿using RogueSharp.DiceNotation;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Data.Items;
+using sharpRoguelike.Core.Data.Items.Weapons;
 using sharpRoguelike.Core.Systems;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace sharpRoguelike.Core.Monsters
     [Serializable]
     public class Cryofailure : Entity
     {
+        
+
         public static Cryofailure Create(int level)
         {
 
@@ -36,7 +39,7 @@ namespace sharpRoguelike.Core.Monsters
 
             Actor actor = new Actor(cryoFailure);
             actor.Awareness = 10;
-            actor.Speed = 9;
+            actor.Speed = 11;
 
             cryoFailure.actor = actor;
 
@@ -59,7 +62,38 @@ namespace sharpRoguelike.Core.Monsters
             cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.RING));
             cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.RING));
             cryoFailure.equipmentSlots.Add(new EquipmentSlot(cryoFailure, EquipSlotType.RANGED_WEAPON));
-            EquipmentManager.EquipItem(cryoFailure, TornRags.Create());
+
+            bool rags  = false;
+            bool club  = false;
+            bool bullet= false;
+            for(int i = 0; i < 3; i++)
+            {
+                int lootroll = Game.Random.Next(0, 100);
+                if (lootroll < 10)
+                {
+                    if (!bullet)
+                    {
+                        bullet = true;
+                        cryoFailure.corpse.inventory.AddItem(BulletStack.Create(Game.Random.Next(2,5)));
+                    }
+                }
+                else if (lootroll < 50)
+                {
+                    if (!rags)
+                    {
+                        rags = true;
+                        EquipmentManager.EquipItem(cryoFailure, TornRags.Create());
+                    }
+                }
+                else if (lootroll < 80)
+                {
+                    if (!club)
+                    {
+                        club = true;
+                        EquipmentManager.EquipItem(cryoFailure, Club.Create());
+                    }
+                }
+            }
 
             cryoFailure.ai = new AI();
             cryoFailure.ai.owner = cryoFailure;
@@ -68,4 +102,6 @@ namespace sharpRoguelike.Core.Monsters
         }
 
     }
+
+    
 }

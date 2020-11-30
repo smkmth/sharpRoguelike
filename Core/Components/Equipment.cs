@@ -28,6 +28,7 @@ namespace sharpRoguelike.Core.Components
         public int defenceModfier;
         public int defenceChanceModifier;
         public int maxHealthModifier;
+        public int accuracyModifier;
 
         public string effectString;
         public EquipSlotType slotType;
