@@ -16,9 +16,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using RogueSharp;
+using System.Diagnostics;
 
 namespace sharpRoguelike.Core.Systems
 {
+
     public class WaveFunctionCollapseMap 
     {
         public Model model;
@@ -26,6 +28,29 @@ namespace sharpRoguelike.Core.Systems
         public int height;
         DungeonMap map;
 
+        /*
+           params ripped from http://www.procjam.com/tutorials/wfc/
+           wfc functionality from https://github.com/mxgmn/WaveFunctionCollapse
+
+
+           
+            name(string)            : The type of this parameter is usually implementation specific. For the original algorithm it's a string representing a file name ($"samples/{name}.png")
+            width,height (int)      : Dimensions of the output data
+            N (int)                 : Represents the width & height of the patterns that the overlap model breaks the input into. As it solves, it attempts to match up these subpatterns
+                                            with each other. A higher N will capture bigger features of the input, but is computationally more intensive, and may require a larger input 
+                                            sample to achieve reliable solutions.
+            periodic input (bool)   : Represents whether the input pattern is tiling. If true, when WFC digests the input into N pattern chunks it will create patterns connecting the 
+                                            right & bottom edges to the left & top. If you use this setting, you'll need to make sure your input "makes sense" accross these edges.
+            periodic output (bool)  : Determines if the output solutions are tilable. It's usefull for creating things like tileable textures, but also has a surprising influence on 
+                                            the output. When working with WFC, it's often a good idea to toggle Periodic Output on and off, checking if either setting influences the 
+                                            results in a favorable way.
+            symmetry (int)          : Represents which additional symmetries of the input pattern are digested. 0 is just the original input, 1-8 adds mirrored and rotated variations.
+                                            These variations can help flesh out the patterns in your input, but aren't necessary. They also only work with unidirectional tiles, and 
+                                            are undesirable when your final game tiles have direction dependent graphics or functionality.
+            ground (int)            : When not 0, this assigns a pattern for the bottom row of the output. It's mainly useful for "vertical" words, where you want a distinct ground
+                                            and sky separation. The value corresponds to the overlap models internal pattern indexes, so some experimentation is needed to figure
+                                            out a suitable value.
+        */
         public WaveFunctionCollapseMap(string name, int N ,int width, int height, bool peridoicInput, bool peridoicOutput, int symmetry, int ground)
         {
             this.width = width;
@@ -33,8 +58,12 @@ namespace sharpRoguelike.Core.Systems
             model = new OverlappingModel(name, N, width, height, peridoicInput, peridoicOutput, symmetry, ground);
         }
 
+        //seed(int) All internal random values are derived from this seed, providing 0 results in a random number.
+        //limit (int) How many iterations to run, providing 0 will run until completion or a contradiction.
         public DungeonMap Run(int intSeed)
         {
+            Stopwatch sw = Stopwatch.StartNew();
+
             bool finish = model.Run(30, 0);
             for (int k = 0; k < 10; k++)
             {
@@ -45,10 +74,11 @@ namespace sharpRoguelike.Core.Systems
                 {
                     Console.WriteLine("DONE");
 
-                    model.Graphics().Save($"{k} qud.png");
+                    //model.Graphics().Save($"{k} qud.png");
 
                     map = MakeMapFromImage(model.Graphics());
-
+                    
+                    Console.WriteLine($"time = {sw.ElapsedMilliseconds}");
                     return map;
                 }
                 else
@@ -59,18 +89,6 @@ namespace sharpRoguelike.Core.Systems
             return null;
         }
 
-        public static void PlacePlayer(DungeonMap map, int x, int y)
-        {
-            Entity player = Game.Player;
-            if (player == null)
-            {
-                player = new Entity();
-            }
-            player.x = x;
-            player.y = y;
-
-            map.AddPlayer(player);
-        }
 
         public static DungeonMap MakeMapFromImage(Bitmap image)
         {
@@ -136,7 +154,6 @@ namespace sharpRoguelike.Core.Systems
                 }
             }
             
-            PlacePlayer(map, lastx, lasty);
 
             return map;
         }

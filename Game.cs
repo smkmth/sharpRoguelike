@@ -73,8 +73,7 @@ namespace sharpRoguelike
         public static bool wallhack = false;
         public static bool seeallwalls = false;
         public static bool seeallentities = false;
-        public static bool useWaveFunctionCollapse = false;
-        public static WaveFunctionCollapseMap collapse;
+        public static bool useWaveFunctionCollapse = true;
         public static bool finish;
             
         static void Main(string[] args)
@@ -161,8 +160,11 @@ namespace sharpRoguelike
             if (useWaveFunctionCollapse)
             {
 
-                collapse = new WaveFunctionCollapseMap("Qud", 3, mapWidth, mapHeight, true, true, 8, 0);
+                WaveFunctionCollapseMap collapse = new WaveFunctionCollapseMap("Network", 3, mapWidth, mapHeight, true, true, 8, 0);
                 DungeonMap = collapse.Run(seed);
+                MapParser parse = new MapParser(DungeonMap, mapWidth, mapHeight);
+                DungeonMap = parse.Pass();
+
             }
             else
             {
