@@ -276,6 +276,7 @@ namespace sharpRoguelike.Core
             Entities.Add(item);
         }
 
+      
         public bool GetRandomWalkableLocationInRoom(Rectangle room, out Point point)
         {
             if (DoesRoomHaveWalkableSpace(room))

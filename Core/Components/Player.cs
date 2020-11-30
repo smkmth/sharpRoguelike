@@ -73,6 +73,10 @@ namespace sharpRoguelike.Core.Components
 
             EquipmentManager.EquipItem(owner, Rifle.Create());
             EquipmentManager.EquipItem(owner, Knife.Create());
+            
+            // debug slime immune
+            owner.immuneStatusEffects = new List<StatusEffectsComp>();
+            owner.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
         }
     }
 }

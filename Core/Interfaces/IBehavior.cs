@@ -5,7 +5,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Interfaces
 {
-    interface IBehavior
+    public interface IBehavior
     {
         bool Act(Entity monster, CommandSystem commandSystem);
     }

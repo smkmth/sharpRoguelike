@@ -1,4 +1,5 @@
 ﻿using RogueSharp.DiceNotation;
+using sharpRoguelike.Core.Behaviors;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Components.StatusEffects;
 using sharpRoguelike.Core.Components.Surfaces;
@@ -54,6 +55,8 @@ namespace sharpRoguelike.Core.Data.Monsters
 
             slimeHulk.ai = new AI();
             slimeHulk.ai.owner = slimeHulk;
+            slimeHulk.ai.behaviorStack = new List<Interfaces.IBehavior>();
+            slimeHulk.ai.behaviorStack.Add(new StandardMoveAndAttack());
 
             slimeHulk.immuneStatusEffects = new List<StatusEffectsComp>();
             slimeHulk.immuneStatusEffects.Add(StatusEffectsComp.Slimed);

@@ -1,4 +1,5 @@
 ﻿using RogueSharp.DiceNotation;
+using sharpRoguelike.Core.Behaviors;
 using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Data.Items;
 using sharpRoguelike.Core.Data.Items.Weapons;
@@ -66,6 +67,7 @@ namespace sharpRoguelike.Core.Monsters
             bool rags  = false;
             bool club  = false;
             bool bullet= false;
+            bool gold = false;
             for(int i = 0; i < 3; i++)
             {
                 int lootroll = Game.Random.Next(0, 100);
@@ -74,8 +76,17 @@ namespace sharpRoguelike.Core.Monsters
                     if (!bullet)
                     {
                         bullet = true;
-                        cryoFailure.corpse.inventory.AddItem(BulletStack.Create(Game.Random.Next(2,5)));
+                        cryoFailure.corpse.inventory.AddItem(BulletStack.Create(Game.Random.Next(2,5)), true);
                     }
+                }
+                else if (lootroll < 20)
+                {
+                    if (!gold)
+                    {
+                        gold = true;
+                        cryoFailure.corpse.inventory.AddItem(GoldStack.Create(Game.Random.Next(5, 10)), true);
+                    }
+
                 }
                 else if (lootroll < 50)
                 {
@@ -97,6 +108,9 @@ namespace sharpRoguelike.Core.Monsters
 
             cryoFailure.ai = new AI();
             cryoFailure.ai.owner = cryoFailure;
+            cryoFailure.ai.behaviorStack = new List<Interfaces.IBehavior>();
+            cryoFailure.ai.behaviorStack.Add(new StandardMoveAndAttack());
+
             return cryoFailure;
 
         }

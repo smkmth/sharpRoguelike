@@ -67,7 +67,7 @@ namespace sharpRoguelike
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
         public static int seed;
-        public static float scaleFactor = 1f;
+        public static float scaleFactor = 1.4f;
 
         public static bool DebugCheats = true;
         public static bool wallhack = false;
