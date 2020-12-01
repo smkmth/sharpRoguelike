@@ -53,13 +53,15 @@ namespace sharpRoguelike.Core
         public Useable effect = null;                           //does this enity have an effect when used
         public Entity corpse = null;                            //does this entity have a corpse
         public Surface surface = null;                          //does this entity have an effect when walked on
-        public List<EquipmentSlot> equipmentSlots;              //does this entity have any equipment equipped
         public Player player = null;                            //is this entity a player
         public Equipment equipment =null;                       //is this entity equipment
         public StatusEffectHolder statusEffectHolder;           //can this entity get status effects
+        public List<EquipmentSlot> equipmentSlots;              //does this entity have any equipment equipped
 
         public string name { get; set; }
         public string description { get; set; }
+
+
 
         public virtual void OnMove(int previous_x, int previous_y, int end_x, int end_y)
         {
