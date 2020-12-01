@@ -23,7 +23,6 @@ namespace sharpRoguelike.Core
     //but it works for now. 
     public class DungeonMap : Map 
     {
-        public List<Rectangle> Rooms;
         public List<Door> Doors;
         public List<Entity> Monsters;
         public List<Entity> Items;
@@ -38,7 +37,6 @@ namespace sharpRoguelike.Core
         public DungeonMap()
         {
             Game.SchedulingSytem.Clear();
-            Rooms = new List<Rectangle>();
             Monsters = new List<Entity>();
             Doors = new List<Door>();
             Items = new List<Entity>();

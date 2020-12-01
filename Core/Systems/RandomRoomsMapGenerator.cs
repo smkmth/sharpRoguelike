@@ -23,6 +23,7 @@ namespace sharpRoguelike.Core
         private readonly int mapLevel;
 
         private DungeonMap map;
+        public List<Rectangle> Rooms;
 
         public RandomRoomsMapGenerator(int _width, int _height, int _maxRooms,int  _roomsMinSize, int _roomsMaxSize, int _mapLevel)
         {
@@ -33,6 +34,7 @@ namespace sharpRoguelike.Core
             roomsMaxSize = _roomsMaxSize;
             mapLevel = _mapLevel;
             map = new DungeonMap();
+            Rooms = new List<Rectangle>();
 
         }
 
@@ -52,27 +54,27 @@ namespace sharpRoguelike.Core
 
                 var newRoom = new Rectangle(roomXPosition, roomYPosition, roomWidth, roomHeight);
 
-                bool newRoomIntersects = map.Rooms.Any(room => newRoom.Intersects(room));
+                bool newRoomIntersects = Rooms.Any(room => newRoom.Intersects(room));
 
                 if (!newRoomIntersects)
                 {
-                    map.Rooms.Add(newRoom);
+                    Rooms.Add(newRoom);
                 }
             }
 
         
 
-            for (int r=0; r < map.Rooms.Count; r++)
+            for (int r=0; r < Rooms.Count; r++)
             {
 
-                CreateRoom(map.Rooms[r]);
+                CreateRoom(Rooms[r]);
             
                 if (r > 0)
                 {
-                    int previousRoomCenterX = map.Rooms[r - 1].Center.X;
-                    int previousRoomCenterY = map.Rooms[r - 1].Center.Y;
-                    int currentRoomCenterX =  map.Rooms[r].Center.X;
-                    int currentRoomCenterY =  map.Rooms[r].Center.Y;
+                    int previousRoomCenterX = Rooms[r - 1].Center.X;
+                    int previousRoomCenterY = Rooms[r - 1].Center.Y;
+                    int currentRoomCenterX =  Rooms[r].Center.X;
+                    int currentRoomCenterY =  Rooms[r].Center.Y;
 
                     if (Game.Random.Next(1, 2) == 1)
                     {
@@ -99,7 +101,7 @@ namespace sharpRoguelike.Core
                 map.SetCellProperties(cell.X, cell.Y, false, false);
             }
 
-            foreach (Rectangle room in map.Rooms)
+            foreach (Rectangle room in Rooms)
             {
                 if (addEntities)
                 {
@@ -211,7 +213,7 @@ namespace sharpRoguelike.Core
 
         private void PlaceMonsters()
         {
-            foreach(var room in map.Rooms)
+            foreach(var room in Rooms)
             {
                 if (Game.Random.Next(0,10) < 7)
                 {
@@ -244,7 +246,7 @@ namespace sharpRoguelike.Core
 
         private void PlaceItems()
         {
-            foreach(var room in map.Rooms)
+            foreach(var room in Rooms)
             {
                 if (Game.Random.Next(0,10) < 4)
                 {
@@ -318,6 +320,7 @@ namespace sharpRoguelike.Core
                         isOpen = doorOpen
 
                     };
+                    door.transform = new Components.Transform();
                     door.transform.x = cell.X;
                     door.transform.y = cell.Y;
                     map.Doors.Add(door);
@@ -375,8 +378,9 @@ namespace sharpRoguelike.Core
                     IsUp = true
                 
                 };
-                upstairs.transform.x = map.Rooms.First().Center.X + 1;
-                upstairs.transform.y = map.Rooms.First().Center.Y;
+                upstairs.transform = new Components.Transform();
+                upstairs.transform.x = Rooms.First().Center.X + 1;
+                upstairs.transform.y = Rooms.First().Center.Y;
                 map.Entities.Add(upstairs);
                 map.StairsUp = upstairs;
 
@@ -386,8 +390,9 @@ namespace sharpRoguelike.Core
                 
                 IsUp = false
             };
-            downstairs.transform.x = map.Rooms.Last().Center.X + 1;
-            downstairs.transform.y = map.Rooms.Last().Center.Y;
+            downstairs.transform = new Components.Transform();
+            downstairs.transform.x = Rooms.Last().Center.X + 1;
+            downstairs.transform.y = Rooms.Last().Center.Y;
             map.Entities.Add(downstairs);
             map.StairsDown = downstairs;
 

@@ -165,11 +165,10 @@ namespace sharpRoguelike
             }
 
             Random = new RandomWrapper(new DotNetRandom(seed));
-
             //gen map
             if (useWaveFunctionCollapse)
             {
-                List<MapSegment> maps = new List<MapSegment>();
+                List<MapSegment> mapSegments = new List<MapSegment>();
                 {
                    // Point sizeOfSegment = new Point(mapWidth, mapHeight);
                    // System.Drawing.Point posOfSegment = new Point(0, 0);
@@ -185,19 +184,23 @@ namespace sharpRoguelike
                     WaveFunctionCollapseMap cityCollapse = new WaveFunctionCollapseMap("Network", 3, sizeOfSegment.X, sizeOfSegment.Y, true, true, 8, 0);
                     DungeonMap cityMap = cityCollapse.Run(seed, mapWidth, mapHeight);
                     MapSegment MapSegment = new MapSegment(posOfSegment.X, posOfSegment.Y, sizeOfSegment, cityMap);
-                    maps.Add(MapSegment);
+                    mapSegments.Add(MapSegment);
 
                 }
 
 
-                MapParser parse = new MapParser( mapWidth, mapHeight, mapLevel, maps);
-                DungeonMap = parse.Pass(true,true,true,true);
+                MapParser parse = new MapParser( mapWidth, mapHeight, mapLevel);
+
+                DungeonMap = parse.SpliceMapSegemnts(mapSegments);
+
+                DungeonMap = parse.Pass(DungeonMap, true,true,true,true);
 
             }
             else
             {
                 RandomRoomsMapGenerator mapGenerator = new RandomRoomsMapGenerator(mapWidth, mapHeight, 20, 7, 14, mapLevel);
                 DungeonMap = mapGenerator.CreateMap(true);
+                MapParser parse = new MapParser(mapWidth, mapHeight, mapLevel);
 
             }
 

@@ -11,7 +11,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Systems
 {
-    class Room
+    public class Room
     {
         public List<Point> points;
 
@@ -57,20 +57,6 @@ namespace sharpRoguelike.Core.Systems
     }
 
 
-    struct CellCopy
-    {
-        public bool walkable;
-        public int x;
-        public int y;
-      
-        public CellCopy(bool walkable, int x, int y)
-        {
-            this.walkable = walkable;
-            this.x = x;
-            this.y = y;
-
-        }
-    }
 
     public class MapSegment
     {
@@ -90,7 +76,6 @@ namespace sharpRoguelike.Core.Systems
 
     class MapParser
     {
-        List<MapSegment> maps;
         public DungeonMap newMap;
 
         int mapWidth;
@@ -108,23 +93,31 @@ namespace sharpRoguelike.Core.Systems
         public int superMassiveRoomDef = 500;
         public bool roomDebugging;
 
-        public MapParser( int _mapWidth, int _mapHeight, int _mapLevel, List<MapSegment> _maps)
+        public MapParser( int _mapWidth, int _mapHeight, int _mapLevel)
         {
-            maps = _maps;
             mapWidth = _mapWidth;
             mapHeight = _mapHeight;
             mapLevel = _mapLevel;
         }
 
-        
-        public DungeonMap Pass(bool doBorders, bool doRooms, bool doCorridors, bool placeEntities)
+        public DungeonMap SpliceMapSegemnts(List<MapSegment> splicedMapSegments)
         {
-            CellCopy[,] copycells = new CellCopy[mapWidth, mapHeight];
-            for (int i = 0; i < maps.Count; i++)
+            DungeonMap splicedMap = new DungeonMap();
+            splicedMap.Initialize(mapWidth, mapHeight);
+
+            SerialiseableCells[,] copycells = new SerialiseableCells[mapWidth, mapHeight];
+            for (int i = 0; i < splicedMapSegments.Count; i++)
             {
-                copycells = CopyCells(copycells, maps[i].sizeOfCopy.X, maps[i].sizeOfCopy.Y, maps[i].map, maps[i].xpos, maps[i].ypos);
+                copycells = CopyCells(copycells, splicedMapSegments[i].sizeOfCopy.X, splicedMapSegments[i].sizeOfCopy.Y, splicedMapSegments[i].map, splicedMapSegments[i].xpos, splicedMapSegments[i].ypos);
             }
-            newMap = MakeMapFromCells(copycells);
+
+            splicedMap = MakeMapFromCells(copycells);
+            return splicedMap;
+        }
+        
+        public DungeonMap Pass(DungeonMap originalMap, bool doBorders, bool doRooms, bool doCorridors, bool placeEntities)
+        {
+            newMap = originalMap;
 
             if (doBorders)
             {
@@ -152,10 +145,10 @@ namespace sharpRoguelike.Core.Systems
             if (doRooms)
             {
 
-                CellCopy[] cells = new CellCopy[mapWidth * mapHeight];
+                SerialiseableCells[] cells = new SerialiseableCells[mapWidth * mapHeight];
                 foreach (ICell cell in newMap.GetAllCells())
                 {
-                    cells[cell.X + mapWidth * cell.Y] = new CellCopy(cell.IsWalkable, cell.X, cell.Y );
+                    cells[cell.X + mapWidth * cell.Y] = new SerialiseableCells( cell.X, cell.Y , cell.IsTransparent, cell.IsWalkable, cell.IsExplored);
                 }
 
                 rooms = GetRooms(cells);
@@ -267,7 +260,7 @@ namespace sharpRoguelike.Core.Systems
             }
             else
             {
-               /// PlacePlayer(0, 0);
+                PlacePlayer(0, 0);
             }
             return newMap;
 
@@ -275,10 +268,10 @@ namespace sharpRoguelike.Core.Systems
 
         }
 
-        public CellCopy[,] CopyCells( CellCopy[,] copyCells, int width, int height, DungeonMap fromMap , int to_x, int to_y)
+        public SerialiseableCells[,] CopyCells(SerialiseableCells[,] copyCells, int width, int height, DungeonMap fromMap , int to_x, int to_y)
         {
 
-            CellCopy[,] copy = new CellCopy[mapWidth, mapHeight];
+            SerialiseableCells[,] copy = new SerialiseableCells[mapWidth, mapHeight];
             for (int x = 0; x <  width; x++)
             {
                 for (int y =0; y <  height; y++)
@@ -304,7 +297,7 @@ namespace sharpRoguelike.Core.Systems
 
         }
 
-        public DungeonMap MakeMapFromCells( CellCopy[,] copycells)
+        public DungeonMap MakeMapFromCells(SerialiseableCells[,] copycells)
         {
             DungeonMap copyMap = new DungeonMap();
             copyMap.Initialize(mapWidth, mapHeight);
@@ -314,7 +307,7 @@ namespace sharpRoguelike.Core.Systems
                 {
                     if (y < mapWidth  && x >= 0 && y < mapHeight && y >= 0)
                     {
-                        CellCopy copycell = copycells[x, y];
+                        SerialiseableCells copycell = copycells[x, y];
                         copyMap.SetCellProperties(x, y, copycell.walkable, copycell.walkable);
                     }
 
@@ -325,7 +318,7 @@ namespace sharpRoguelike.Core.Systems
 
        
 
-        public List<Room> GetRooms(CellCopy[] runmap)
+        public List<Room> GetRooms(SerialiseableCells[] runmap)
         {
             List<Room> rooms = new List<Room>();
             for(int x = 1; x < mapWidth-1; x++)
@@ -347,7 +340,7 @@ namespace sharpRoguelike.Core.Systems
             return rooms;
         }
 
-        private List<Point> FloodFill( Point pt, CellCopy[] runmap)
+        private List<Point> FloodFill( Point pt, SerialiseableCells[] runmap)
         {
             List<Point> contiguousPoints = new List<Point>();
             Stack<Point> points = new Stack<Point>();
