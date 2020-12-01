@@ -12,10 +12,13 @@ namespace sharpRoguelike.Core.Data.Items
         {
             WaterPotion potion = new WaterPotion
             {
-                symbol = '!',
-                color = Colors.ShallowWater,
+
                 name = "Water Potion",
             };
+            potion.renderer = new Components.Renderer(potion);
+            potion.renderer.symbol = '!';
+            potion.renderer.color = Colors.ShallowWater;
+
             potion.transform = new Components.Transform();
             potion.effect = new WaterPotionUse();
             potion.effect.owner = potion;

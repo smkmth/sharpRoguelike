@@ -116,29 +116,7 @@ namespace sharpRoguelike.Core.Systems
                 for (int y = 0; y < height; y++)
                 {
                     Color color = colors[x + width * y];
-                 
-                    if (color.R == 255 && color.B == 0 && color.G == 0)
-                    {
-                        map.SetCellProperties(x, y, true, true);
-                        map.GetCell(x, y);
-
-
-                    }
-                    else if (color.R == 0 && color.B == 255 && color.G == 0)
-                    {
-                        map.SetCellProperties(x, y, true, true);
-                        Door door = new Door
-                        {
-                
-                            isOpen = false
-
-                        };
-                        door.transform.x = x;
-                        door.transform.y = y;
-                        map.Doors.Add(door);
-                        map.Entities.Add(door);
-                    }
-                    else if (color.R == 0 && color.B == 0 && color.G == 0)
+                    if (color.R == 0 && color.B == 0 && color.G == 0)
                     {
                         map.SetCellProperties(x, y, false, false);
 

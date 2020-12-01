@@ -1,5 +1,6 @@
 ﻿using RLNET;
 using RogueSharp;
+using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,20 +12,22 @@ namespace sharpRoguelike.Core
     //funny way - up stairs and down stairs need to be drawn differently
 
     [Serializable]
-    public class Stairs : Entity 
+    public class StairRenderer : Renderer 
     { 
+
+        public StairRenderer(Entity _owner) : base(_owner) { }
  
         public bool IsUp { get; set; }
         public override void Draw(RLConsole console, IMap map)
         {
-            if (!map.GetCell(transform.x, transform.y).IsExplored && !Clairvoince) 
+            if (!map.GetCell(owner.transform.x, owner.transform.y).IsExplored && !Clairvoince) 
             {
                 return;
             }
             symbol = IsUp ? '<' : '>';
-            name = IsUp ? "Stairs leading up" : "Stairs leading down";
+            owner.name = IsUp ? "Stairs leading up" : "Stairs leading down";
 
-            if (map.IsInFov(transform.x, transform.y) || Clairvoince)
+            if (map.IsInFov(owner.transform.x, owner.transform.y) || Clairvoince)
             {
                 color = Colors.Player;
             }
@@ -33,7 +36,7 @@ namespace sharpRoguelike.Core
                 color = Colors.Floor;
             }
 
-            console.Set(transform.x, transform.y, color, null, symbol);
+            console.Set(owner.transform.x, owner.transform.y, color, null, symbol);
         }
 
 

@@ -12,10 +12,13 @@ namespace sharpRoguelike.Core.Data.Items
         {
             SlimePotion potion = new SlimePotion
             {
-                symbol = '!',
-                color = Colors.SlimehulkColor,
+
                 name = "Slime Potion",
             };
+            potion.renderer = new Components.Renderer(potion);
+
+            potion.renderer.symbol = '!';
+            potion.renderer.color = Colors.SlimehulkColor;
             potion.transform = new Components.Transform();
             potion.effect = new SlimePotionUse();
             potion.effect.owner = potion;

@@ -12,10 +12,12 @@ namespace sharpRoguelike.Core.Items
         {
             HealthPotion potion=  new HealthPotion
             {
-                symbol = '!',
-                color = Colors.HealthPotion,
+   
                 name = "Health Potion",
             };
+            potion.renderer = new Renderer(potion);
+            potion.renderer.symbol = '!';
+            potion.renderer.color = Colors.HealthPotion;
             potion.transform = new Transform();
 
             potion.effect = new HealPotionUse();

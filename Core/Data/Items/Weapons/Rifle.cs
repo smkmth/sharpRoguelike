@@ -12,13 +12,16 @@ namespace sharpRoguelike.Core.Data.Items.Weapons
         public static Rifle Create()
         {
             Rifle rifle = new Rifle
-            {
-                symbol = '¬',
-                color = Colors.MidTierItem,
+            { 
                 name = "Rifle",
                 description = "A long barreled hunting rifle"
             };
             rifle.transform = new Transform();
+
+            rifle.renderer = new Renderer(rifle);
+            rifle.renderer.symbol = '¬';
+            rifle.renderer.color = Colors.MidTierItem;
+
             rifle.equipment = new Equipment(rifle, EquipSlotType.RANGED_WEAPON);
             RifleEffect rifleEffect = new RifleEffect(rifle.equipment, 5);
             rifle.equipment.ranged = rifleEffect; 

@@ -13,11 +13,12 @@ namespace sharpRoguelike.Core.Data.Items
         {
             TornRags tornRags = new TornRags
             {
-                symbol = '(',
-                color = Colors.LowTeirItem,
                 name = "Torn Rags",
                 description = "Shreded and torn rags."
             };
+            tornRags.renderer = new Renderer(tornRags);
+            tornRags.renderer.symbol = '(';
+            tornRags.renderer.color = Colors.LowTeirItem;
             tornRags.transform = new Transform();
             tornRags.equipment = new Equipment(tornRags, EquipSlotType.CHEST);
             tornRags.equipment.defenceModfier = 1;

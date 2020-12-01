@@ -39,71 +39,29 @@ namespace sharpRoguelike.Core
     [Serializable]
     public class Entity 
     {
-        RLSerialiseableColor s_color;
-        [NonSerialized()] private RLColor _color;
-        public RLColor color
-        {
-            get { return _color; }
-            set { _color = value; }
-        }
-
-        public char symbol { get; set; }
-
-        public string name { get; set; }
-        public string description { get; set; }
 
         public bool stackable = false;
         public int stackcount =0;
 
         public Transform transform = null;              //does this entity have a physical location
-        public Inventory inventory = null;              //does this entity have an inventory
-        public Attacker attacker = null;                //does this entity attack
-        public Actor actor = null;                      //does this entity move
-        public Useable effect = null;                   //does this enity have an effect when used
-        public Entity corpse = null;                    //does this entity have a corpse
-        public Surface surface = null;                  //does this entity have an effect when walked on
+        public Renderer renderer = null;                //does this entity have a renderer
         public AI ai = null;                            //does this entity have AI
-        public List<EquipmentSlot> equipmentSlots;      //does this entity have any equipment equipped
+        
+        public Inventory inventory = null;                      //does this entity have an inventory
+        public Attacker attacker = null;                        //does this entity attack
+        public Actor actor = null;                              //does this entity move
+        public Useable effect = null;                           //does this enity have an effect when used
+        public Entity corpse = null;                            //does this entity have a corpse
+        public Surface surface = null;                          //does this entity have an effect when walked on
+        public List<EquipmentSlot> equipmentSlots;              //does this entity have any equipment equipped
+        public Player player = null;                            //is this entity a player
+        public Equipment equipment =null;                       //is this entity equipment
+        public List<StatusEffect> statusEffects;                //is this entity under a status effect 
+        public List<StatusEffectsComp> immuneStatusEffects;     //is this entity immune from a status effect 
 
-        public Player player = null;                    //is this entity a player
-        public Equipment equipment =null;               //is this entity equipment
-        public List<StatusEffect> statusEffects;        //is this entity under a status effect 
-        public List<StatusEffectsComp> immuneStatusEffects;  //is this entity immune from a status effect 
 
-
-        public bool Clairvoince =false;
-        public virtual void Draw(RLConsole con, IMap map)
-        {
-            ICell cell = map.GetCell(transform.x, transform.y);
-
-            if (!cell.IsExplored && !Clairvoince)
-            {
-                return;
-            }
-
-            if (map.IsInFov(transform.x, transform.y) || Clairvoince)
-            {
-                con.Set(transform.x, transform.y, color, Colors.FloorBackgroundFov, symbol);
-
-            }
-            else
-            {
-                con.Set(transform.x, transform.y, Colors.Floor, Colors.FloorBackground, ' ');
-            }
-        }
-
-        public void LoadEntityColor()
-        {
-            _color = new RLColor(s_color.r, s_color.g, s_color.b);
-            
-
-        }
-
-        public void SaveEntityColor()
-        {
-            s_color = new RLSerialiseableColor(_color.r, _color.g, _color.b);
-         
-        }
+        public string name { get; set; }
+        public string description { get; set; }
 
         public virtual void OnMove(int previous_x, int previous_y, int end_x, int end_y)
         {

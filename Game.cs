@@ -575,7 +575,7 @@ namespace sharpRoguelike
 
                 DungeonMap.Draw(mapConsole, statConsole);
                 MessageLog.Draw(messageConsole);
-                Player.Draw(mapConsole, DungeonMap);
+                Player.renderer.Draw(mapConsole, DungeonMap);
                 statDisplay.DrawPlayer(statConsole, Player);
                 rootConsole.Draw();
             }

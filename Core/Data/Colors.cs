@@ -103,6 +103,7 @@ namespace sharpRoguelike.Core
         public static RLColor CombatMessage = Swatch.DbBlood;
         public static RLColor NormalMessage = new RLColor(239,234,224);
         public static RLColor HealMessage = Swatch.DbGrass;
-
+        public static RLColor StairsColor = Swatch.Alternate;
+        
     }
 }

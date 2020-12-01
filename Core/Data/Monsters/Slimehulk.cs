@@ -19,12 +19,13 @@ namespace sharpRoguelike.Core.Data.Monsters
             Slimehulk slimeHulk = new Slimehulk
             {
                 name = "slimeHulk",
-                color = Colors.SlimehulkColor,
-                symbol = 'S',
+
                 description = "a yellowtinged gelatinous monster of slime"
             };
             slimeHulk.transform = new Transform();
-
+            slimeHulk.renderer = new Renderer(slimeHulk);
+            slimeHulk.renderer.color = Colors.SlimehulkColor;
+            slimeHulk.renderer.symbol = 'S';
             Attacker attacker = new Attacker(slimeHulk);
             attacker.Attack = Dice.Roll("2D2") + level / 3;
             attacker.AttackChance = Dice.Roll("25D3");
@@ -46,11 +47,16 @@ namespace sharpRoguelike.Core.Data.Monsters
             Entity corpse = new Entity()
             {
                 name = "slimehulk Corpse",
-                color = Colors.SlimehulkColor,
-                symbol = '%'
+           
             };
 
+            corpse.transform = new Transform();
+            corpse.renderer = new Renderer(corpse);
+            corpse.renderer.color = Colors.SlimehulkColor;
+            corpse.renderer.symbol = '%';
+
             slimeHulk.corpse = corpse;
+
             slimeHulk.corpse.inventory = new Inventory(slimeHulk);
 
 
@@ -68,13 +74,10 @@ namespace sharpRoguelike.Core.Data.Monsters
         public override void OnMove(int previous_x, int previous_y, int end_x, int end_y)
         {
             base.OnMove(previous_x, previous_y, end_x, end_y);
-            Entity liquid = new Entity();
-            liquid.name = "Slime";
-            liquid.color = Colors.SlimehulkColor;
-            liquid.symbol = '~';
-            liquid.surface = new SlimeSurface();
 
-            Game.DungeonMap.CreateSurface(previous_x, previous_y, 2, liquid);
+            SlimeSurface surface = new SlimeSurface();
+
+            Game.DungeonMap.CreateSurface(previous_x, previous_y, 2, "Slime", Colors.SlimehulkColor, '~', surface);
         }
     }
 }

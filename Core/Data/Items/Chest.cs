@@ -12,12 +12,17 @@ namespace sharpRoguelike.Core.Data.Items
         {
             Chest chest = new Chest
             {
-                symbol = '&',
-                color = Colors.HighTierItem,
+
                 name = "Chest",
                 description = "A cloesd wooden chest."
             };
+
+            chest.renderer = new Renderer(chest);
+            chest.renderer.symbol = '&';
+            chest.renderer.color = Colors.HighTierItem;
+
             chest.transform = new Transform();
+
             chest.inventory = new Inventory(chest);
             chest.inventory.AddItem(GoldStack.Create(50));
 

@@ -13,11 +13,13 @@ namespace sharpRoguelike.Core.Data.Items
         {
             BearTrap beartrap = new BearTrap
             {
-                symbol = '^',
-                color = Colors.LowTeirItem,
+
                 name = "A Untripped BearTrap",
                 description = "Set on ground to damage enemies"
             };
+            beartrap.renderer = new Renderer(beartrap);
+            beartrap.renderer.symbol = '^';
+            beartrap.renderer.color = Colors.LowTeirItem;
             beartrap.transform = new Transform();
 
             beartrap.effect = new SetTrapUse();

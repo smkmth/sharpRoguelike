@@ -46,13 +46,9 @@ namespace sharpRoguelike.Core.Components
 
             Game.MessageLog.Add("The potion bottle smashes on the ground - spilling healing liquid everywhere!", Colors.NormalMessage);
 
-            Entity liquid = new Entity();
-            liquid.name = "Healing Liquid";
-            liquid.color = RLNET.RLColor.Red;
-            liquid.symbol = '~';
-            liquid.surface = new HealingSurface();
+            HealingSurface surf= new HealingSurface();
 
-            Game.DungeonMap.CreateSurface(x, y, 4, liquid);
+            Game.DungeonMap.CreateSurface(x, y, 4, "Healing Liquid", Colors.CombatMessage, '~', surf);
         }
 
     }

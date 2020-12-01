@@ -5,7 +5,6 @@ using System.Text;
 using RLNET;
 using RogueSharp;
 using sharpRoguelike.Core.Components;
-using sharpRoguelike.Core.Items;
 
 namespace sharpRoguelike.Core
 {
@@ -23,14 +22,13 @@ namespace sharpRoguelike.Core
     //but it works for now. 
     public class DungeonMap : Map 
     {
-        public List<Door> Doors;
+        public List<Entity> Doors;
         public List<Entity> Monsters;
         public List<Entity> Items;
         public List<Entity> Surfaces;
         public List<Entity> Entities;
-        public Stairs StairsUp;
-        public Stairs StairsDown;
-
+        public Entity StairsUp;
+        public Entity StairsDown;
         public List<SerialiseableCells> s_cells;
         List<Entity> monstersInFov;
 
@@ -38,7 +36,7 @@ namespace sharpRoguelike.Core
         {
             Game.SchedulingSytem.Clear();
             Monsters = new List<Entity>();
-            Doors = new List<Door>();
+            Doors = new List<Entity>();
             Items = new List<Entity>();
             Surfaces = new List<Entity>();
             Entities = new List<Entity>();
@@ -77,23 +75,23 @@ namespace sharpRoguelike.Core
             {
                 SetConsoleSymbolForCell(mapConsole, cell);
             }
-
+          
             foreach(Entity surface in Surfaces)
             {
-                surface.Draw(mapConsole, this);
+                surface.renderer.Draw(mapConsole, this);
             }
             foreach(Entity item in Items)
             {
-                item.Draw(mapConsole, this);
+                item.renderer.Draw(mapConsole, this);
             }
-            foreach(Door door in Doors)
+            foreach(Entity door in Doors)
             {
-                door.Draw(mapConsole, this);
+                door.renderer.Draw(mapConsole, this);
             }
             monstersInFov.Clear();
             foreach (Entity monster in Monsters)
             {
-                monster.Draw(mapConsole, this);
+                monster.renderer.Draw(mapConsole, this);
                 if (IsInFov(monster.transform.x, monster.transform.y))
                 {
                     monstersInFov.Add(monster);
@@ -102,8 +100,8 @@ namespace sharpRoguelike.Core
             Game.statDisplay.DrawMonsters(statConsole, monstersInFov);
 
             //stairs always at the v top 
-            StairsUp?.Draw(mapConsole, this);
-            StairsDown?.Draw(mapConsole, this);
+            StairsUp?.renderer.Draw(mapConsole, this);
+            StairsDown?.renderer.Draw(mapConsole, this);
 
         }
 
@@ -171,7 +169,7 @@ namespace sharpRoguelike.Core
         {
             foreach(Entity entity in Entities)
             {
-                entity.Clairvoince = setOn;
+                entity.renderer.Clairvoince = setOn;
             }
         }
 
@@ -315,17 +313,17 @@ namespace sharpRoguelike.Core
             return false;
         }
         
-        public Door GetDoor(int x, int y)
+        public Entity GetDoor(int x, int y)
         {
             return Doors.SingleOrDefault(d => d.transform.x == x && d.transform.y == y);
         }
 
         private void OpenDoor(Entity actor, int x, int y)
         {
-            Door door = GetDoor(x, y);
+            Entity door = GetDoor(x, y);
             if (door != null)
             {
-                door.isOpen = true;
+ 
                 var cell = GetCell(x, y);
                 SetCellProperties(x, y, true, cell.IsWalkable, cell.IsExplored);
                 Game.MessageLog.Add($"{actor.name} opened a door", Colors.NormalMessage);
@@ -367,7 +365,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void CreateSurface(int x, int y, int range , Entity entity, SurfaceKerning kerning = SurfaceKerning.CenterAligned )
+        public void CreateSurface(int x, int y, int range , string name, RLColor color, char symbol, Surface surf , SurfaceKerning kerning = SurfaceKerning.CenterAligned )
         {
 
             switch (kerning)
@@ -386,9 +384,9 @@ namespace sharpRoguelike.Core
                                     if (oldSurf.surface != null)
                                     {
 
-                                        if (entity.surface.surfaceResistance < oldSurf.surface.surfaceResistance)
+                                        if (surf.surfaceResistance < oldSurf.surface.surfaceResistance)
                                         {
-                                            oldSurf.surface.surfaceResistance -= entity.surface.surfaceResistance;
+                                            oldSurf.surface.surfaceResistance -= surf.surfaceResistance;
                                             break;
                                         }
                                         else
@@ -399,11 +397,13 @@ namespace sharpRoguelike.Core
                                 }
 
                                 Entity liquidinst = new Entity();
+                                liquidinst.name = name;
+                                liquidinst.renderer = new Renderer(liquidinst);
+                                liquidinst.renderer.color = color;
+                                liquidinst.renderer.symbol= symbol;
+                                liquidinst.surface = surf;
+
                                 liquidinst.transform = new Transform();
-                                liquidinst.name = entity.name;
-                                liquidinst.color = entity.color;
-                                liquidinst.symbol = entity.symbol;
-                                liquidinst.surface = entity.surface;
                                 liquidinst.transform.x = dx;
                                 liquidinst.transform.y = dy;
                                 Surfaces.Add(liquidinst);
@@ -427,9 +427,9 @@ namespace sharpRoguelike.Core
                                     if (oldSurf.surface != null)
                                     {
 
-                                        if (entity.surface.surfaceResistance < oldSurf.surface.surfaceResistance)
+                                        if (surf.surfaceResistance < oldSurf.surface.surfaceResistance)
                                         {
-                                            oldSurf.surface.surfaceResistance -= entity.surface.surfaceResistance;
+                                            oldSurf.surface.surfaceResistance -= surf.surfaceResistance;
                                             break;
                                         }
                                         else
@@ -439,11 +439,13 @@ namespace sharpRoguelike.Core
                                     }
                                 }
                                 Entity liquidinst = new Entity();
+                                liquidinst.name = name;
+                                liquidinst.renderer = new Renderer(liquidinst);
+                                liquidinst.renderer.color = color;
+                                liquidinst.renderer.symbol = symbol;
+                                liquidinst.surface = surf;
+
                                 liquidinst.transform = new Transform();
-                                liquidinst.name = entity.name;
-                                liquidinst.color = entity.color;
-                                liquidinst.symbol = entity.symbol;
-                                liquidinst.surface = entity.surface;
                                 liquidinst.transform.x = dx;
                                 liquidinst.transform.y = dy;
                                 Surfaces.Add(liquidinst);
@@ -487,14 +489,14 @@ namespace sharpRoguelike.Core
             Entities.AddRange(Surfaces);
             foreach (Entity entity in Entities)
             {
-                entity.LoadEntityColor();
+                entity.renderer.LoadEntityColor();
                 if (entity.corpse != null)
                 {
-                    entity.corpse.LoadEntityColor();
+                    entity.corpse.renderer.LoadEntityColor();
 
                 }
             }
-            Game.Player.LoadEntityColor();
+            Game.Player.renderer.LoadEntityColor();
 
        
         }
@@ -504,10 +506,10 @@ namespace sharpRoguelike.Core
         {
             foreach(Entity entity in Entities)
             {
-                entity.SaveEntityColor();
+                entity.renderer.SaveEntityColor();
                 if (entity.corpse != null)
                 {
-                    entity.corpse.SaveEntityColor();
+                    entity.corpse.renderer.SaveEntityColor();
 
                 }
             }

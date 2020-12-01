@@ -23,16 +23,15 @@ namespace sharpRoguelike.Core.Components
             owner = _owner;
         }
 
-
         public void ResetPlayer()
         {
             if (owner.statusEffects != null)
-            { 
+            {
                 owner.statusEffects.Clear();
             }
-
-            owner.color = Colors.Player;
-            owner.symbol = '@';
+            owner.renderer = new Renderer(owner);
+            owner.renderer.color = Colors.Player;
+            owner.renderer.symbol = '@';
             owner.name = "Rogue";
             owner.transform = new Transform();
             owner.attacker = new Attacker(owner);
@@ -51,17 +50,17 @@ namespace sharpRoguelike.Core.Components
 
             owner.inventory.AddItem(HealthPotion.Create(), true);
 
-            owner.inventory.AddItem(SlimePotion.Create(),true);
+            owner.inventory.AddItem(SlimePotion.Create(), true);
 
-            owner.inventory.AddItem(WaterPotion.Create(),true);
-            owner.inventory.AddItem(WaterPotion.Create(),true);
-            owner.inventory.AddItem(WaterPotion.Create(),true);
+            owner.inventory.AddItem(WaterPotion.Create(), true);
+            owner.inventory.AddItem(WaterPotion.Create(), true);
+            owner.inventory.AddItem(WaterPotion.Create(), true);
 
-            owner.inventory.AddItem(BulletStack.Create(30),true);
+            owner.inventory.AddItem(BulletStack.Create(30), true);
 
-            owner.inventory.AddItem(BearTrap.Create(),true);
-            owner.inventory.AddItem(BearTrap.Create(),true);
-            owner.inventory.AddItem(BearTrap.Create(),true);
+            owner.inventory.AddItem(BearTrap.Create(), true);
+            owner.inventory.AddItem(BearTrap.Create(), true);
+            owner.inventory.AddItem(BearTrap.Create(), true);
 
             owner.equipmentSlots = new List<EquipmentSlot>();
             owner.equipmentSlots.Add(new EquipmentSlot(owner, EquipSlotType.CHEST));
@@ -73,7 +72,7 @@ namespace sharpRoguelike.Core.Components
 
             EquipmentManager.EquipItem(owner, Rifle.Create());
             EquipmentManager.EquipItem(owner, Knife.Create());
-            
+
             // debug slime immune
             owner.immuneStatusEffects = new List<StatusEffectsComp>();
             owner.immuneStatusEffects.Add(StatusEffectsComp.Slimed);

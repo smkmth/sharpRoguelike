@@ -1,8 +1,8 @@
 ﻿using RogueSharp;
+using sharpRoguelike.Core.Components;
 using sharpRoguelike.Core.Data.Items;
 using sharpRoguelike.Core.Data.Monsters;
 using sharpRoguelike.Core.Items;
-using sharpRoguelike.Core.Monsters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -209,15 +209,13 @@ namespace sharpRoguelike.Core.Systems
 
                     foreach (Room room in rooms)
                     {
-                        Entity surface = new Entity();
-                        surface.symbol = '~';
-                        surface.color = new RLNET.RLColor(Game.Random.Next(0,255), Game.Random.Next(0, 255), Game.Random.Next(0, 255));
-                        surface.name = $"room - {counter} + room size - {room.points.Count} ";
-                    
+                        RLNET.RLColor dcolor = new RLNET.RLColor(Game.Random.Next(0,255), Game.Random.Next(0, 255), Game.Random.Next(0, 255));
+                        string dname = $"room - {counter} + room size - {room.points.Count} ";
+                        Surface surface = new Surface();
                         counter++;
                         foreach(Point point in room.points)
                         {
-                            newMap.CreateSurface(point.X, point.Y, 1, surface, SurfaceKerning.TopLeft);
+                            newMap.CreateSurface(point.X, point.Y, 1, dname, dcolor, 'X',  surface, SurfaceKerning.TopLeft);
                         }
 
                         int rpc = room.points.Count; 
@@ -392,35 +390,33 @@ namespace sharpRoguelike.Core.Systems
         {
             if (mapLevel > 1)
             {
+                Point endPoint = rooms[Game.Random.Next(0, rooms.Count)].GetRandomPointInRoom();
 
-                Point stairpoint = StartRoom.GetRandomPointInRoom();
-
-                Stairs upstairs = new Stairs
-                {
-           
-                    IsUp = true
-
-                };
-                upstairs.transform.x = stairpoint.X;
-                upstairs.transform.x = stairpoint.Y;
-
-                newMap.Entities.Add(upstairs);
-                newMap.StairsUp = upstairs;
-
+                Entity downstairs = new Entity();
+                downstairs.renderer = new Renderer(downstairs);
+                downstairs.renderer.symbol = '<';
+                downstairs.renderer.color = Colors.StairsColor;
+                downstairs.transform = new Components.Transform();
+                downstairs.transform.x = endPoint.X;
+                downstairs.transform.y = endPoint.Y;
+                newMap.Entities.Add(downstairs);
+                newMap.StairsUp = downstairs;
             }
-
-            Point endPoint = rooms[Game.Random.Next(0, rooms.Count)].GetRandomPointInRoom();
-
-            Stairs downstairs = new Stairs
             {
-               
-                IsUp = false
-            };
-            downstairs.transform = new Components.Transform();
-            downstairs.transform.x = endPoint.X;
-            downstairs.transform.y = endPoint.Y;
-            newMap.Entities.Add(downstairs);
-            newMap.StairsDown = downstairs;
+
+                Point endPoint = rooms[Game.Random.Next(0, rooms.Count)].GetRandomPointInRoom();
+
+                Entity downstairs = new Entity();
+                downstairs.renderer = new Renderer(downstairs);
+                downstairs.renderer.symbol = '>';
+                downstairs.renderer.color = Colors.StairsColor;
+                downstairs.transform = new Components.Transform();
+                downstairs.transform.x = endPoint.X;
+                downstairs.transform.y = endPoint.Y;
+                newMap.Entities.Add(downstairs);
+                newMap.StairsDown = downstairs;
+            
+            }
 
         }
 
@@ -463,11 +459,12 @@ namespace sharpRoguelike.Core.Systems
                             potion.transform.x = randomRoomLocation.X;
                             potion.transform.y = randomRoomLocation.Y;
                             newMap.AddItem(potion);
-
                         }
-                        
+
+
                     }
                 }
+
 
             }
         }
@@ -502,28 +499,28 @@ namespace sharpRoguelike.Core.Systems
                     Console.WriteLine($"room size is massive - using {numberOfMonsters}");
 
                 }
-                for (int i = 0; i < numberOfMonsters; i++)
-                {
-                    Point randomRoomLocation = room.GetRandomPointInRoom();
-
-                    int monsterRoll = Game.Random.Next(0, 100);
-                    if (monsterRoll < 70)
-                    {
-                        var monster = Cryofailure.Create(mapLevel);
-                        monster.transform.x = randomRoomLocation.X;
-                        monster.transform.y = randomRoomLocation.Y;
-                        newMap.AddMonster(monster);
-                    }
-                    else
-                    {
-                        var monster = Slimehulk.Create(mapLevel);
-                        monster.transform.x = randomRoomLocation.X;
-                        monster.transform.y = randomRoomLocation.Y;
-                        newMap.AddMonster(monster);
-                    }
-                        
-                    
-                }
+                 for (int i = 0; i < numberOfMonsters; i++)
+                 {
+                     Point randomRoomLocation = room.GetRandomPointInRoom();
+                
+                     int monsterRoll = Game.Random.Next(0, 100);
+                     if (monsterRoll < 70)
+                     {
+                         var monster = Cryofailure.Create(mapLevel);
+                         monster.transform.x = randomRoomLocation.X;
+                         monster.transform.y = randomRoomLocation.Y;
+                         newMap.AddMonster(monster);
+                     }
+                     else
+                     {
+                         var monster = Slimehulk.Create(mapLevel);
+                         monster.transform.x = randomRoomLocation.X;
+                         monster.transform.y = randomRoomLocation.Y;
+                         newMap.AddMonster(monster);
+                     }
+                         
+                     
+                 }
             }
         }
 

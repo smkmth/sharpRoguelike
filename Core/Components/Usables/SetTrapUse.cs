@@ -25,13 +25,9 @@ namespace sharpRoguelike.Core.Components
             {
                 Game.MessageLog.Add($"{user.name} pulls the spring back on a deadly trap", Colors.NormalMessage);
 
-                Entity trap = new Entity();
-                trap.name = "BearTrap";
-                trap.color = Colors.BearTrap;
-                trap.symbol = '^';
-                trap.surface = new TrapSurface(user);
 
-                Game.DungeonMap.CreateSurface(user.transform.x, user.transform.y, 4, trap);
+                TrapSurface surface = new TrapSurface(user);
+                Game.DungeonMap.CreateSurface(user.transform.x, user.transform.y, 4, "Bear Trap", Colors.BearTrap, '^', surface);
                 return true;
             }
             return base.Use(usageChar, user, target);

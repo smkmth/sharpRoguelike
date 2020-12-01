@@ -24,12 +24,9 @@ namespace sharpRoguelike.Core.Components.Usables
         {
             Game.MessageLog.Add("The potion bottle smashes on the ground - spilling yellow slime everywhere!", Colors.NormalMessage);
 
-            Entity liquid = new Entity();
-            liquid.name = "Slime";
-            liquid.color = Colors.SlimehulkColor;
-            liquid.symbol = '~';
-            liquid.surface = new SlimeSurface();
-            Game.DungeonMap.CreateSurface(x, y, 4, liquid);
+
+            SlimeSurface surface = new SlimeSurface();
+            Game.DungeonMap.CreateSurface(x, y, 4, "Slime", Colors.SlimehulkColor, '~', surface);
         }
 
 

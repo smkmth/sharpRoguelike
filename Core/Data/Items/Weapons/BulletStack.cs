@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,11 +12,13 @@ namespace sharpRoguelike.Core.Data.Items
         {
             BulletStack bulletstack = new BulletStack
             {
-                symbol = ',',
-                color = Colors.LowTeirItem,
+           
                 name = $"A pile of bullets",
                 description = "ammo for rifles"
             };
+            bulletstack.renderer = new Renderer(bulletstack);
+            bulletstack.renderer.symbol = ',';
+            bulletstack.renderer.color = Colors.LowTeirItem;
             bulletstack.transform = new Components.Transform();
             bulletstack.stackable = true;
             bulletstack.stackcount = count;

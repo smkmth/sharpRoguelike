@@ -13,11 +13,13 @@ namespace sharpRoguelike.Core.Items
         {
             Knife knife = new Knife
             {
-                symbol = '/',
-                color = Colors.LowTeirItem,
+ 
                 name = "Knife",
                 description = "A combat knife - adds 2 to attack"
             };
+            knife.renderer = new Renderer(knife);
+            knife.renderer.symbol = '/';
+            knife.renderer.color = Colors.LowTeirItem;
             knife.transform = new Transform();
             knife.equipment = new Equipment(knife, EquipSlotType.WEAPON);
             knife.equipment.attackModifier = 2;

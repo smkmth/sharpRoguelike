@@ -1,9 +1,6 @@
 ﻿using RogueSharp;
 using RogueSharp.MapCreation;
 using sharpRoguelike.Core.Data.Items;
-using sharpRoguelike.Core.Data.Monsters;
-using sharpRoguelike.Core.Items;
-using sharpRoguelike.Core.Monsters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,22 +98,13 @@ namespace sharpRoguelike.Core
                 map.SetCellProperties(cell.X, cell.Y, false, false);
             }
 
-            foreach (Rectangle room in Rooms)
-            {
-                if (addEntities)
-                {
-                    CreateDoors(room);
-                }
-
-            }
+           
 
             if (addEntities)
             {
 
-                CreateStairs();
                 PlacePlayer();
-                PlaceMonsters();
-                PlaceItems();
+  
             }
             
             return map;
@@ -211,192 +199,10 @@ namespace sharpRoguelike.Core
             //map.AddPlayer( map.Rooms[0].Center.X, map.Rooms[0].Center.Y);
         }
 
-        private void PlaceMonsters()
-        {
-            foreach(var room in Rooms)
-            {
-                if (Game.Random.Next(0,10) < 7)
-                {
-                    var numberOfMonsters = Game.Random.Next(1,4);
-                    for(int i = 0; i < numberOfMonsters; i++)
-                    {
-                        Point randomRoomLocation = new Point(0, 0);
-                        if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
-                        {
-                            int monsterRoll = Game.Random.Next(0, 100);
-                            if (monsterRoll < 70)
-                            {
-                                var monster = Cryofailure.Create(mapLevel);
-                                monster.transform.x = randomRoomLocation.X;
-                                monster.transform.y = randomRoomLocation.Y;
-                                map.AddMonster(monster);
-                            }
-                            else
-                            {
-                                var monster = Slimehulk.Create(mapLevel);
-                                monster.transform.x = randomRoomLocation.X;
-                                monster.transform.y = randomRoomLocation.Y;
-                                map.AddMonster(monster);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void PlaceItems()
-        {
-            foreach(var room in Rooms)
-            {
-                if (Game.Random.Next(0,10) < 4)
-                {
-                    var items = Game.Random.Next(1,2);
-                    for (int i = 0; i < items; i++)
-                    {
-                        Point randomRoomLocation = new Point(0, 0);
-                        if (map.GetRandomWalkableLocationInRoom(room, out randomRoomLocation))
-                        {
-                            int roll = Game.Random.Next(0, 100);
-                            if (roll < 10)
-                            {
-                                var potion = HealthPotion.Create();
-                                potion.transform.x = randomRoomLocation.X;
-                                potion.transform.y = randomRoomLocation.Y;
-                                map.AddItem(potion);
-                            }
-                            else if (roll < 50)
-                            {
-                                var chest = Chest.Create();
-                                chest.transform.x = randomRoomLocation.X;
-                                chest.transform.y = randomRoomLocation.Y;
-                                map.AddItem(chest);
-                            }
-                            else if (roll < 75)
-                            {
-                                var potion = WaterPotion.Create();
-                                potion.transform.x = randomRoomLocation.X;
-                                potion.transform.y = randomRoomLocation.Y;
-                                map.AddItem(potion);
-                            }
-                            else
-                            {
-                                var potion = SlimePotion.Create();
-                                potion.transform.x = randomRoomLocation.X;
-                                potion.transform.y = randomRoomLocation.Y;
-                                map.AddItem(potion);
-
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-
-        private void CreateDoors(Rectangle room)
-        {
-            int xMin = room.Left;
-            int xMax = room.Right;
-            int yMin = room.Top;
-            int yMax = room.Bottom;
-            List<ICell> borderCells = map.GetCellsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(map.GetCellsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(map.GetCellsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(map.GetCellsAlongLine(xMax, yMin, xMax, yMax));
-
-            foreach(Cell cell in borderCells)
-            {
-                if (IsPotentialDoor(cell))
-                {
-                    map.SetCellProperties(cell.X, cell.Y, false, true);
-                    bool doorOpen = false;
-                    if (Game.Random.Next(0, 100) > 75)
-                    {
-                        doorOpen = true;
-                    }
-                    Door door = new Door
-                    {
-                     
-                        isOpen = doorOpen
-
-                    };
-                    door.transform = new Components.Transform();
-                    door.transform.x = cell.X;
-                    door.transform.y = cell.Y;
-                    map.Doors.Add(door);
-                    map.Entities.Add(door);
-
-                }
-            }
-        }
-
-        private bool IsPotentialDoor(ICell cell)
-        {
-            if (!cell.IsWalkable)
-            {
-                return false;
-            }
-            // Store references to all of the neighboring cells 
-            ICell right = map.GetCell(cell.X + 1, cell.Y);          
-            ICell left = map.GetCell(cell.X - 1, cell.Y);
-            ICell top = map.GetCell(cell.X, cell.Y - 1);
-            ICell bottom = map.GetCell(cell.X, cell.Y + 1);
+    
+     
 
 
-
-            if (map.GetDoor(cell.X, cell.Y) != null ||
-                    map.GetDoor(right.X, right.Y) != null ||
-                    map.GetDoor(left.X, left.Y) != null ||
-                    map.GetDoor(top.X, top.Y) != null ||
-                    map.GetDoor(bottom.X, bottom.Y) != null)
-            {
-                return false;
-            }
-
-            if (right.IsWalkable && left.IsWalkable && !top.IsWalkable && !bottom.IsWalkable)
-            {
-               
-                return true;
-            }
-
-            if (!right.IsWalkable && !left.IsWalkable && top.IsWalkable && bottom.IsWalkable)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private void CreateStairs()
-        {
-            if (mapLevel > 1)
-            {
-
-                Stairs upstairs = new Stairs
-                {
-                  
-                    IsUp = true
-                
-                };
-                upstairs.transform = new Components.Transform();
-                upstairs.transform.x = Rooms.First().Center.X + 1;
-                upstairs.transform.y = Rooms.First().Center.Y;
-                map.Entities.Add(upstairs);
-                map.StairsUp = upstairs;
-
-            }
-            Stairs downstairs = new Stairs
-            {
-                
-                IsUp = false
-            };
-            downstairs.transform = new Components.Transform();
-            downstairs.transform.x = Rooms.Last().Center.X + 1;
-            downstairs.transform.y = Rooms.Last().Center.Y;
-            map.Entities.Add(downstairs);
-            map.StairsDown = downstairs;
-
-        }
 
     }
 

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace sharpRoguelike.Core.Monsters
+namespace sharpRoguelike.Core.Data.Monsters
 {
     [Serializable]
     public class Cryofailure : Entity
@@ -21,11 +21,13 @@ namespace sharpRoguelike.Core.Monsters
             Cryofailure cryoFailure = new Cryofailure
             {
                 name = "Cryofailure",
-                color = Colors.KoboldColor,
-                symbol = 'k',
+
                 description = "a slippery accident of science born from a pod"
             };
             cryoFailure.transform = new Transform();
+            cryoFailure.renderer = new Renderer(cryoFailure);
+            cryoFailure.renderer.color = Colors.KoboldColor;
+            cryoFailure.renderer.symbol = 'k';
 
             Attacker attacker = new Attacker(cryoFailure);
             attacker.Attack = Dice.Roll("1D3") + level / 3;
@@ -48,9 +50,13 @@ namespace sharpRoguelike.Core.Monsters
             Entity corpse = new Entity()
             {
                 name = "Cryofailure Corpse",
-                color = Colors.Corpse,
-                symbol = '%'
+  
             };
+            corpse.transform = new Transform();
+            corpse.renderer = new Renderer(corpse);
+            corpse.renderer.color = Colors.KoboldColor;
+            corpse.renderer.symbol = '%';
+
 
 
             cryoFailure.corpse = corpse;

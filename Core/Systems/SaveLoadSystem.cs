@@ -29,7 +29,7 @@ namespace sharpRoguelike.Core.Systems
         public string seedName ;
         public void SaveGame()
         {
-            Game.Player.SaveEntityColor();
+            Game.Player.renderer.SaveEntityColor();
             Game.DungeonMap.SaveEntityColors();
 
             FileStream stream =  File.Create(saveName);
@@ -65,11 +65,11 @@ namespace sharpRoguelike.Core.Systems
             Game.seed = (int)formatter.Deserialize(stream);
             Game.Player = (Entity)formatter.Deserialize(stream);
             Game.DungeonMap.s_cells = (List<SerialiseableCells>)formatter.Deserialize(stream);
-            Game.DungeonMap.Doors = (List<Door>)formatter.Deserialize(stream);
+            Game.DungeonMap.Doors = (List<Entity>)formatter.Deserialize(stream);
             Game.DungeonMap.Monsters = (List<Entity>)formatter.Deserialize(stream);
             Game.DungeonMap.Items = (List<Entity>)formatter.Deserialize(stream);
             Game.DungeonMap.Surfaces = (List<Entity>)formatter.Deserialize(stream);
-            Game.DungeonMap.StairsDown = (Stairs)formatter.Deserialize(stream);
+            Game.DungeonMap.StairsDown = (Entity)formatter.Deserialize(stream);
             stream.Close();
         }
 
