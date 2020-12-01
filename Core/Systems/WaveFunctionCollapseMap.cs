@@ -129,11 +129,12 @@ namespace sharpRoguelike.Core.Systems
                         map.SetCellProperties(x, y, true, true);
                         Door door = new Door
                         {
-                            x = x,
-                            y = y,
+                
                             isOpen = false
 
                         };
+                        door.transform.x = x;
+                        door.transform.y = y;
                         map.Doors.Add(door);
                         map.Entities.Add(door);
                     }

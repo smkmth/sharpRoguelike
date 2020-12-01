@@ -21,11 +21,11 @@ namespace sharpRoguelike.Core.Behaviors
 
             if (!monster.ai.TurnsAlerted.HasValue)  //monster hasnst seen us
             {
-                monsterFov.ComputeFov(monster.x, monster.y, monster.actor.Awareness, true);
-                if (monsterFov.IsInFov(player.x, player.y))
+                monsterFov.ComputeFov(monster.transform.x, monster.transform.y, monster.actor.Awareness, true);
+                if (monsterFov.IsInFov(player.transform.x, player.transform.y))
                 {
-                    monster.ai.lastSeenPlayerX = player.x;
-                    monster.ai.lastSeenPlayerY = player.y;
+                    monster.ai.lastSeenPlayerX = player.transform.x;
+                    monster.ai.lastSeenPlayerY = player.transform.y;
                     Game.MessageLog.Add($" The {monster.name} sees {player.name}", Colors.NormalMessage);
                     monster.ai.TurnsAlerted = 1;
                 }
@@ -33,12 +33,12 @@ namespace sharpRoguelike.Core.Behaviors
             }
             else
             {
-                monsterFov.ComputeFov(monster.x, monster.y, monster.actor.Awareness, true);
-                if (monsterFov.IsInFov(player.x, player.y))
+                monsterFov.ComputeFov(monster.transform.x, monster.transform.y, monster.actor.Awareness, true);
+                if (monsterFov.IsInFov(player.transform.x, player.transform.y))
                 {
-                    monster.ai.lastSeenPlayerX = player.x;
-                    monster.ai.lastSeenPlayerY = player.y;
-                    PathToSpot(monster, commandSystem, player.x, player.y);
+                    monster.ai.lastSeenPlayerX = player.transform.x;
+                    monster.ai.lastSeenPlayerY = player.transform.y;
+                    PathToSpot(monster, commandSystem, player.transform.x, player.transform.y);
                     return true;
                 }
                 else
@@ -49,7 +49,7 @@ namespace sharpRoguelike.Core.Behaviors
                         monster.ai.currentPath = StaticPathToSpot(monster, commandSystem, monster.ai.lastSeenPlayerX, monster.ai.lastSeenPlayerY);
                         if (monster.ai.currentPath == null)
                         {
-                            Console.WriteLine($"{monster.name} {monster.x} {monster.y} couldnt find a path to {monster.ai.lastSeenPlayerX} {monster.ai.lastSeenPlayerY}");
+                            Console.WriteLine($"{monster.name} {monster.transform.x} {monster.transform.y} couldnt find a path to {monster.ai.lastSeenPlayerX} {monster.ai.lastSeenPlayerY}");
                         }
                         return true;
                     }
@@ -110,7 +110,7 @@ namespace sharpRoguelike.Core.Behaviors
             DungeonMap dungeonMap = Game.DungeonMap;
             bool wasWalkable = true;
 
-            dungeonMap.SetIsWalkable(monster.x, monster.y, true);
+            dungeonMap.SetIsWalkable(monster.transform.x, monster.transform.y, true);
             wasWalkable = dungeonMap.IsWalkable(x, y);
             dungeonMap.SetIsWalkable(x, y, true);
             PathFinder pf = new PathFinder(dungeonMap);
@@ -118,7 +118,7 @@ namespace sharpRoguelike.Core.Behaviors
             try
             {
                 path = pf.ShortestPath(
-                    dungeonMap.GetCell(monster.x, monster.y),
+                    dungeonMap.GetCell(monster.transform.x, monster.transform.y),
                     dungeonMap.GetCell(x, y));
 
             }
@@ -127,7 +127,7 @@ namespace sharpRoguelike.Core.Behaviors
                 return false;
                // Game.MessageLog.Add($"{monster.name} waits for a turn", Colors.NormalMessage);
             }
-            dungeonMap.SetIsWalkable(monster.x, monster.y, false);
+            dungeonMap.SetIsWalkable(monster.transform.x, monster.transform.y, false);
             dungeonMap.SetIsWalkable(x, y, wasWalkable);
             if (path != null)
             {
@@ -171,14 +171,14 @@ namespace sharpRoguelike.Core.Behaviors
         public static Path StaticPathToSpot(Entity monster, CommandSystem commandSystem, int x, int y)
         {
             DungeonMap dungeonMap = Game.DungeonMap;
-            dungeonMap.SetIsWalkable(monster.x, monster.y, true);
+            dungeonMap.SetIsWalkable(monster.transform.x, monster.transform.y, true);
             dungeonMap.SetIsWalkable(x, y, true);
             PathFinder pf = new PathFinder(dungeonMap);
             Path path = null;
             try
             {
                 path = pf.ShortestPath(
-                    dungeonMap.GetCell(monster.x, monster.y),
+                    dungeonMap.GetCell(monster.transform.x, monster.transform.y),
                     dungeonMap.GetCell(x, y));
                 return path;
             }

@@ -18,8 +18,8 @@ namespace sharpRoguelike.Core.Data.Items.Weapons
                 name = "Rifle",
                 description = "A long barreled hunting rifle"
             };
+            rifle.transform = new Transform();
             rifle.equipment = new Equipment(rifle, EquipSlotType.RANGED_WEAPON);
-            
             RifleEffect rifleEffect = new RifleEffect(rifle.equipment, 5);
             rifle.equipment.ranged = rifleEffect; 
             rifle.equipment.ranged.damage = "1D5";

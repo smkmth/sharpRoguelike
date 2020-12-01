@@ -267,7 +267,7 @@ namespace sharpRoguelike.Core.Systems
             }
             else
             {
-                PlacePlayer(0, 0);
+               /// PlacePlayer(0, 0);
             }
             return newMap;
 
@@ -392,15 +392,7 @@ namespace sharpRoguelike.Core.Systems
         }
         public void PlacePlayer(int x, int y)
         {
-            Entity player = Game.Player;
-            if (player == null)
-            {
-                player = new Entity();
-            }
-            player.x = x;
-            player.y = y;
-
-            newMap.AddPlayer(player);
+            newMap.AddPlayer( x, y);
         }
 
         private void CreateStairs()
@@ -412,11 +404,13 @@ namespace sharpRoguelike.Core.Systems
 
                 Stairs upstairs = new Stairs
                 {
-                    x = stairpoint.X,
-                    y = stairpoint.Y,
+           
                     IsUp = true
 
                 };
+                upstairs.transform.x = stairpoint.X;
+                upstairs.transform.x = stairpoint.Y;
+
                 newMap.Entities.Add(upstairs);
                 newMap.StairsUp = upstairs;
 
@@ -426,11 +420,12 @@ namespace sharpRoguelike.Core.Systems
 
             Stairs downstairs = new Stairs
             {
-                x = endPoint.X,
-                y = endPoint.Y,
+               
                 IsUp = false
             };
-
+            downstairs.transform = new Components.Transform();
+            downstairs.transform.x = endPoint.X;
+            downstairs.transform.y = endPoint.Y;
             newMap.Entities.Add(downstairs);
             newMap.StairsDown = downstairs;
 
@@ -451,29 +446,29 @@ namespace sharpRoguelike.Core.Systems
                         if (roll < 10)
                         {
                             var potion = HealthPotion.Create();
-                            potion.x = randomRoomLocation.X;
-                            potion.y = randomRoomLocation.Y;
+                            potion.transform.x = randomRoomLocation.X;
+                            potion.transform.y = randomRoomLocation.Y;
                             newMap.AddItem(potion);
                         }
                         else if (roll < 50)
                         {
                             var chest = Chest.Create();
-                            chest.x = randomRoomLocation.X;
-                            chest.y = randomRoomLocation.Y;
+                            chest.transform.x = randomRoomLocation.X;
+                            chest.transform.y = randomRoomLocation.Y;
                             newMap.AddItem(chest);
                         }
                         else if (roll < 75)
                         {
                             var potion = WaterPotion.Create();
-                            potion.x = randomRoomLocation.X;
-                            potion.y = randomRoomLocation.Y;
+                            potion.transform.x = randomRoomLocation.X;
+                            potion.transform.y = randomRoomLocation.Y;
                             newMap.AddItem(potion);
                         }
                         else
                         {
                             var potion = SlimePotion.Create();
-                            potion.x = randomRoomLocation.X;
-                            potion.y = randomRoomLocation.Y;
+                            potion.transform.x = randomRoomLocation.X;
+                            potion.transform.y = randomRoomLocation.Y;
                             newMap.AddItem(potion);
 
                         }
@@ -522,15 +517,15 @@ namespace sharpRoguelike.Core.Systems
                     if (monsterRoll < 70)
                     {
                         var monster = Cryofailure.Create(mapLevel);
-                        monster.x = randomRoomLocation.X;
-                        monster.y = randomRoomLocation.Y;
+                        monster.transform.x = randomRoomLocation.X;
+                        monster.transform.y = randomRoomLocation.Y;
                         newMap.AddMonster(monster);
                     }
                     else
                     {
                         var monster = Slimehulk.Create(mapLevel);
-                        monster.x = randomRoomLocation.X;
-                        monster.y = randomRoomLocation.Y;
+                        monster.transform.x = randomRoomLocation.X;
+                        monster.transform.y = randomRoomLocation.Y;
                         newMap.AddMonster(monster);
                     }
                         

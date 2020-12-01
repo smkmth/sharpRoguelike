@@ -201,7 +201,7 @@ namespace sharpRoguelike
 
             }
 
-            Player.player.ResetPlayer();
+           // Player.player.ResetPlayer();
 
             //start messages
             MessageLog.Add($"Level created with seed : ' {seed}' , Map Level : '{mapLevel}'", Colors.NormalMessage);
@@ -291,7 +291,7 @@ namespace sharpRoguelike
                         }
                         else if (keyPress.Key == RLKey.G)
                         {
-                            Entity pickup = DungeonMap.GetItemAt(Player.x, Player.y);
+                            Entity pickup = DungeonMap.GetItemAt(Player.transform.x, Player.transform.y);
                             if (pickup != null)
                             {
                                 if (Player.inventory.AddItem(pickup))
@@ -305,7 +305,7 @@ namespace sharpRoguelike
                         else if (keyPress.Key == RLKey.S)
                         {
                             CurrentGameMode = GameMode.INVENTORY;
-                            List<Entity> checkThis = DungeonMap.GetAllEntitiesAt(Player.x, Player.y);
+                            List<Entity> checkThis = DungeonMap.GetAllEntitiesAt(Player.transform.x, Player.transform.y);
                             List<Inventory> inventories = new List<Inventory>();
                             foreach (Entity entity in checkThis)
                             {

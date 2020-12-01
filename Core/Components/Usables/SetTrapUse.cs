@@ -31,7 +31,7 @@ namespace sharpRoguelike.Core.Components
                 trap.symbol = '^';
                 trap.surface = new TrapSurface(user);
 
-                Game.DungeonMap.CreateSurface(user.x, user.y, 4, trap);
+                Game.DungeonMap.CreateSurface(user.transform.x, user.transform.y, 4, trap);
                 return true;
             }
             return base.Use(usageChar, user, target);

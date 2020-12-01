@@ -5,7 +5,7 @@ using System.Text;
 
 namespace sharpRoguelike.Core.Data.Items
 {
-        [Serializable]
+    [Serializable]
     class BearTrap : Entity
     {
        
@@ -18,7 +18,7 @@ namespace sharpRoguelike.Core.Data.Items
                 name = "A Untripped BearTrap",
                 description = "Set on ground to damage enemies"
             };
-
+            beartrap.transform = new Transform();
 
             beartrap.effect = new SetTrapUse();
             beartrap.effect.owner = beartrap;

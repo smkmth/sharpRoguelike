@@ -18,6 +18,7 @@ namespace sharpRoguelike.Core.Items
                 name = "Knife",
                 description = "A combat knife - adds 2 to attack"
             };
+            knife.transform = new Transform();
             knife.equipment = new Equipment(knife, EquipSlotType.WEAPON);
             knife.equipment.attackModifier = 2;
 

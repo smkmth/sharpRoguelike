@@ -11,7 +11,7 @@ namespace sharpRoguelike.Core.Behaviors
         public bool Act(Entity monster, CommandSystem commandSystem)
         {
             Console.WriteLine("goin random walk");
-            return StandardMoveAndAttack.PathToSpot(monster, commandSystem, Game.Player.x, Game.Player.y);
+            return StandardMoveAndAttack.PathToSpot(monster, commandSystem, Game.Player.transform.x, Game.Player.transform.y);
          
         }
     }

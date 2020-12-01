@@ -205,15 +205,8 @@ namespace sharpRoguelike.Core
 
         private void PlacePlayer()
         {
-            Entity player = Game.Player;
-            if (player == null)
-            {
-                player = new Entity();
-            }
-            player.x = map.Rooms[0].Center.X;
-            player.y = map.Rooms[0].Center.Y;
 
-            map.AddPlayer(player);
+            //map.AddPlayer( map.Rooms[0].Center.X, map.Rooms[0].Center.Y);
         }
 
         private void PlaceMonsters()
@@ -232,15 +225,15 @@ namespace sharpRoguelike.Core
                             if (monsterRoll < 70)
                             {
                                 var monster = Cryofailure.Create(mapLevel);
-                                monster.x = randomRoomLocation.X;
-                                monster.y = randomRoomLocation.Y;
+                                monster.transform.x = randomRoomLocation.X;
+                                monster.transform.y = randomRoomLocation.Y;
                                 map.AddMonster(monster);
                             }
                             else
                             {
                                 var monster = Slimehulk.Create(mapLevel);
-                                monster.x = randomRoomLocation.X;
-                                monster.y = randomRoomLocation.Y;
+                                monster.transform.x = randomRoomLocation.X;
+                                monster.transform.y = randomRoomLocation.Y;
                                 map.AddMonster(monster);
                             }
                         }
@@ -265,29 +258,29 @@ namespace sharpRoguelike.Core
                             if (roll < 10)
                             {
                                 var potion = HealthPotion.Create();
-                                potion.x = randomRoomLocation.X;
-                                potion.y = randomRoomLocation.Y;
+                                potion.transform.x = randomRoomLocation.X;
+                                potion.transform.y = randomRoomLocation.Y;
                                 map.AddItem(potion);
                             }
                             else if (roll < 50)
                             {
                                 var chest = Chest.Create();
-                                chest.x = randomRoomLocation.X;
-                                chest.y = randomRoomLocation.Y;
+                                chest.transform.x = randomRoomLocation.X;
+                                chest.transform.y = randomRoomLocation.Y;
                                 map.AddItem(chest);
                             }
                             else if (roll < 75)
                             {
                                 var potion = WaterPotion.Create();
-                                potion.x = randomRoomLocation.X;
-                                potion.y = randomRoomLocation.Y;
+                                potion.transform.x = randomRoomLocation.X;
+                                potion.transform.y = randomRoomLocation.Y;
                                 map.AddItem(potion);
                             }
                             else
                             {
                                 var potion = SlimePotion.Create();
-                                potion.x = randomRoomLocation.X;
-                                potion.y = randomRoomLocation.Y;
+                                potion.transform.x = randomRoomLocation.X;
+                                potion.transform.y = randomRoomLocation.Y;
                                 map.AddItem(potion);
 
                             }
@@ -321,11 +314,12 @@ namespace sharpRoguelike.Core
                     }
                     Door door = new Door
                     {
-                        x = cell.X,
-                        y = cell.Y,
+                     
                         isOpen = doorOpen
 
                     };
+                    door.transform.x = cell.X;
+                    door.transform.y = cell.Y;
                     map.Doors.Add(door);
                     map.Entities.Add(door);
 
@@ -377,22 +371,23 @@ namespace sharpRoguelike.Core
 
                 Stairs upstairs = new Stairs
                 {
-                    x = map.Rooms.First().Center.X + 1,
-                    y = map.Rooms.First().Center.Y,
+                  
                     IsUp = true
                 
                 };
+                upstairs.transform.x = map.Rooms.First().Center.X + 1;
+                upstairs.transform.y = map.Rooms.First().Center.Y;
                 map.Entities.Add(upstairs);
                 map.StairsUp = upstairs;
 
             }
             Stairs downstairs = new Stairs
             {
-                x = map.Rooms.Last().Center.X,
-                y = map.Rooms.Last().Center.Y -1,
+                
                 IsUp = false
             };
-
+            downstairs.transform.x = map.Rooms.Last().Center.X + 1;
+            downstairs.transform.y = map.Rooms.Last().Center.Y;
             map.Entities.Add(downstairs);
             map.StairsDown = downstairs;
 

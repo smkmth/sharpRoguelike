@@ -16,6 +16,7 @@ namespace sharpRoguelike.Core.Data.Items
                 color = Colors.ShallowWater,
                 name = "Water Potion",
             };
+            potion.transform = new Components.Transform();
             potion.effect = new WaterPotionUse();
             potion.effect.owner = potion;
             return potion;

@@ -16,6 +16,7 @@ namespace sharpRoguelike.Core.Data.Items
                 color = Colors.SlimehulkColor,
                 name = "Slime Potion",
             };
+            potion.transform = new Components.Transform();
             potion.effect = new SlimePotionUse();
             potion.effect.owner = potion;
             return potion;

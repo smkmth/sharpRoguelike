@@ -17,14 +17,14 @@ namespace sharpRoguelike.Core
         public bool IsUp { get; set; }
         public override void Draw(RLConsole console, IMap map)
         {
-            if (!map.GetCell(x, y).IsExplored && !Clairvoince) 
+            if (!map.GetCell(transform.x, transform.y).IsExplored && !Clairvoince) 
             {
                 return;
             }
             symbol = IsUp ? '<' : '>';
             name = IsUp ? "Stairs leading up" : "Stairs leading down";
 
-            if (map.IsInFov(x, y) || Clairvoince)
+            if (map.IsInFov(transform.x, transform.y) || Clairvoince)
             {
                 color = Colors.Player;
             }
@@ -33,7 +33,7 @@ namespace sharpRoguelike.Core
                 color = Colors.Floor;
             }
 
-            console.Set(x, y, color, null, symbol);
+            console.Set(transform.x, transform.y, color, null, symbol);
         }
 
 

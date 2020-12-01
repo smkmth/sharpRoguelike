@@ -64,8 +64,8 @@ namespace sharpRoguelike.Core
 
         public void DropItem(Entity item)
         {
-            item.x = owner.x;
-            item.y = owner.y;
+            item.transform.x = owner.transform.x;
+            item.transform.y = owner.transform.y;
             Game.DungeonMap.AddItem(item);
             storedItems.Remove(item);
             Game.MessageLog.Add($"Dropped {item.name}.", Colors.NormalMessage);

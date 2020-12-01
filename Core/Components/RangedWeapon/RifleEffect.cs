@@ -78,7 +78,7 @@ namespace sharpRoguelike.Core.Components
                         {
                             entity.ai.AlertAI();
                         }
-                        int numalerted = Game.DungeonMap.AlertAllInRange(owner.ownerHolder.x, owner.ownerHolder.y, loudness);
+                        int numalerted = Game.DungeonMap.AlertAllInRange(owner.ownerHolder.transform.x, owner.ownerHolder.transform.y, loudness);
                         if (numalerted > 0)
                         {
                             Game.MessageLog.Add($"As the ringing of the shot dies down - you hear noises all around you", Colors.CombatMessage);

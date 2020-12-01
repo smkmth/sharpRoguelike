@@ -19,6 +19,7 @@ namespace sharpRoguelike.Core.Data.Items.Weapons
                 name = "Club",
                 description = "A large blunt object, adds 10 to chance to hit"
             };
+            club.transform = new Transform();
             club.equipment = new Equipment(club, EquipSlotType.WEAPON);
             club.equipment.attackChanceModifier = 10;
 

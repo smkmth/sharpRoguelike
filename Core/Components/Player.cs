@@ -34,7 +34,7 @@ namespace sharpRoguelike.Core.Components
             owner.color = Colors.Player;
             owner.symbol = '@';
             owner.name = "Rogue";
-
+            owner.transform = new Transform();
             owner.attacker = new Attacker(owner);
             owner.attacker.Attack = 2;
             owner.attacker.AttackChance = 50;

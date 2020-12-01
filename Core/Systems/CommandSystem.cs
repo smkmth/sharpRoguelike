@@ -55,7 +55,7 @@ namespace sharpRoguelike.Core.Systems
         {
             if (!Game.DungeonMap.SetActorPosition(monster, cell.X, cell.Y))
             {
-                if (Game.Player.x == cell.X && Game.Player.y == cell.Y)
+                if (Game.Player.transform.x == cell.X && Game.Player.transform.y == cell.Y)
                 {
                     Attack(monster, Game.Player);
 
@@ -65,30 +65,30 @@ namespace sharpRoguelike.Core.Systems
 
         public bool MovePlayer(Direction direction)
         {
-            int x = Game.Player.x;
-            int y = Game.Player.y;
+            int x = Game.Player.transform.x;
+            int y = Game.Player.transform.y;
 
             switch ( direction)
             {
                 case Direction.Up:
                     {
-                        y = Game.Player.y - 1;
+                        y = Game.Player.transform.y - 1;
                         break;
                     }
                 case Direction.Down:
                     {
-                        y = Game.Player.y + 1;
+                        y = Game.Player.transform.y + 1;
                         break;
                     }
                 case Direction.Left:
                     {
-                        x = Game.Player.x - 1;
+                        x = Game.Player.transform.x - 1;
 
                         break;
                     }
                 case Direction.Right:
                     {
-                        x = Game.Player.x + 1;
+                        x = Game.Player.transform.x + 1;
 
                         break;
                     }
@@ -235,8 +235,9 @@ namespace sharpRoguelike.Core.Systems
             else 
             {
                 Game.DungeonMap.RemoveMonster(defender);
-                defender.corpse.x = defender.x;
-                defender.corpse.y = defender.y;
+                defender.corpse.transform = new Components.Transform();
+                defender.corpse.transform.x = defender.transform.x;
+                defender.corpse.transform.y = defender.transform.y;
                 defender.attacker = null;
                 defender.ai = null;
                 EquipmentManager.TransferEquipmentToInv(defender, defender.corpse.inventory);

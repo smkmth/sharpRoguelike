@@ -16,6 +16,7 @@ namespace sharpRoguelike.Core.Data.Items
                 name = $"A pile of bullets",
                 description = "ammo for rifles"
             };
+            bulletstack.transform = new Components.Transform();
             bulletstack.stackable = true;
             bulletstack.stackcount = count;
             return bulletstack;

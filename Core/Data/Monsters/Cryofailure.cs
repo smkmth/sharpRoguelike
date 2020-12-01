@@ -25,6 +25,7 @@ namespace sharpRoguelike.Core.Monsters
                 symbol = 'k',
                 description = "a slippery accident of science born from a pod"
             };
+            cryoFailure.transform = new Transform();
 
             Attacker attacker = new Attacker(cryoFailure);
             attacker.Attack = Dice.Roll("1D3") + level / 3;

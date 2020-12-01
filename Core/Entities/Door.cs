@@ -25,7 +25,7 @@ namespace sharpRoguelike.Core
 
         public override void Draw(RLConsole console, IMap map)
         {
-            if (!map.GetCell(x, y).IsExplored)
+            if (!map.GetCell(transform.x, transform.y).IsExplored)
             {
                 return;
             }
@@ -33,7 +33,7 @@ namespace sharpRoguelike.Core
             symbol = isOpen ? '-' : '+';
             name = isOpen ? "A open door" : "A closed door";
 
-            if (map.IsInFov(x, y))
+            if (map.IsInFov(transform.x, transform.y))
             {
                 color = Colors.DoorFov;
                 BackgroundColor = Colors.DoorBackgroundFov;
@@ -45,7 +45,7 @@ namespace sharpRoguelike.Core
                 BackgroundColor = Colors.DoorBackground;
             }
 
-            console.Set(x, y, color, BackgroundColor, symbol);
+            console.Set(transform.x, transform.y, color, BackgroundColor, symbol);
 
         }
     }

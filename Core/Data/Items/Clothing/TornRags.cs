@@ -18,6 +18,7 @@ namespace sharpRoguelike.Core.Data.Items
                 name = "Torn Rags",
                 description = "Shreded and torn rags."
             };
+            tornRags.transform = new Transform();
             tornRags.equipment = new Equipment(tornRags, EquipSlotType.CHEST);
             tornRags.equipment.defenceModfier = 1;
 

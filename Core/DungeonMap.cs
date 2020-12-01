@@ -96,7 +96,7 @@ namespace sharpRoguelike.Core
             foreach (Entity monster in Monsters)
             {
                 monster.Draw(mapConsole, this);
-                if (IsInFov(monster.x, monster.y))
+                if (IsInFov(monster.transform.x, monster.transform.y))
                 {
                     monstersInFov.Add(monster);
                 }
@@ -144,7 +144,7 @@ namespace sharpRoguelike.Core
         public void UpdatePlayerFOV()
         {
             Entity player = Game.Player;
-            ComputeFov(player.x, player.y, player.actor.Awareness, true);
+            ComputeFov(player.transform.x, player.transform.y, player.actor.Awareness, true);
             foreach(Cell cell in GetAllCells())
             {
                 if (IsInFov(cell.X, cell.Y))
@@ -182,12 +182,12 @@ namespace sharpRoguelike.Core
         {
             if (GetCell(x, y).IsWalkable)
             {
-                SetIsWalkable(entity.x, entity.y, true);
-                entity.x = x;
-                entity.y = y;
-                entity.OnMove(entity.x, entity.y, x, y);
+                SetIsWalkable(entity.transform.x, entity.transform.y, true);
+                entity.transform.x = x;
+                entity.transform.y = y;
+                entity.OnMove(entity.transform.x, entity.transform.y, x, y);
 
-                SetIsWalkable(entity.x, entity.y, false);
+                SetIsWalkable(entity.transform.x, entity.transform.y, false);
                 if (entity.player != null)
                 {
                     UpdatePlayerFOV();
@@ -222,13 +222,18 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void AddPlayer(Entity player)
+        public void AddPlayer(int x, int y)
         {
-            Game.Player = player;
+            if (Game.Player == null)
+            {
+                Game.Player = new Entity();
+            }
+            Entity player = Game.Player;
             player.player = new Player(player);
             player.player.ResetPlayer();
-
-            SetIsWalkable(player.x, player.y, false);
+            player.transform.x = x;
+            player.transform.y = y;
+            SetIsWalkable(player.transform.x, player.transform.y, false);
             UpdatePlayerFOV();
             Game.SchedulingSytem.Add(player.actor);
             Entities.Add(player);
@@ -237,7 +242,7 @@ namespace sharpRoguelike.Core
         public void AddMonster(Entity monster)
         {
             Monsters.Add(monster);
-            SetIsWalkable(monster.x, monster.y, false);
+            SetIsWalkable(monster.transform.x, monster.transform.y, false);
             Game.SchedulingSytem.Add(monster.actor);
             Entities.Add(monster);
 
@@ -247,7 +252,7 @@ namespace sharpRoguelike.Core
         {
             Monsters.Remove(monster);
             Entities.Remove(monster);
-            SetIsWalkable(monster.x, monster.y, true);
+            SetIsWalkable(monster.transform.x, monster.transform.y, true);
             Game.SchedulingSytem.Remove(monster.actor);
 
         }
@@ -255,12 +260,12 @@ namespace sharpRoguelike.Core
 
         public Entity GetMonsterAt(int x, int y)
         {
-            return Monsters.FirstOrDefault(m => m.x == x && m.y == y);
+            return Monsters.FirstOrDefault(m => m.transform.x == x && m.transform.y == y);
         }
 
         public Entity GetItemAt(int x, int y)
         {
-            return Items.FirstOrDefault(i => i.x == x && i.y == y);
+            return Items.FirstOrDefault(i => i.transform.x == x && i.transform.y == y);
 
         }
 
@@ -314,7 +319,7 @@ namespace sharpRoguelike.Core
         
         public Door GetDoor(int x, int y)
         {
-            return Doors.SingleOrDefault(d => d.x == x && d.y == y);
+            return Doors.SingleOrDefault(d => d.transform.x == x && d.transform.y == y);
         }
 
         private void OpenDoor(Entity actor, int x, int y)
@@ -332,13 +337,13 @@ namespace sharpRoguelike.Core
         public bool CanMoveDownToNextLevel()
         {
             Entity player = Game.Player;
-            return StairsDown.x == player.x && StairsDown.y == player.y;
+            return StairsDown.transform.x == player.transform.x && StairsDown.transform.y == player.transform.y;
 
         }
 
         public List<Entity> GetAllEntitiesAt(int x, int y)
         {
-            var results = Entities.Where(i => i.x == x && i.y == y);
+            var results = Entities.Where(i => i.transform.x == x && i.transform.y == y);
             List<Entity> entitiesHere = new List<Entity>();           
             foreach(Entity entity in results)
             {
@@ -350,11 +355,11 @@ namespace sharpRoguelike.Core
 
         public List<Entity> InterigateEntityAtLocation(int x, int y) 
         {
-            var results =  Entities.Where(i => i.x == x && i.y == y );
+            var results =  Entities.Where(i => i.transform.x == x && i.transform.y == y );
             List<Entity> names = new List<Entity>();
             foreach(Entity entity in results)
             {
-                if (IsInFov(entity.x, entity.y) || Game.DebugCheats)
+                if (IsInFov(entity.transform.x, entity.transform.y) || Game.DebugCheats)
                 {
                     names.Add(entity);
                 }
@@ -396,12 +401,13 @@ namespace sharpRoguelike.Core
                                 }
 
                                 Entity liquidinst = new Entity();
+                                liquidinst.transform = new Transform();
                                 liquidinst.name = entity.name;
                                 liquidinst.color = entity.color;
                                 liquidinst.symbol = entity.symbol;
                                 liquidinst.surface = entity.surface;
-                                liquidinst.x = dx;
-                                liquidinst.y = dy;
+                                liquidinst.transform.x = dx;
+                                liquidinst.transform.y = dy;
                                 Surfaces.Add(liquidinst);
                                 Entities.Add(liquidinst);
                             }
@@ -435,12 +441,13 @@ namespace sharpRoguelike.Core
                                     }
                                 }
                                 Entity liquidinst = new Entity();
+                                liquidinst.transform = new Transform();
                                 liquidinst.name = entity.name;
                                 liquidinst.color = entity.color;
                                 liquidinst.symbol = entity.symbol;
                                 liquidinst.surface = entity.surface;
-                                liquidinst.x = dx;
-                                liquidinst.y = dy;
+                                liquidinst.transform.x = dx;
+                                liquidinst.transform.y = dy;
                                 Surfaces.Add(liquidinst);
                                 Entities.Add(liquidinst);
                             }
@@ -454,7 +461,7 @@ namespace sharpRoguelike.Core
 
         public Entity GetSurfaceAt(int x, int y)
         {
-            return Surfaces.FirstOrDefault(i => i.x == x && i.y == y);
+            return Surfaces.FirstOrDefault(i => i.transform.x == x && i.transform.y == y);
 
         }
         public void RemoveSurface(Entity surface)
@@ -516,8 +523,8 @@ namespace sharpRoguelike.Core
         public int GetDistance(Entity entiyA, Entity entiyB)
         {
 
-            double a = (double)(entiyA.x - entiyB.x);
-            double b = (double)(entiyA.y - entiyB.y);
+            double a = (double)(entiyA.transform.x - entiyB.transform.x);
+            double b = (double)(entiyA.transform.y - entiyB.transform.y);
 
             return (int)(Math.Sqrt(a * a + b * b));
 

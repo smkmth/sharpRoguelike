@@ -48,14 +48,14 @@ namespace sharpRoguelike.Core
         }
 
         public char symbol { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
+
         public string name { get; set; }
         public string description { get; set; }
 
         public bool stackable = false;
         public int stackcount =0;
 
+        public Transform transform = null;              //does this entity have a physical location
         public Inventory inventory = null;              //does this entity have an inventory
         public Attacker attacker = null;                //does this entity attack
         public Actor actor = null;                      //does this entity move
@@ -74,21 +74,21 @@ namespace sharpRoguelike.Core
         public bool Clairvoince =false;
         public virtual void Draw(RLConsole con, IMap map)
         {
-            ICell cell = map.GetCell(x, y);
+            ICell cell = map.GetCell(transform.x, transform.y);
 
             if (!cell.IsExplored && !Clairvoince)
             {
                 return;
             }
 
-            if (map.IsInFov(x, y) || Clairvoince)
+            if (map.IsInFov(transform.x, transform.y) || Clairvoince)
             {
-                con.Set(x, y, color, Colors.FloorBackgroundFov, symbol);
+                con.Set(transform.x, transform.y, color, Colors.FloorBackgroundFov, symbol);
 
             }
             else
             {
-                con.Set(x, y, Colors.Floor, Colors.FloorBackground, ' ');
+                con.Set(transform.x, transform.y, Colors.Floor, Colors.FloorBackground, ' ');
             }
         }
 

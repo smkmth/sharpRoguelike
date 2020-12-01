@@ -23,6 +23,7 @@ namespace sharpRoguelike.Core.Data.Monsters
                 symbol = 'S',
                 description = "a yellowtinged gelatinous monster of slime"
             };
+            slimeHulk.transform = new Transform();
 
             Attacker attacker = new Attacker(slimeHulk);
             attacker.Attack = Dice.Roll("2D2") + level / 3;
@@ -73,7 +74,7 @@ namespace sharpRoguelike.Core.Data.Monsters
             liquid.symbol = '~';
             liquid.surface = new SlimeSurface();
 
-            Game.DungeonMap.CreateSurface(x, y, 2, liquid);
+            Game.DungeonMap.CreateSurface(previous_x, previous_y, 2, liquid);
         }
     }
 }

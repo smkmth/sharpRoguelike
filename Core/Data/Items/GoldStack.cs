@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +17,8 @@ namespace sharpRoguelike.Core.Data.Items
                 name = $"A pile of gold",
                 description = "small round units of currency"
             };
+            gold.transform = new Transform();
+
             gold.stackable = true;
             gold.stackcount = count;
             return gold;

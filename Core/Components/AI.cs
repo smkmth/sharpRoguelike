@@ -26,8 +26,8 @@ namespace sharpRoguelike.Core
         public void AlertAI()
         {
             TurnsAlerted = 1;
-            lastSeenPlayerX = Game.Player.x;
-            lastSeenPlayerY = Game.Player.y;
+            lastSeenPlayerX = Game.Player.transform.x;
+            lastSeenPlayerY = Game.Player.transform.y;
         }
 
         public virtual void PerformAction(CommandSystem commandSystem)

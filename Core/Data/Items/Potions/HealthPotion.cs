@@ -16,6 +16,8 @@ namespace sharpRoguelike.Core.Items
                 color = Colors.HealthPotion,
                 name = "Health Potion",
             };
+            potion.transform = new Transform();
+
             potion.effect = new HealPotionUse();
             potion.effect.owner = potion;
             return potion;

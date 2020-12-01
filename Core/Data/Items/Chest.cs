@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sharpRoguelike.Core.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +17,7 @@ namespace sharpRoguelike.Core.Data.Items
                 name = "Chest",
                 description = "A cloesd wooden chest."
             };
-
+            chest.transform = new Transform();
             chest.inventory = new Inventory(chest);
             chest.inventory.AddItem(GoldStack.Create(50));
 
