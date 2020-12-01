@@ -498,7 +498,7 @@ namespace sharpRoguelike.Core.Systems
             {
                 
                 int numberOfMonsters = 0;
-                if (room.points.Count < smallRoom)
+                if (room.points.Count < 10)
                 {
                     numberOfMonsters = 0;
                     Console.WriteLine($"room size is 10 - using {numberOfMonsters}");
