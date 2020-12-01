@@ -13,11 +13,14 @@ namespace sharpRoguelike.Core.Systems
 {
     class Room
     {
+        public List<Point> points;
+
+
         public Room()
         {
             points = new List<Point>();
         }
-        public List<Point> points;
+
         public Point Center()
         {
             int xtot = 0;
@@ -33,21 +36,6 @@ namespace sharpRoguelike.Core.Systems
 
             return new Point(xtot, ytot);
         }
-       public Room SplitOffLargerRoom()
-        {
-            int CenterX = Center().X;
-            Room room = new Room();
-            foreach(Point point in points)
-            {
-                if (point.X < CenterX)
-                {
-                    room.points.Add(point);
-                }
-            }
-            points = points.Except(room.points).ToList();
-            return room;
-
-        }
 
         public int GetExtremeLeft()
         {
@@ -61,6 +49,7 @@ namespace sharpRoguelike.Core.Systems
             }
             return bestfit.X;
         }
+
         public Point GetRandomPointInRoom()
         {
             return points[Game.Random.Next(0, points.Count-1)];
@@ -103,13 +92,21 @@ namespace sharpRoguelike.Core.Systems
     {
         List<MapSegment> maps;
         public DungeonMap newMap;
+
         int mapWidth;
         int mapHeight;
         int mapLevel;
 
         List<Room> rooms;
-        CellCopy[] cells;
         Room StartRoom;
+
+        public int tinyRoomDef =3;
+        public int smallRoomDef =5;
+        public int midRoomDef = 10;
+        public int largeRoomDef = 50;
+        public int massiveRoomDef =100;
+        public int superMassiveRoomDef = 500;
+        public bool roomDebugging;
 
         public MapParser( int _mapWidth, int _mapHeight, int _mapLevel, List<MapSegment> _maps)
         {
@@ -119,7 +116,8 @@ namespace sharpRoguelike.Core.Systems
             mapLevel = _mapLevel;
         }
 
-        public DungeonMap Pass(bool doBorders, bool doRooms)
+        
+        public DungeonMap Pass(bool doBorders, bool doRooms, bool doCorridors, bool placeEntities)
         {
             CellCopy[,] copycells = new CellCopy[mapWidth, mapHeight];
             for (int i = 0; i < maps.Count; i++)
@@ -153,8 +151,8 @@ namespace sharpRoguelike.Core.Systems
 
             if (doRooms)
             {
-            
-                cells = new CellCopy[mapWidth * mapHeight];
+
+                CellCopy[] cells = new CellCopy[mapWidth * mapHeight];
                 foreach (ICell cell in newMap.GetAllCells())
                 {
                     cells[cell.X + mapWidth * cell.Y] = new CellCopy(cell.IsWalkable, cell.X, cell.Y );
@@ -162,91 +160,107 @@ namespace sharpRoguelike.Core.Systems
 
                 rooms = GetRooms(cells);
 
-
-            
-                List<Room> sortedRooms = rooms.OrderByDescending(o => o.GetExtremeLeft()).ToList();
-
-                for (int r = 0; r < sortedRooms.Count; r++)
+                if (doCorridors)
                 {
-                    if (r > 0)
-                    {
-                        int previousRoomCenterX =   sortedRooms[r - 1].Center().X;
-                        int previousRoomCenterY =   sortedRooms[r - 1].Center().Y;
-                        int currentRoomCenterX =    sortedRooms[r].Center().X;
-                        int currentRoomCenterY =    sortedRooms[r].Center().Y;
 
-                        if (Game.Random.Next(1, 2) == 1)
+                    List<Room> sortedRooms = rooms.OrderByDescending(o => o.GetExtremeLeft()).ToList();
+
+                    for (int r = 0; r < sortedRooms.Count; r++)
+                    {
+                        if (r > 0)
                         {
-                            CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
-                            CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
-                        }
-                        else
-                        {
-                            CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
-                            CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
+                            int previousRoomCenterX =   sortedRooms[r - 1].Center().X;
+                            int previousRoomCenterY =   sortedRooms[r - 1].Center().Y;
+                            int currentRoomCenterX =    sortedRooms[r].Center().X;
+                            int currentRoomCenterY =    sortedRooms[r].Center().Y;
+
+                            if (Game.Random.Next(1, 2) == 1)
+                            {
+                                CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
+                                CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
+                            }
+                            else
+                            {
+                                CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
+                                CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
+                            }
+
                         }
 
                     }
-
                 }
 
 
                 StartRoom = rooms[Game.Random.Next(0, rooms.Count)];
-
-
                 PlacePlayer(StartRoom.points[0].X, StartRoom.points[0].Y);
 
-                CreateStairs();
-                PlaceMonsters();
-                PlaceItems();
-                int counter = 0;
-                int smallRooms = 0;
-                int midRooms = 0;
-                int largeRooms = 0;
-                int massiveRooms = 0;
-                int superMassiveRooms = 0;
-
-                foreach (Room room in rooms)
+                if (placeEntities)
                 {
-                   //Entity surface = new Entity();
-                   //surface.symbol = '~';
-                   //surface.color = new RLNET.RLColor(Game.Random.Next(0,255), Game.Random.Next(0, 255), Game.Random.Next(0, 255));
-                   //surface.name = $"room - {counter} + room size - {room.points.Count} ";
-                   //
-                   //counter++;
-                   //foreach(Point point in room.points)
-                   //{
-                   //    newMap.CreateSurface(point.X, point.Y, 1, surface, SurfaceKerning.TopLeft);
-                   //}
-                   //
-
-                    if (room.points.Count < 10)
-                    {
-                        smallRooms++;
-                    }
-                    else if (room.points.Count < 30)
-                    {
-                        midRooms++;
-
-                    }
-                    else if (room.points.Count < 100)
-                    {
-                        largeRooms++;
-
-                    }
-                    else if (room.points.Count < 300)
-                    {
-                        massiveRooms++;
-
-                    }
-                    else
-                    {
-                        superMassiveRooms++;
-                    }
+                    CreateStairs();
+                    PlaceMonsters();
+                    PlaceItems();
 
                 }
 
-                Console.WriteLine($" small rooms= {smallRooms} mid rooms = {midRooms} large rooms =={largeRooms} massive rooms= {massiveRooms} supermassive rooms {superMassiveRooms}");
+                if (roomDebugging)
+                {
+
+                    int counter = 0;
+
+                    int tinyRooms = 0;
+                    int smallRooms = 0;
+                    int midRooms = 0;
+                    int largeRooms = 0;
+                    int massiveRooms = 0;
+                    int superMassiveRooms = 0;
+
+                    foreach (Room room in rooms)
+                    {
+                        Entity surface = new Entity();
+                        surface.symbol = '~';
+                        surface.color = new RLNET.RLColor(Game.Random.Next(0,255), Game.Random.Next(0, 255), Game.Random.Next(0, 255));
+                        surface.name = $"room - {counter} + room size - {room.points.Count} ";
+                    
+                        counter++;
+                        foreach(Point point in room.points)
+                        {
+                            newMap.CreateSurface(point.X, point.Y, 1, surface, SurfaceKerning.TopLeft);
+                        }
+
+                        int rpc = room.points.Count; 
+
+                        if (rpc < tinyRoomDef)
+                        {
+                            tinyRooms++;
+                        }
+                        else if (rpc < smallRoomDef)
+                        {
+                            smallRooms++;
+                        }
+                        else if (rpc < midRoomDef)
+                        {
+                            midRooms++;
+
+                        }
+                        else if (rpc < largeRoomDef)
+                        {
+                            largeRooms++;
+
+                        }
+                        else if (rpc < massiveRoomDef)
+                        {
+                            massiveRooms++;
+
+                        }
+                        else
+                        {
+                            superMassiveRooms++;
+                        }
+
+                    }
+
+                    Console.WriteLine($"tiny rooms ={tinyRooms} small rooms= {smallRooms} mid rooms = {midRooms} large rooms =={largeRooms} massive rooms= {massiveRooms} supermassive rooms {superMassiveRooms}");
+                }
 
 
 
@@ -327,28 +341,7 @@ namespace sharpRoguelike.Core.Systems
                     }
                 }
             }
-            List<Room> splitRooms = new List<Room>();
-            bool roomSplitter = true;
-            while (roomSplitter)
-            {
-                int counter = 0;
-                foreach(Room room in rooms)
-                {
-                    if (room.points.Count > 400)
-                    {
-                        counter++;
-                        Room newRoom = room.SplitOffLargerRoom();
-                        splitRooms.Add(newRoom);
-                    }
 
-                }
-                rooms.AddRange(splitRooms);
-                Console.WriteLine(counter);
-                if(counter == 0)
-                {
-                    roomSplitter = false;
-                }
-            }
           
           
             return rooms;

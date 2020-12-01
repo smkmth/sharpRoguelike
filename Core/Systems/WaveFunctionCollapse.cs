@@ -275,7 +275,7 @@ namespace sharpRoguelike.Core.Systems
             //          
             //          }
             //          
-            string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Data\", $"{name}.png");
+            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"WFCTex\", $"{name}.png");
             var bitmap = new Bitmap(path);
            // var bitmap = new Bitmap($"C:/Users/Lab42_AMD_1/source/repos/sharpRoguelike/{name}.png");
 
