@@ -60,7 +60,7 @@ namespace sharpRoguelike.Core.Systems
 
         //seed(int) All internal random values are derived from this seed, providing 0 results in a random number.
         //limit (int) How many iterations to run, providing 0 will run until completion or a contradiction.
-        public DungeonMap Run(int intSeed)
+        public DungeonMap Run(int intSeed, int mapWidth, int mapHeight)
         {
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -76,7 +76,7 @@ namespace sharpRoguelike.Core.Systems
 
                     //model.Graphics().Save($"{k} qud.png");
 
-                    map = MakeMapFromImage(model.Graphics());
+                    map = MakeMapFromImage(model.Graphics(), mapWidth, mapHeight);
                     
                     Console.WriteLine($"time = {sw.ElapsedMilliseconds}");
                     return map;
@@ -90,11 +90,11 @@ namespace sharpRoguelike.Core.Systems
         }
 
 
-        public static DungeonMap MakeMapFromImage(Bitmap image)
+        public static DungeonMap MakeMapFromImage(Bitmap image, int mapwidth, int mapHeight)
         {
             int width = image.Width;
             int height = image.Height;
-
+            
             Color[] colors = new Color[image.Width * image.Height];
             for (int x = 0; x < image.Width; x++)
             {
@@ -107,7 +107,7 @@ namespace sharpRoguelike.Core.Systems
             }
 
             DungeonMap map = new DungeonMap();
-            map.Initialize(width, height);
+            map.Initialize(mapwidth, mapHeight);
             int lastx = 0;
             int lasty = 0;
 

@@ -354,10 +354,11 @@ namespace sharpRoguelike.Core
             List<Entity> names = new List<Entity>();
             foreach(Entity entity in results)
             {
-                if (IsInFov(entity.x, entity.y))
+                if (IsInFov(entity.x, entity.y) || Game.DebugCheats)
                 {
                     names.Add(entity);
                 }
+             
             }
             return names;
 

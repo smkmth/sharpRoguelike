@@ -13,6 +13,10 @@ namespace sharpRoguelike.Core.Systems
 {
     class Room
     {
+        public Room()
+        {
+            points = new List<Point>();
+        }
         public List<Point> points;
         public Point Center()
         {
@@ -29,7 +33,22 @@ namespace sharpRoguelike.Core.Systems
 
             return new Point(xtot, ytot);
         }
-       
+       public Room SplitOffLargerRoom()
+        {
+            int CenterX = Center().X;
+            Room room = new Room();
+            foreach(Point point in points)
+            {
+                if (point.X < CenterX)
+                {
+                    room.points.Add(point);
+                }
+            }
+            points = points.Except(room.points).ToList();
+            return room;
+
+        }
+
         public int GetExtremeLeft()
         {
             Point bestfit = points[0];
@@ -48,6 +67,7 @@ namespace sharpRoguelike.Core.Systems
         }
     }
 
+
     struct CellCopy
     {
         public bool walkable;
@@ -63,9 +83,26 @@ namespace sharpRoguelike.Core.Systems
         }
     }
 
+    public class MapSegment
+    {
+        public int xpos;
+        public int ypos;
+        public System.Drawing.Point sizeOfCopy;
+        public DungeonMap map;
+
+        public MapSegment(int xpos, int ypos, System.Drawing.Point sizeOfCopy, DungeonMap map)
+        {
+            this.xpos = xpos;
+            this.ypos = ypos;
+            this.map = map;
+            this.sizeOfCopy = sizeOfCopy;
+        }
+    }
+
     class MapParser
     {
-        DungeonMap map;
+        List<MapSegment> maps;
+        public DungeonMap newMap;
         int mapWidth;
         int mapHeight;
         int mapLevel;
@@ -74,85 +111,205 @@ namespace sharpRoguelike.Core.Systems
         CellCopy[] cells;
         Room StartRoom;
 
-        public MapParser(DungeonMap _map, int _mapWidth, int _mapHeight, int _mapLevel)
+        public MapParser( int _mapWidth, int _mapHeight, int _mapLevel, List<MapSegment> _maps)
         {
-            map = _map;
+            maps = _maps;
             mapWidth = _mapWidth;
             mapHeight = _mapHeight;
             mapLevel = _mapLevel;
         }
 
-
-        public DungeonMap Pass()
+        public DungeonMap Pass(bool doBorders, bool doRooms)
         {
-
-
-            foreach (ICell cell in map.GetCellsInColumns(mapWidth - 1))
+            CellCopy[,] copycells = new CellCopy[mapWidth, mapHeight];
+            for (int i = 0; i < maps.Count; i++)
             {
-                map.SetCellProperties(cell.X, cell.Y, false, false);
+                copycells = CopyCells(copycells, maps[i].sizeOfCopy.X, maps[i].sizeOfCopy.Y, maps[i].map, maps[i].xpos, maps[i].ypos);
             }
-            foreach (ICell cell in map.GetCellsInColumns(0))
-            {
-                map.SetCellProperties(cell.X, cell.Y, false, false);
-            }
-            foreach (ICell cell in map.GetCellsInRows(mapHeight - 1))
-            {
-                map.SetCellProperties(cell.X, cell.Y, false, false);
-            }
-            foreach (ICell cell in map.GetCellsInRows(0))
-            {
-                map.SetCellProperties(cell.X, cell.Y, false, false);
-            }
+            newMap = MakeMapFromCells(copycells);
 
-            cells = new CellCopy[mapWidth * mapHeight];
-            foreach (ICell cell in map.GetAllCells())
+            if (doBorders)
             {
-                cells[cell.X + mapWidth * cell.Y] = new CellCopy(cell.IsWalkable, cell.X, cell.Y );
-            }
 
-            rooms = GetRooms(cells);
-           
-            
-            List<Room> sortedRooms = rooms.OrderByDescending(o => o.GetExtremeLeft()).ToList();
-
-            for (int r = 0; r < sortedRooms.Count; r++)
-            {
-                if (r > 0)
+                foreach (ICell cell in newMap.GetCellsInColumns(mapWidth - 1))
                 {
-                    int previousRoomCenterX =   sortedRooms[r - 1].Center().X;
-                    int previousRoomCenterY =   sortedRooms[r - 1].Center().Y;
-                    int currentRoomCenterX =    sortedRooms[r].Center().X;
-                    int currentRoomCenterY =    sortedRooms[r].Center().Y;
-
-                    if (Game.Random.Next(1, 2) == 1)
-                    {
-                        CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
-                        CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
-                    }
-                    else
-                    {
-                        CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
-                        CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
-                    }
-
+                    newMap.SetCellProperties(cell.X, cell.Y, false, false);
+                }
+                foreach (ICell cell in newMap.GetCellsInColumns(0))
+                {
+                    newMap.SetCellProperties(cell.X, cell.Y, false, false);
+                }
+                foreach (ICell cell in newMap.GetCellsInRows(mapHeight - 1))
+                {
+                    newMap.SetCellProperties(cell.X, cell.Y, false, false);
+                }
+                foreach (ICell cell in newMap.GetCellsInRows(0))
+                {
+                    newMap.SetCellProperties(cell.X, cell.Y, false, false);
                 }
 
             }
 
 
-            StartRoom = rooms[Game.Random.Next(0, rooms.Count)];
-            PlacePlayer(StartRoom.points[0].X, StartRoom.points[0].Y);
-
-            CreateStairs();
-            PlaceMonsters();
-            PlaceItems();
+            if (doRooms)
+            {
             
+                cells = new CellCopy[mapWidth * mapHeight];
+                foreach (ICell cell in newMap.GetAllCells())
+                {
+                    cells[cell.X + mapWidth * cell.Y] = new CellCopy(cell.IsWalkable, cell.X, cell.Y );
+                }
 
-            return map;
+                rooms = GetRooms(cells);
+
+
             
+                List<Room> sortedRooms = rooms.OrderByDescending(o => o.GetExtremeLeft()).ToList();
+
+                for (int r = 0; r < sortedRooms.Count; r++)
+                {
+                    if (r > 0)
+                    {
+                        int previousRoomCenterX =   sortedRooms[r - 1].Center().X;
+                        int previousRoomCenterY =   sortedRooms[r - 1].Center().Y;
+                        int currentRoomCenterX =    sortedRooms[r].Center().X;
+                        int currentRoomCenterY =    sortedRooms[r].Center().Y;
+
+                        if (Game.Random.Next(1, 2) == 1)
+                        {
+                            CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, previousRoomCenterY);
+                            CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, currentRoomCenterX);
+                        }
+                        else
+                        {
+                            CreateVerticalTunnel(previousRoomCenterY, currentRoomCenterY, previousRoomCenterX);
+                            CreateHorizontalTunnel(previousRoomCenterX, currentRoomCenterX, currentRoomCenterY);
+                        }
+
+                    }
+
+                }
+
+
+                StartRoom = rooms[Game.Random.Next(0, rooms.Count)];
+
+
+                PlacePlayer(StartRoom.points[0].X, StartRoom.points[0].Y);
+
+                CreateStairs();
+                PlaceMonsters();
+                PlaceItems();
+                int counter = 0;
+                int smallRooms = 0;
+                int midRooms = 0;
+                int largeRooms = 0;
+                int massiveRooms = 0;
+                int superMassiveRooms = 0;
+
+                foreach (Room room in rooms)
+                {
+                   //Entity surface = new Entity();
+                   //surface.symbol = '~';
+                   //surface.color = new RLNET.RLColor(Game.Random.Next(0,255), Game.Random.Next(0, 255), Game.Random.Next(0, 255));
+                   //surface.name = $"room - {counter} + room size - {room.points.Count} ";
+                   //
+                   //counter++;
+                   //foreach(Point point in room.points)
+                   //{
+                   //    newMap.CreateSurface(point.X, point.Y, 1, surface, SurfaceKerning.TopLeft);
+                   //}
+                   //
+
+                    if (room.points.Count < 10)
+                    {
+                        smallRooms++;
+                    }
+                    else if (room.points.Count < 30)
+                    {
+                        midRooms++;
+
+                    }
+                    else if (room.points.Count < 100)
+                    {
+                        largeRooms++;
+
+                    }
+                    else if (room.points.Count < 300)
+                    {
+                        massiveRooms++;
+
+                    }
+                    else
+                    {
+                        superMassiveRooms++;
+                    }
+
+                }
+
+                Console.WriteLine($" small rooms= {smallRooms} mid rooms = {midRooms} large rooms =={largeRooms} massive rooms= {massiveRooms} supermassive rooms {superMassiveRooms}");
+
+
+
+            }
+            else
+            {
+                PlacePlayer(0, 0);
+            }
+            return newMap;
+
 
 
         }
+
+        public CellCopy[,] CopyCells( CellCopy[,] copyCells, int width, int height, DungeonMap fromMap , int to_x, int to_y)
+        {
+
+            CellCopy[,] copy = new CellCopy[mapWidth, mapHeight];
+            for (int x = 0; x <  width; x++)
+            {
+                for (int y =0; y <  height; y++)
+                {
+                    copy[x,y].walkable = fromMap.GetCell(x, y).IsWalkable;
+                }
+            }
+       
+
+            for (int x = to_x; x < (to_x+ width) ; x++)
+            {
+                for (int y =to_y; y < (to_y +height); y++)
+                { 
+                    if (x < mapWidth && x >= 0 && y < mapHeight && y >= 0)
+                    {
+                        copyCells[x,y].walkable = copy[x - to_x, y - to_y].walkable;
+                    }
+                }
+            }
+
+
+            return copyCells;
+
+        }
+
+        public DungeonMap MakeMapFromCells( CellCopy[,] copycells)
+        {
+            DungeonMap copyMap = new DungeonMap();
+            copyMap.Initialize(mapWidth, mapHeight);
+            for (int x = 0; x < mapWidth; x++)
+            {
+                for (int y = 0; y < mapHeight; y++)
+                {
+                    if (y < mapWidth  && x >= 0 && y < mapHeight && y >= 0)
+                    {
+                        CellCopy copycell = copycells[x, y];
+                        copyMap.SetCellProperties(x, y, copycell.walkable, copycell.walkable);
+                    }
+
+                }
+            }
+            return copyMap;
+        }
+
+       
 
         public List<Room> GetRooms(CellCopy[] runmap)
         {
@@ -170,6 +327,28 @@ namespace sharpRoguelike.Core.Systems
                     }
                 }
             }
+            List<Room> splitRooms = new List<Room>();
+            bool roomSplitter = true;
+            while (roomSplitter)
+            {
+                int counter = 0;
+                foreach(Room room in rooms)
+                {
+                    if (room.points.Count > 400)
+                    {
+                        counter++;
+                        Room newRoom = room.SplitOffLargerRoom();
+                        splitRooms.Add(newRoom);
+                    }
+
+                }
+                rooms.AddRange(splitRooms);
+                Console.WriteLine(counter);
+                if(counter == 0)
+                {
+                    roomSplitter = false;
+                }
+            }
           
           
             return rooms;
@@ -181,7 +360,6 @@ namespace sharpRoguelike.Core.Systems
             Stack<Point> points = new Stack<Point>();
 
             points.Push(pt);
-
             while (points.Count > 0)
             {
                 Point a = points.Pop();
@@ -190,6 +368,7 @@ namespace sharpRoguelike.Core.Systems
 
                     if (runmap[a.X + mapWidth * a.Y].walkable)
                     {
+                       
                         runmap[a.X + mapWidth * a.Y].walkable = false;
                         contiguousPoints.Add(new Point(a.X, a.Y));
                         points.Push(new Point(a.X - 1, a.Y));
@@ -206,7 +385,7 @@ namespace sharpRoguelike.Core.Systems
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                map.SetCellProperties(x, yPosition, true, true);
+                newMap.SetCellProperties(x, yPosition, true, true);
             }
         }
 
@@ -215,7 +394,7 @@ namespace sharpRoguelike.Core.Systems
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                map.SetCellProperties(xPosition, y, true, true);
+                newMap.SetCellProperties(xPosition, y, true, true);
             }
         }
         public void PlacePlayer(int x, int y)
@@ -228,7 +407,7 @@ namespace sharpRoguelike.Core.Systems
             player.x = x;
             player.y = y;
 
-            map.AddPlayer(player);
+            newMap.AddPlayer(player);
         }
 
         private void CreateStairs()
@@ -245,8 +424,8 @@ namespace sharpRoguelike.Core.Systems
                     IsUp = true
 
                 };
-                map.Entities.Add(upstairs);
-                map.StairsUp = upstairs;
+                newMap.Entities.Add(upstairs);
+                newMap.StairsUp = upstairs;
 
             }
 
@@ -259,8 +438,8 @@ namespace sharpRoguelike.Core.Systems
                 IsUp = false
             };
 
-            map.Entities.Add(downstairs);
-            map.StairsDown = downstairs;
+            newMap.Entities.Add(downstairs);
+            newMap.StairsDown = downstairs;
 
         }
 
@@ -281,28 +460,28 @@ namespace sharpRoguelike.Core.Systems
                             var potion = HealthPotion.Create();
                             potion.x = randomRoomLocation.X;
                             potion.y = randomRoomLocation.Y;
-                            map.AddItem(potion);
+                            newMap.AddItem(potion);
                         }
                         else if (roll < 50)
                         {
                             var chest = Chest.Create();
                             chest.x = randomRoomLocation.X;
                             chest.y = randomRoomLocation.Y;
-                            map.AddItem(chest);
+                            newMap.AddItem(chest);
                         }
                         else if (roll < 75)
                         {
                             var potion = WaterPotion.Create();
                             potion.x = randomRoomLocation.X;
                             potion.y = randomRoomLocation.Y;
-                            map.AddItem(potion);
+                            newMap.AddItem(potion);
                         }
                         else
                         {
                             var potion = SlimePotion.Create();
                             potion.x = randomRoomLocation.X;
                             potion.y = randomRoomLocation.Y;
-                            map.AddItem(potion);
+                            newMap.AddItem(potion);
 
                         }
                         
@@ -317,44 +496,52 @@ namespace sharpRoguelike.Core.Systems
         {
             foreach (var room in rooms)
             {
-                if (Game.Random.Next(0, 10) < 7)
+                
+                int numberOfMonsters = 0;
+                if (room.points.Count < smallRoom)
                 {
-                    int numberOfMonsters = 0;
-                    if (room.points.Count > 20)
-                    {
-                        numberOfMonsters = Game.Random.Next(1, 4);
-                    }
-                    else if (room.points.Count > 50)
-                    {
-                        numberOfMonsters = Game.Random.Next(5, 10);
+                    numberOfMonsters = 0;
+                    Console.WriteLine($"room size is 10 - using {numberOfMonsters}");
+                }
+                else if (room.points.Count < 30)
+                {
+                    numberOfMonsters = Game.Random.Next(0, 5);
+                    Console.WriteLine($"room size is 30 - using {numberOfMonsters}");
 
-                    }
-                    else if (room.points.Count > 100)
-                    {
-                        numberOfMonsters = Game.Random.Next(10, 15);
+                }
+                else if (room.points.Count < 100)
+                {
+                    numberOfMonsters = Game.Random.Next(3, 6);
+                    Console.WriteLine($"room size is 100 - using {numberOfMonsters}");
 
-                    }
-                    for (int i = 0; i < numberOfMonsters; i++)
-                    {
-                        Point randomRoomLocation = room.GetRandomPointInRoom();
+                }
+                else 
+                {
+                    numberOfMonsters = Game.Random.Next(6, 10);
+                    Console.WriteLine($"room size is massive - using {numberOfMonsters}");
 
-                        int monsterRoll = Game.Random.Next(0, 100);
-                        if (monsterRoll < 70)
-                        {
-                            var monster = Cryofailure.Create(mapLevel);
-                            monster.x = randomRoomLocation.X;
-                            monster.y = randomRoomLocation.Y;
-                            map.AddMonster(monster);
-                        }
-                        else
-                        {
-                            var monster = Slimehulk.Create(mapLevel);
-                            monster.x = randomRoomLocation.X;
-                            monster.y = randomRoomLocation.Y;
-                            map.AddMonster(monster);
-                        }
+                }
+                for (int i = 0; i < numberOfMonsters; i++)
+                {
+                    Point randomRoomLocation = room.GetRandomPointInRoom();
+
+                    int monsterRoll = Game.Random.Next(0, 100);
+                    if (monsterRoll < 70)
+                    {
+                        var monster = Cryofailure.Create(mapLevel);
+                        monster.x = randomRoomLocation.X;
+                        monster.y = randomRoomLocation.Y;
+                        newMap.AddMonster(monster);
+                    }
+                    else
+                    {
+                        var monster = Slimehulk.Create(mapLevel);
+                        monster.x = randomRoomLocation.X;
+                        monster.y = randomRoomLocation.Y;
+                        newMap.AddMonster(monster);
+                    }
                         
-                    }
+                    
                 }
             }
         }

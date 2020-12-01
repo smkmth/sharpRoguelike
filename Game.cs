@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using RLNET;
 using RogueSharp.Random;
 using sharpRoguelike.Core;
@@ -69,7 +70,7 @@ namespace sharpRoguelike
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
         public static int seed;
-        public static float scaleFactor = 1.4f;
+        public static float scaleFactor = 1f;
 
         public static bool DebugCheats = true;
         public static bool wallhack = false;
@@ -168,11 +169,29 @@ namespace sharpRoguelike
             //gen map
             if (useWaveFunctionCollapse)
             {
+                List<MapSegment> maps = new List<MapSegment>();
+                {
+                   // Point sizeOfSegment = new Point(mapWidth, mapHeight);
+                   // System.Drawing.Point posOfSegment = new Point(0, 0);
+                   // WaveFunctionCollapseMap forestCollapse = new WaveFunctionCollapseMap("CurvyCaves", 3, sizeOfSegment.X, sizeOfSegment.Y, true, true, 8, 0);
+                   // DungeonMap forestMap = forestCollapse.Run(seed, mapWidth, mapHeight);
+                   // MapSegment MapSegment = new MapSegment(posOfSegment.X, posOfSegment.Y, sizeOfSegment, forestMap);
+                   // maps.Add(MapSegment);
 
-                WaveFunctionCollapseMap collapse = new WaveFunctionCollapseMap("Network", 3, mapWidth, mapHeight, true, true, 8, 0);
-                DungeonMap = collapse.Run(seed);
-                MapParser parse = new MapParser(DungeonMap, mapWidth, mapHeight, mapLevel);
-                DungeonMap = parse.Pass();
+                }
+                {
+                    Point sizeOfSegment = new Point(mapWidth  , mapHeight );
+                    System.Drawing.Point posOfSegment = new Point(0,0);
+                    WaveFunctionCollapseMap cityCollapse = new WaveFunctionCollapseMap("Network", 3, sizeOfSegment.X, sizeOfSegment.Y, true, true, 8, 0);
+                    DungeonMap cityMap = cityCollapse.Run(seed, mapWidth, mapHeight);
+                    MapSegment MapSegment = new MapSegment(posOfSegment.X, posOfSegment.Y, sizeOfSegment, cityMap);
+                    maps.Add(MapSegment);
+
+                }
+
+
+                MapParser parse = new MapParser( mapWidth, mapHeight, mapLevel, maps);
+                DungeonMap = parse.Pass(true,true);
 
             }
             else
@@ -445,6 +464,7 @@ namespace sharpRoguelike
                 }
             }
             //tell us what entities are under the mouse pointer
+            
             if (mx > 0 && my > 0)
             {
                 List<Entity> entities = DungeonMap.InterigateEntityAtLocation(mx, my);
@@ -454,7 +474,7 @@ namespace sharpRoguelike
                     for (int i = 0; i < entities.Count; i++)
                     {
                         string nametoprint = entities[i].name;
-                        lookConsole.Print(2, i, entities[i].name, RLColor.White);
+                        lookConsole.Print(2, i, $"x ={mx} y={my} name: {entities[i].name}", RLColor.White);
                         if (!string.IsNullOrEmpty(entities[i].description))
                         {
                             lookConsole.Print(nametoprint.Length + 2, i, ": " + entities[i].description, RLColor.White);

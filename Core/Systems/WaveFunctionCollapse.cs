@@ -269,13 +269,15 @@ namespace sharpRoguelike.Core.Systems
         {
             this.N = N;
             periodic = periodicOutput;
-            if (!File.Exists($"C:/Users/Lab42_AMD_1/source/repos/sharpRoguelike/{name}.png"))
-            {
-                Console.WriteLine("no file");
-                return;
-
-            }
-            var bitmap = new Bitmap($"C:/Users/Lab42_AMD_1/source/repos/sharpRoguelike/{name}.png");
+            //          if (!File.Exists($"C:/Users/danda/source/repos/sharpRoguelike/{name}.png"))
+            //          {
+            //              Console.WriteLine("no file");
+            //          
+            //          }
+            //          
+            string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Data\", $"{name}.png");
+            var bitmap = new Bitmap(path);
+           // var bitmap = new Bitmap($"C:/Users/Lab42_AMD_1/source/repos/sharpRoguelike/{name}.png");
 
             int SMX = bitmap.Width, SMY = bitmap.Height;
             byte[,] sample = new byte[SMX, SMY];
