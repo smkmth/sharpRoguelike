@@ -46,7 +46,7 @@ namespace sharpRoguelike.Core.Components
         public virtual void RemoveEffect() 
         {
             ResolveEffect();
-            owner.statusEffects.Remove(this);
+            owner.statusEffectHolder.statusEffects.Remove(this);
         }
 
         //reverse effects of status effect 

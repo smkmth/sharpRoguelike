@@ -64,9 +64,9 @@ namespace sharpRoguelike.Core.Data.Monsters
             slimeHulk.ai.owner = slimeHulk;
             slimeHulk.ai.behaviorStack = new List<Interfaces.IBehavior>();
             slimeHulk.ai.behaviorStack.Add(new StandardMoveAndAttack());
-
-            slimeHulk.immuneStatusEffects = new List<StatusEffectsComp>();
-            slimeHulk.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
+            slimeHulk.statusEffectHolder = new StatusEffectHolder(slimeHulk);
+            slimeHulk.statusEffectHolder.immuneStatusEffects = new List<StatusEffectsComp>();
+            slimeHulk.statusEffectHolder.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
 
             return slimeHulk;
 

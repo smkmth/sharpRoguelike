@@ -25,9 +25,9 @@ namespace sharpRoguelike.Core.Components
 
         public void ResetPlayer()
         {
-            if (owner.statusEffects != null)
+            if (owner.statusEffectHolder != null)
             {
-                owner.statusEffects.Clear();
+                owner.statusEffectHolder.statusEffects.Clear();
             }
             owner.renderer = new Renderer(owner);
             owner.renderer.color = Colors.Player;
@@ -72,10 +72,10 @@ namespace sharpRoguelike.Core.Components
 
             EquipmentManager.EquipItem(owner, Rifle.Create());
             EquipmentManager.EquipItem(owner, Knife.Create());
-
+            owner.statusEffectHolder = new StatusEffectHolder(owner);
             // debug slime immune
-            owner.immuneStatusEffects = new List<StatusEffectsComp>();
-            owner.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
+            owner.statusEffectHolder.immuneStatusEffects = new List<StatusEffectsComp>();
+            owner.statusEffectHolder.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
         }
     }
 }

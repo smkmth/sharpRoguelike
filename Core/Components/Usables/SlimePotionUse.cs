@@ -16,7 +16,7 @@ namespace sharpRoguelike.Core.Components.Usables
             target.attacker.Health -= 20;
             Game.MessageLog.Add("You swig down the slime potion, it tastes foul - and you feel sick", Colors.NormalMessage);
 
-            target.AddStatusEffect(new Slimed(target, 5, StatusEffectsComp.Slimed));
+            target.statusEffectHolder.AddStatusEffect(new Slimed(target, 5, StatusEffectsComp.Slimed));
             return true;
         }
 

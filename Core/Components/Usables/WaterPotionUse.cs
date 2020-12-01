@@ -12,7 +12,7 @@ namespace sharpRoguelike.Core.Components.Usables
         {
 
             Game.MessageLog.Add("You swig down the water potion, its refreshing.", Colors.NormalMessage);
-            user.RemoveStatusEffect(StatusEffectsComp.Slimed);
+            user.statusEffectHolder.RemoveStatusEffect(StatusEffectsComp.Slimed);
             return base.DrinkEffect(user, target);
         }
 

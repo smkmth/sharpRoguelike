@@ -29,7 +29,7 @@ namespace sharpRoguelike.Core.Systems
             {
                 IsPlayerTurn = true;
                 Game.SchedulingSytem.Add(Game.Player.actor);
-                scheduleable.owner.ApplyStatusEffects();
+                scheduleable.owner.statusEffectHolder.ApplyStatusEffects();
 
             }
             else
@@ -38,7 +38,7 @@ namespace sharpRoguelike.Core.Systems
                 if (monster.attacker != null)
                 {
                     monster.ai.PerformAction(this);
-                    monster.ApplyStatusEffects();
+                    monster.statusEffectHolder.ApplyStatusEffects();
                     if (monster.attacker != null)
                     {
                         Game.SchedulingSytem.Add(monster.actor);

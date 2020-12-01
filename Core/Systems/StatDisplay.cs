@@ -22,18 +22,18 @@ namespace sharpRoguelike.Core.Systems
         public void DrawPlayer(RLConsole con, Entity player)
         {
             string statuseffectString = "";
-            if (player.statusEffects != null)
+            if (player.statusEffectHolder.statusEffects != null)
             {
                 int effectcounter = 0;
                 
-                foreach (StatusEffect effect in player.statusEffects)
+                foreach (StatusEffect effect in player.statusEffectHolder.statusEffects)
                 {
                     if(effectcounter == 0)
                     {
                         string capsString= CapFirstLetter(effect.statusEffectAppliedName);
                         statuseffectString += $"{capsString}";
                     }
-                    else if (effectcounter == player.statusEffects.Count)
+                    else if (effectcounter == player.statusEffectHolder.statusEffects.Count)
                     {
                         statuseffectString += $" {effect.statusEffectAppliedName} ";
 

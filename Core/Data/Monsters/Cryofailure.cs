@@ -117,6 +117,7 @@ namespace sharpRoguelike.Core.Data.Monsters
             cryoFailure.ai.owner = cryoFailure;
             cryoFailure.ai.behaviorStack = new List<Interfaces.IBehavior>();
             cryoFailure.ai.behaviorStack.Add(new StandardMoveAndAttack());
+            cryoFailure.statusEffectHolder = new StatusEffectHolder(cryoFailure);
 
             return cryoFailure;
 

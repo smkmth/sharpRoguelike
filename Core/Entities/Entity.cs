@@ -56,9 +56,7 @@ namespace sharpRoguelike.Core
         public List<EquipmentSlot> equipmentSlots;              //does this entity have any equipment equipped
         public Player player = null;                            //is this entity a player
         public Equipment equipment =null;                       //is this entity equipment
-        public List<StatusEffect> statusEffects;                //is this entity under a status effect 
-        public List<StatusEffectsComp> immuneStatusEffects;     //is this entity immune from a status effect 
-
+        public StatusEffectHolder statusEffectHolder;           //can this entity get status effects
 
         public string name { get; set; }
         public string description { get; set; }
@@ -68,84 +66,7 @@ namespace sharpRoguelike.Core
 
         }
 
-        public void ApplyStatusEffects()
-        {
-            if (statusEffects == null)
-            {
-                return;
-            }
-
-            for(int i = 0; i < statusEffects.Count; i++)
-            {
-                statusEffects[i].ApplyEffect();
-                statusEffects[i].DecreaseCounter();
-
-            }
-        }
-        public void RemoveAllStatusEffects()
-        {
-
-            if (statusEffects != null)
-            {
-
-                foreach (StatusEffect currentEffect in statusEffects)
-                {
-                    currentEffect.ResolveEffect();
-
-                }
-                statusEffects.Clear();
-            }
-           
-        }
-        public void RemoveStatusEffect(StatusEffectsComp effect)
-        {
-            if (statusEffects != null)
-            {
-                StatusEffect targetEffect = null;
-
-                foreach(StatusEffect currentEffect in statusEffects)
-                {
-                    if (effect == currentEffect.comp)
-                    {
-                        currentEffect.ResolveEffect();
-                        targetEffect = currentEffect;
-                    }
-
-                }
-
-                statusEffects.Remove(targetEffect);
-            }
-
-        }
-
-        public bool AddStatusEffect(StatusEffect effect)
-        {
-            if (statusEffects == null)
-            {
-                statusEffects = new List<StatusEffect>();
-            }
-
-            if (immuneStatusEffects != null)
-            {
-                foreach(StatusEffectsComp immune_effect in immuneStatusEffects)
-                {
-                    if (effect.comp == immune_effect)
-                    {
-                        return false;
-                    }
-                   
-                }
-            }
-
-            var dupes = statusEffects.Where(p => p.comp == effect.comp);
-            if (dupes.Count() <= 0)
-            {
-                statusEffects.Add(effect);
-                return true;
-            }
-            return false;
-        }
-
+       
         public Equipment GetEquippedRangedWeapon()
         {
             Equipment rangedWeapon = null;

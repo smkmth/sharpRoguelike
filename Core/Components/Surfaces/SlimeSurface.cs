@@ -14,7 +14,7 @@ namespace sharpRoguelike.Core.Components.Surfaces
         }
         public override bool WalkOverSurface(Entity entity)
         {
-            return entity.AddStatusEffect(new Slimed(entity, 5, StatusEffectsComp.Slimed));
+            return entity.statusEffectHolder.AddStatusEffect(new Slimed(entity, 5, StatusEffectsComp.Slimed));
 
         }
     }
