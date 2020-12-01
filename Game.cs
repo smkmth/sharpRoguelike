@@ -6,6 +6,7 @@ using RLNET;
 using RogueSharp.Random;
 using sharpRoguelike.Core;
 using sharpRoguelike.Core.Components;
+using sharpRoguelike.Core.Data.Monsters;
 using sharpRoguelike.Core.Menus;
 using sharpRoguelike.Core.Systems;
 
@@ -39,7 +40,7 @@ namespace sharpRoguelike
         private static readonly int lookHeight = 11;
         private static RLConsole lookConsole;
 
-        private static readonly int statWidth = screenWidth - messageWidth;
+        private static readonly int statWidth = screenWidth ;
         private static readonly int statHeight = 11;
         private static RLConsole statConsole;
 
@@ -70,7 +71,7 @@ namespace sharpRoguelike
         public static int mapLevel =1;
         public static GameMode CurrentGameMode;
         public static int seed;
-        public static float scaleFactor = 1.4f;
+        public static float scaleFactor = 1f;
 
         public static bool DebugCheats = true;
         public static bool wallhack = false;
@@ -292,6 +293,14 @@ namespace sharpRoguelike
                             saveLoad.SaveSeed();
                             rootConsole.Close();
                         }
+                        else if (keyPress.Key == RLKey.BackSlash)
+                        {
+                            Console.WriteLine("printed");
+                            Entity slimespawn = Slimehulk.Create(1);
+                            slimespawn.transform.x = Player.transform.x;
+                            slimespawn.transform.y = Player.transform.y;
+                            DungeonMap.AddMonster(slimespawn);
+                        }
                         else if (keyPress.Key == RLKey.G)
                         {
                             Entity pickup = DungeonMap.GetItemAt(Player.transform.x, Player.transform.y);
@@ -499,9 +508,6 @@ namespace sharpRoguelike
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
 
-
-
-
             if (CurrentGameMode == GameMode.MAINMENU)
             {
                 DrawMainMenu();
@@ -516,17 +522,56 @@ namespace sharpRoguelike
                 return;
 
             }
+            lookConsole.Clear();
 
+            int index = 1;
+            if (CurrentGameMode != GameMode.TARGETING)
+            {
 
+                string invstring = "(i) access inventory";
+                lookConsole.Print(lookConsole.Width - invstring.Length, index, invstring, Colors.Text);
+                index += 2;
+
+                if (Player.GetEquippedRangedWeapon() != null )
+                {
+                    string rangedString = $"(f) ranged weapon";
+                    lookConsole.Print(lookConsole.Width - rangedString.Length, index, rangedString, Colors.Text);
+                    index += 2;
+                }
+
+                List<Entity> entites = Game.DungeonMap.GetAllEntitiesAt(Player.transform.x, Player.transform.y);
+                foreach (Entity en in entites)
+                {
+                    if (en != Player)
+                    {
+                        string getstring = $"(g) pick up {en.name}";
+                        lookConsole.Print(lookConsole.Width - getstring.Length , index, getstring, Colors.Text);
+                        index += 2;
+
+                        if (en.inventory != null)
+                        {
+                            string searchstring = $"(s) search {en.name}";
+                            lookConsole.Print(lookConsole.Width - searchstring.Length, index, searchstring , Colors.Text);
+                            index += 2;
+                        }
+                    }
+
+                }
+
+            }
             if (CurrentGameMode == GameMode.TARGETING)
             {
+
                 //weird placement - but yeah sort this out later
                 Equipment rangedWeapon = Player.GetEquippedRangedWeapon();
                 if (rangedWeapon != null && rangedWeapon.ranged != null)
                 {
                     string gunString = "Aiming with a " + rangedWeapon.ownerItem.name + " you have " + rangedWeapon.ranged.ammo + " shots ";
-                    lookConsole.Print(lookConsole.Width - gunString.Length, 2, gunString, RLColor.White);
+                    lookConsole.Print(lookConsole.Width - gunString.Length, index, gunString, RLColor.White);
+                    index += 2;
                 }
+
+
                 DrawMainGame();
                 return;
 

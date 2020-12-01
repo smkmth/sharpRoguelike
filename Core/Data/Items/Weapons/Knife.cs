@@ -23,7 +23,6 @@ namespace sharpRoguelike.Core.Items
             knife.transform = new Transform();
             knife.equipment = new Equipment(knife, EquipSlotType.WEAPON);
             knife.equipment.attackModifier = 2;
-
             knife.effect = new EquipmentUse();
             knife.effect.owner = knife;
 

@@ -476,26 +476,22 @@ namespace sharpRoguelike.Core.Systems
             {
                 
                 int numberOfMonsters = 0;
-                if (room.points.Count < 10)
+              
+                if (room.points.Count < 30)
                 {
-                    numberOfMonsters = 0;
-                    Console.WriteLine($"room size is 10 - using {numberOfMonsters}");
-                }
-                else if (room.points.Count < 30)
-                {
-                    numberOfMonsters = Game.Random.Next(0, 5);
+                    Game.Random.Next(1, 5);
                     Console.WriteLine($"room size is 30 - using {numberOfMonsters}");
 
                 }
                 else if (room.points.Count < 100)
                 {
-                    numberOfMonsters = Game.Random.Next(3, 6);
+                    numberOfMonsters = Game.Random.Next(0, 2);
                     Console.WriteLine($"room size is 100 - using {numberOfMonsters}");
 
                 }
                 else 
                 {
-                    numberOfMonsters = Game.Random.Next(6, 10);
+                    numberOfMonsters = Game.Random.Next(0, 4);
                     Console.WriteLine($"room size is massive - using {numberOfMonsters}");
 
                 }

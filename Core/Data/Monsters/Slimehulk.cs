@@ -32,7 +32,7 @@ namespace sharpRoguelike.Core.Data.Monsters
             attacker.Defense = Dice.Roll("1D4") + level / 3;
             attacker.DefenseChance = Dice.Roll("10D4");
 
-            int health = Dice.Roll("4D5");
+            int health = Dice.Roll("10D10");
             attacker.Health = health;
             attacker.MaxHealth = health;
 

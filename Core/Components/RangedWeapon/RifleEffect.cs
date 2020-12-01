@@ -98,7 +98,7 @@ namespace sharpRoguelike.Core.Components
         {
             Game.CurrentGameMode = GameMode.PLAYING;
         }
-        /*
+        
         public override bool Load()
         {
             if (owner.ownerHolder != null)
@@ -117,6 +117,6 @@ namespace sharpRoguelike.Core.Components
             }
             return false;
         }
-        */
+        
     }
 }

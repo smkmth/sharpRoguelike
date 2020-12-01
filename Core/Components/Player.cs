@@ -35,9 +35,9 @@ namespace sharpRoguelike.Core.Components
             owner.name = "Rogue";
             owner.transform = new Transform();
             owner.attacker = new Attacker(owner);
-            owner.attacker.Attack = 2;
-            owner.attacker.AttackChance = 50;
-            owner.attacker.Defense = 2;
+            owner.attacker.Attack = 1;
+            owner.attacker.AttackChance = 30;
+            owner.attacker.Defense = 1;
             owner.attacker.DefenseChance = 20;
             owner.attacker.Health = 100;
             owner.attacker.MaxHealth = 100;
@@ -74,8 +74,8 @@ namespace sharpRoguelike.Core.Components
             EquipmentManager.EquipItem(owner, Knife.Create());
             owner.statusEffectHolder = new StatusEffectHolder(owner);
             // debug slime immune
-            owner.statusEffectHolder.immuneStatusEffects = new List<StatusEffectsComp>();
-            owner.statusEffectHolder.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
+            //owner.statusEffectHolder.immuneStatusEffects = new List<StatusEffectsComp>();
+            //owner.statusEffectHolder.immuneStatusEffects.Add(StatusEffectsComp.Slimed);
         }
     }
 }

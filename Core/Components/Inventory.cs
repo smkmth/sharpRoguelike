@@ -77,7 +77,7 @@ namespace sharpRoguelike.Core
 
         }
 
-            /*
+            
         public int LoadAmmoOfType(AmmoType type, int clip)
         {
             BulletStack bullets = new BulletStack();
@@ -110,7 +110,7 @@ namespace sharpRoguelike.Core
             
         }
 
-            */
+            
 
     }
 }

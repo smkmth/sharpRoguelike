@@ -29,7 +29,7 @@ namespace sharpRoguelike.Core.Components.StatusEffects
             {
                 if (owner.attacker != null)
                 {
-                    owner.attacker.Health -= 2;
+                    owner.attacker.Health -= 6;
                 }
             }
         }

@@ -30,12 +30,12 @@ namespace sharpRoguelike.Core.Data.Monsters
             cryoFailure.renderer.symbol = 'k';
 
             Attacker attacker = new Attacker(cryoFailure);
-            attacker.Attack = Dice.Roll("1D3") + level / 3;
-            attacker.AttackChance = Dice.Roll("25D3");
-            attacker.Defense = Dice.Roll("1D3") + level / 3;
-            attacker.DefenseChance = Dice.Roll("10D4");
+            attacker.Attack = 5;
+            attacker.AttackChance =30;
+            attacker.Defense = 10;
+            attacker.DefenseChance = 50;
 
-            int health = Dice.Roll("2D5");
+            int health = 50;
             attacker.Health = health;
             attacker.MaxHealth = health;
 

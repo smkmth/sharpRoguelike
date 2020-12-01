@@ -11,7 +11,7 @@ namespace sharpRoguelike.Core.Systems
     public class StatDisplay
     {
         int stepDistance = 20;
-        int offset = 10;
+        int offset = 25;
 
         public string CapFirstLetter(string str)
         {
@@ -52,8 +52,7 @@ namespace sharpRoguelike.Core.Systems
             con.Print(1, 5, $"Attack:  {player.attacker.Attack} ({player.attacker.AttackChance}%)", Colors.Text);
             con.Print(1, 7, $"Defense: {player.attacker.Defense} ({player.attacker.DefenseChance}%)", Colors.Text);
             con.Print(1, 9, $"Speed: {player.actor.Speed}", Colors.Text);
-         
-          
+
 
         }
 

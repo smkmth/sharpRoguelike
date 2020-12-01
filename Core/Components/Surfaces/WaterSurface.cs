@@ -9,7 +9,7 @@ namespace sharpRoguelike.Core.Components.Surfaces
     {
         public WaterSurface()
         {
-            surfaceResistance = 20;
+            surfaceResistance = 100;
         }
 
         public override bool WalkOverSurface(Entity entity)

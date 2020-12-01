@@ -25,7 +25,7 @@ namespace sharpRoguelike.Core.Data.Items.Weapons
             rifle.equipment = new Equipment(rifle, EquipSlotType.RANGED_WEAPON);
             RifleEffect rifleEffect = new RifleEffect(rifle.equipment, 5);
             rifle.equipment.ranged = rifleEffect; 
-            rifle.equipment.ranged.damage = "1D5";
+            rifle.equipment.ranged.damage = "4D10";
             rifle.equipment.ranged.loudness = 40;
             rifle.equipment.ranged.targetString = "Rogue aims the rifle. Left Click a target to shoot, Right Click to cancel";
             rifle.effect = new RangedEquipUse(rifleEffect);
